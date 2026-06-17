@@ -1,22 +1,32 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig, esmExternalRequirePlugin } from 'vite';
+import react from '@vitejs/plugin-react';
 import { resolve } from "path";
-
 
 // https://vite.dev/config/
 export default defineConfig({
     plugins: [react()],
-    server: {
-        port: 8080,
-        host: true,
-    },
     build: {
-        target: "es2023",
-        sourcemap: false,
+        outDir: "dist",
+        emptyOutDir: true,
+        lib: {
+            entry: resolve(__dirname, 'src/index.ts'),
+            name: 'moranaui',
+            fileName: (format) => `moranaui.${format}.js`,
+            formats: ["es"],
+            cssFileName: "styles",
+        },
+        cssCodeSplit: false,
+        rollupOptions: {
+            plugins: [
+                esmExternalRequirePlugin({
+                    external: ['react', 'react-dom'],
+                }),
+            ],
+        },
     },
     resolve: {
         alias: {
             "@": resolve(__dirname, "./src"),
         },
     },
-})
+});

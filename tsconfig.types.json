@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es2023",
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "dist/types",
+    "rootDir": "src",
+    "jsx": "react-jsx",
+    "isolatedModules": true,
+    "module": "esnext",
+    "moduleResolution": "bundler"
+  },
+  "include": ["src"]
+}
