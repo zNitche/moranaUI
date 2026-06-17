@@ -1,0 +1,9 @@
+services:
+  morana_worker:
+    container_name: morana_worker_devcontainer
+    build: .
+    restart: "no"
+    volumes:
+      - ..:/workspace
+    ports:
+      - 8080:8080

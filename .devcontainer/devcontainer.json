@@ -1,0 +1,14 @@
+{
+    "name": "morana_worker_devcontainer",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "morana_worker",
+    "overrideCommand": true,
+    "workspaceFolder": "/workspace",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "dbaeumer.vscode-eslint"
+            ]
+        }
+    }
+}
