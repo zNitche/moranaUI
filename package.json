@@ -20,7 +20,7 @@
     },
     "scripts": {
         "dev": "vite",
-        "build": "tsc -b && vite build && tsc --project tsconfig.types.json",
+        "build": "tsc -b && vite build",
         "lint": "eslint .",
         "preview": "vite preview"
     },

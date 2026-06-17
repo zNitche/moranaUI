@@ -1,10 +1,20 @@
 import { defineConfig, esmExternalRequirePlugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from "path";
+import { execSync } from 'child_process';
+
 
 // https://vite.dev/config/
 export default defineConfig({
-    plugins: [react()],
+    plugins: [
+        react(),
+        {
+            name: 'generate-types',
+            closeBundle: () => {
+                execSync('tsc --project tsconfig.types.json', { stdio: 'inherit' });
+            },
+        },
+    ],
     build: {
         outDir: "dist",
         emptyOutDir: true,
