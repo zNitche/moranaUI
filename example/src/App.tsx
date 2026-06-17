@@ -4,7 +4,7 @@ import { MoranaTest } from "moranaui";
 export default function App() {
     return (
         <>
-            <MoranaTest />
+            <MoranaTest text={"test123"} />
         </>
     )
 }
