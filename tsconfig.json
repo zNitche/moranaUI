@@ -1,7 +1,32 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
+    "compilerOptions": {
+        "target": "es2023",
+        "lib": [
+            "ES2023",
+            "DOM"
+        ],
+        "module": "esnext",
+        "types": [
+            "node"
+        ],
+        "skipLibCheck": true,
+        /* Bundler mode */
+        "moduleResolution": "bundler",
+        "verbatimModuleSyntax": true,
+        "noEmit": true,
+        "outDir": "dist",
+        "rootDir": ".",
+        "declaration": false,
+        "jsx": "react-jsx",
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        /* Linting */
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "erasableSyntaxOnly": true,
+        "noFallthroughCasesInSwitch": true
+    },
+    "include": [
+        "src"
+    ]
 }
