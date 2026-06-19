@@ -1,19 +1,14 @@
 import { defineConfig, esmExternalRequirePlugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from "path";
-import { execSync } from 'child_process';
+import dts_generator from './vite_plugins/dts_generator';
 
 
 // https://vite.dev/config/
 export default defineConfig({
     plugins: [
         react(),
-        {
-            name: 'generate-types',
-            closeBundle: () => {
-                execSync('tsc --project tsconfig.types.json', { stdio: 'inherit' });
-            },
-        },
+        dts_generator(),
     ],
     build: {
         outDir: "dist",
