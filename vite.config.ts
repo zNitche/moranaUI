@@ -18,6 +18,7 @@ export default defineConfig({
     build: {
         outDir: "dist",
         emptyOutDir: true,
+        target: "es2024",
         lib: {
             entry: resolve(__dirname, 'src/index.ts'),
             name: 'moranaui',

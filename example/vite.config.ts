@@ -11,7 +11,7 @@ export default defineConfig({
         host: true,
     },
     build: {
-        target: "es2023",
+        target: "es2024",
         sourcemap: false,
     },
     resolve: {
