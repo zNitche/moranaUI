@@ -1,7 +1,7 @@
 import { defineConfig, esmExternalRequirePlugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from "path";
-import dts_generator from './vite_plugins/dts_generator';
+import { dts_generator } from './vite_plugins';
 
 
 // https://vite.dev/config/
