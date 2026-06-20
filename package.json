@@ -22,7 +22,7 @@
         "dev": "vite",
         "build": "tsc -b && vite build",
         "lint": "eslint .",
-        "preview": "vite preview"
+        "watch": "vite build --watch"
     },
     "peerDependencies": {
         "react": "19.2.6",
