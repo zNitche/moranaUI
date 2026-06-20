@@ -1,0 +1,15 @@
+:root {}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    background: #000;
+    color: #fff;
+    height: 100dvh;
+    overscroll-behavior: none;
+}
+
+body * {
+    font-family: Monospace, serif;
+}

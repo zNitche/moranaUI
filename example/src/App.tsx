@@ -1,3 +1,4 @@
+import "./index.css"
 import "moranaui/styles.css";
 import { MoranaTest } from "moranaui";
 
