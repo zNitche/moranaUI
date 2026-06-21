@@ -5,10 +5,10 @@ import type RouterContextType from "../types/RouterContextType"
 
 export default function Router({ children }: PropsWithChildren) {
     const [routes, setRoutes] = useState<RouterData[]>([])
-    const [path, setPath] = useState(window.location.pathname);
+    const [currentPath, setCurrentPath] = useState(window.location.pathname);
 
     const __handleNavEvent = useCallback(() => {
-        setPath(window.location.pathname);
+        setCurrentPath(window.location.pathname);
     }, [])
 
     useEffect(() => {
@@ -19,6 +19,22 @@ export default function Router({ children }: PropsWithChildren) {
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    const currentRoute = useMemo(() => {
+        // url matching simplified for now
+        for (const route of routes) {
+            if (!route.url) {
+                continue;
+            }
+
+            if (route.url === currentPath) {
+                return route.uuid
+            }
+        }
+
+        // find catch all route
+        return routes.find((r) => !r.url)?.uuid;
+    }, [currentPath, routes])
 
     const addRoute = useCallback((route: RouterData) => {
         const currentRoute = routes.find((r) => r.url === route.url)
@@ -40,11 +56,11 @@ export default function Router({ children }: PropsWithChildren) {
     const values: RouterContextType = useMemo(() => {
         return {
             addRoute,
-            path,
+            currentRoute,
             navigateTo,
             navigateBack,
         }
-    }, [addRoute, path, navigateTo, navigateBack])
+    }, [addRoute, navigateTo, navigateBack, currentRoute])
 
     return <RouterContext.Provider value={values}>
         {children}

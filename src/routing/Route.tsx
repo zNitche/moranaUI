@@ -1,20 +1,23 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import useRouter from "./hooks/useRouter";
+import { generateUUID } from "../utils";
 
 interface RouteProps {
     readonly url?: string;
     readonly component: React.ComponentType;
 }
 
-export default function Route({url, component}: RouteProps) {
-    const {addRoute, path} = useRouter();
+export default function Route({ url, component }: RouteProps) {
+    const routeUUID = useMemo(() => generateUUID(), [])
+
+    const { addRoute, currentRoute } = useRouter();
 
     useEffect(() => {
-        addRoute({url, component})
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        addRoute({ uuid: routeUUID, url, component })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    if (url !== path) {
+    if (routeUUID !== currentRoute) {
         return null;
     }
 

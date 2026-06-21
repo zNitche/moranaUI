@@ -5,6 +5,6 @@ export default function AboutPage() {
 
     return <div>
         <div>About Page</div>
-        <div onClick={() => navigateTo("/home")}>nav to home</div>
+        <div onClick={() => navigateTo("/")}>nav to home</div>
     </div>
 }
