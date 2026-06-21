@@ -1,11 +1,14 @@
 import "./index.css"
 import "moranaui/styles.css";
-import { MoranaTest } from "moranaui";
+import { Router, Route } from "moranaui";
+import HomePage from "./pages/HomePage/HomePage";
+import AboutPage from "./pages/AboutPage/AboutPage";
 
 export default function App() {
     return (
-        <>
-            <MoranaTest text={"test123"} />
-        </>
+        <Router>
+            <Route url={"/home"} component={HomePage} />
+            <Route url={"/about"} component={AboutPage} />
+        </Router>
     )
 }
