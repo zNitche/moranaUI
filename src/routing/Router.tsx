@@ -8,8 +8,7 @@ export default function Router({ children }: PropsWithChildren) {
     const [path, setPath] = useState(window.location.pathname);
 
     const __handleNavEvent = useCallback(() => {
-        const newPath = window.location.pathname;
-        setPath(newPath);
+        setPath(window.location.pathname);
     }, [])
 
     useEffect(() => {
@@ -18,7 +17,7 @@ export default function Router({ children }: PropsWithChildren) {
         return () => {
             window.removeEventListener('popstate', __handleNavEvent);
         };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const addRoute = useCallback((route: RouterData) => {
@@ -34,13 +33,18 @@ export default function Router({ children }: PropsWithChildren) {
         window.dispatchEvent(new PopStateEvent('popstate'));
     }, [])
 
+    const navigateBack = useCallback(() => {
+        window.history.back();
+    }, [])
+
     const values: RouterContextType = useMemo(() => {
         return {
             addRoute,
             path,
             navigateTo,
+            navigateBack,
         }
-    }, [addRoute, path, navigateTo])
+    }, [addRoute, path, navigateTo, navigateBack])
 
     return <RouterContext.Provider value={values}>
         {children}
