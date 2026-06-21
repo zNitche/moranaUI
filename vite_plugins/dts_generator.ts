@@ -1,14 +1,16 @@
-import { execSync } from 'node:child_process';
-import type { Plugin } from 'vite';
+import { execSync } from "node:child_process";
+import type { Plugin } from "vite";
 
 export default function dts_generator(): Plugin {
     return {
-        name: 'dts_generator',
+        name: "dts_generator",
         closeBundle: () => {
             try {
-                execSync('tsc --project tsconfig.types.json', { stdio: 'inherit' });
+                execSync("tsc --project tsconfig.types.json", {
+                    stdio: "inherit",
+                });
             } catch (error) {
-                console.error(error)
+                console.error(error);
             }
         },
     };

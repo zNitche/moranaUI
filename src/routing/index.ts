@@ -1,8 +1,8 @@
 import Router from "./Router";
-export {Router}
+export { Router };
 
 import Route from "./Route";
-export {Route}
+export { Route };
 
 import useRouter from "./hooks/useRouter";
-export {useRouter}
+export { useRouter };

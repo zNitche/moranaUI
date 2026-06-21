@@ -8,20 +8,20 @@ interface RouteProps {
 }
 
 export default function Route({ url, component }: RouteProps) {
-    const routeUUID = useMemo(() => generateUUID(), [])
+    const routeUUID = useMemo(() => generateUUID(), []);
 
     const { addRoute, currentRoute } = useRouter();
 
     useEffect(() => {
-        addRoute({ uuid: routeUUID, url, component })
+        addRoute({ uuid: routeUUID, url, component });
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, []);
 
     if (routeUUID !== currentRoute) {
         return null;
     }
 
-    const Component = component
+    const Component = component;
 
     return <Component />;
 }

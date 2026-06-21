@@ -1,21 +1,27 @@
-import { useCallback, useEffect, useMemo, useState, type PropsWithChildren } from "react"
-import { RouterContext } from "./context"
-import type RouterData from "../types/RouteData"
-import type RouterContextType from "../types/RouterContextType"
+import {
+    useCallback,
+    useEffect,
+    useMemo,
+    useState,
+    type PropsWithChildren,
+} from "react";
+import { RouterContext } from "./context";
+import type RouterData from "../types/RouteData";
+import type RouterContextType from "../types/RouterContextType";
 
 export default function Router({ children }: PropsWithChildren) {
-    const [routes, setRoutes] = useState<RouterData[]>([])
+    const [routes, setRoutes] = useState<RouterData[]>([]);
     const [currentPath, setCurrentPath] = useState(window.location.pathname);
 
     const __handleNavEvent = useCallback(() => {
         setCurrentPath(window.location.pathname);
-    }, [])
+    }, []);
 
     useEffect(() => {
-        window.addEventListener('popstate', __handleNavEvent);
+        window.addEventListener("popstate", __handleNavEvent);
 
         return () => {
-            window.removeEventListener('popstate', __handleNavEvent);
+            window.removeEventListener("popstate", __handleNavEvent);
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -28,30 +34,33 @@ export default function Router({ children }: PropsWithChildren) {
             }
 
             if (route.url === currentPath) {
-                return route.uuid
+                return route.uuid;
             }
         }
 
         // find catch all route
         return routes.find((r) => !r.url)?.uuid;
-    }, [currentPath, routes])
+    }, [currentPath, routes]);
 
-    const addRoute = useCallback((route: RouterData) => {
-        const currentRoute = routes.find((r) => r.url === route.url)
+    const addRoute = useCallback(
+        (route: RouterData) => {
+            const currentRoute = routes.find((r) => r.url === route.url);
 
-        if (!currentRoute) {
-            setRoutes(current => [...current, route])
-        }
-    }, [routes])
+            if (!currentRoute) {
+                setRoutes((current) => [...current, route]);
+            }
+        },
+        [routes],
+    );
 
     const navigateTo = useCallback((url: string) => {
-        window.history.pushState({}, '', url);
-        window.dispatchEvent(new PopStateEvent('popstate'));
-    }, [])
+        window.history.pushState({}, "", url);
+        window.dispatchEvent(new PopStateEvent("popstate"));
+    }, []);
 
     const navigateBack = useCallback(() => {
         window.history.back();
-    }, [])
+    }, []);
 
     const values: RouterContextType = useMemo(() => {
         return {
@@ -59,10 +68,12 @@ export default function Router({ children }: PropsWithChildren) {
             currentRoute,
             navigateTo,
             navigateBack,
-        }
-    }, [addRoute, navigateTo, navigateBack, currentRoute])
+        };
+    }, [addRoute, navigateTo, navigateBack, currentRoute]);
 
-    return <RouterContext.Provider value={values}>
-        {children}
-    </RouterContext.Provider>
+    return (
+        <RouterContext.Provider value={values}>
+            {children}
+        </RouterContext.Provider>
+    );
 }
