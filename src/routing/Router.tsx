@@ -7,6 +7,20 @@ export default function Router({ children }: PropsWithChildren) {
     const [routes, setRoutes] = useState<RouterData[]>([])
     const [path, setPath] = useState(window.location.pathname);
 
+    const __handleNavEvent = useCallback(() => {
+        const newPath = window.location.pathname;
+        setPath(newPath);
+    }, [])
+
+    useEffect(() => {
+        window.addEventListener('popstate', __handleNavEvent);
+
+        return () => {
+            window.removeEventListener('popstate', __handleNavEvent);
+        };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     const addRoute = useCallback((route: RouterData) => {
         const currentRoute = routes.find((r) => r.url === route.url)
 
@@ -16,7 +30,8 @@ export default function Router({ children }: PropsWithChildren) {
     }, [routes])
 
     const navigateTo = useCallback((url: string) => {
-        return
+        window.history.pushState({}, '', url);
+        window.dispatchEvent(new PopStateEvent('popstate'));
     }, [])
 
     const values: RouterContextType = useMemo(() => {
