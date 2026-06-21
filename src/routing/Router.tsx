@@ -1,20 +1,33 @@
-import { useMemo } from "react"
+import { useCallback, useEffect, useMemo, useState, type PropsWithChildren } from "react"
 import { RouterContext } from "./context"
 import type RouterData from "../types/RouteData"
 import type RouterContextType from "../types/RouterContextType"
 
-interface RouterProps {
-    readonly routes: RouterData[];
-}
+export default function Router({ children }: PropsWithChildren) {
+    const [routes, setRoutes] = useState<RouterData[]>([])
+    const [path, setPath] = useState(window.location.pathname);
 
-export default function Router({routes}: RouterProps) {
-    const values: RouterContextType = useMemo(() => {
-        return {
-            
+    const addRoute = useCallback((route: RouterData) => {
+        const currentRoute = routes.find((r) => r.url === route.url)
+
+        if (!currentRoute) {
+            setRoutes(current => [...current, route])
         }
+    }, [routes])
+
+    const navigateTo = useCallback((url: string) => {
+        return
     }, [])
 
+    const values: RouterContextType = useMemo(() => {
+        return {
+            addRoute,
+            path,
+            navigateTo,
+        }
+    }, [addRoute, path, navigateTo])
+
     return <RouterContext.Provider value={values}>
-        {routes[0].component}
+        {children}
     </RouterContext.Provider>
 }
