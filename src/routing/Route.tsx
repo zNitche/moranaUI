@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from "react";
-import useRouter from "./hooks/useRouter";
 import { generateUUID } from "../utils";
+import useRouterContext from "./hooks/useRouterContext";
 
 interface RouteProps {
     readonly url?: string;
@@ -10,14 +10,14 @@ interface RouteProps {
 export default function Route({ url, component }: RouteProps) {
     const routeUUID = useMemo(() => generateUUID(), []);
 
-    const { addRoute, currentRoute } = useRouter();
+    const { addRoute, router } = useRouterContext();
 
     useEffect(() => {
         addRoute({ uuid: routeUUID, url, component });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    if (routeUUID !== currentRoute) {
+    if (routeUUID !== router.currentRoute) {
         return null;
     }
 
