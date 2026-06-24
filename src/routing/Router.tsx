@@ -62,14 +62,21 @@ export default function Router({ children }: PropsWithChildren) {
         window.history.back();
     }, []);
 
+    const router = useMemo(() => {
+        return {
+            currentRoute: currentRoute,
+            path: currentPath,
+        }
+    }, [currentRoute, currentPath])
+
     const values: RouterContextType = useMemo(() => {
         return {
             addRoute,
-            currentRoute,
+            router,
             navigateTo,
             navigateBack,
         };
-    }, [addRoute, navigateTo, navigateBack, currentRoute]);
+    }, [addRoute, navigateTo, navigateBack, router]);
 
     return (
         <RouterContext.Provider value={values}>
