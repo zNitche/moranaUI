@@ -6,7 +6,7 @@ import {
     type PropsWithChildren,
 } from "react";
 import { RouterContext } from "./context";
-import type RouterData from "../types/RouteData";
+import type RouteData from "../types/RouteData";
 import type RouterContextType from "../types/RouterContextType";
 
 export default function Router({ children }: PropsWithChildren) {

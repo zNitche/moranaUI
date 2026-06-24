@@ -3,7 +3,7 @@ import type Router from "./Router";
 
 export default interface RouterContextType {
     router: Router;
-    addRoute: (route: RouterData) => void;
+    __addRoute: (route: RouteData) => void;
     navigateTo: (url: string) => void;
     navigateBack: () => void;
 }
