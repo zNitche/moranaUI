@@ -8,9 +8,10 @@ import {
 import { RouterContext } from "./context";
 import type RouteData from "../types/RouteData";
 import type RouterContextType from "../types/RouterContextType";
+import { tokenizeUrl } from "../utils/url";
 
 export default function Router({ children }: PropsWithChildren) {
-    const [routes, setRoutes] = useState<RouterData[]>([]);
+    const [routes, setRoutes] = useState<RouteData[]>([]);
     const [currentPath, setCurrentPath] = useState(window.location.pathname);
 
     const __handleNavEvent = useCallback(() => {
@@ -27,7 +28,6 @@ export default function Router({ children }: PropsWithChildren) {
     }, []);
 
     const currentRoute = useMemo(() => {
-        // url matching simplified for now
         for (const route of routes) {
             if (!route.url) {
                 continue;
@@ -46,6 +46,9 @@ export default function Router({ children }: PropsWithChildren) {
             const currentRoute = routes.find((r) => r.url === route.url);
 
             if (!currentRoute) {
+                if (route.url && route.url !== "*")
+                    route.tokenizedUrl = tokenizeUrl(route.url);
+
                 setRoutes((current) => [...current, route]);
             }
         },
@@ -65,8 +68,8 @@ export default function Router({ children }: PropsWithChildren) {
         return {
             currentRoute: currentRoute,
             path: currentPath,
-        }
-    }, [currentRoute, currentPath])
+        };
+    }, [currentRoute, currentPath]);
 
     const values: RouterContextType = useMemo(() => {
         return {
