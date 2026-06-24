@@ -8,7 +8,7 @@ import {
 import { RouterContext } from "./context";
 import type RouteData from "../types/RouteData";
 import type RouterContextType from "../types/RouterContextType";
-import { tokenizeUrl } from "../utils/url";
+import { matchTokenizedUrl, tokenizeUrl } from "../utils/url";
 
 export default function Router({ children }: PropsWithChildren) {
     const [routes, setRoutes] = useState<RouteData[]>([]);
@@ -29,12 +29,14 @@ export default function Router({ children }: PropsWithChildren) {
 
     const currentRoute = useMemo(() => {
         for (const route of routes) {
-            if (!route.url) {
+            if (route.url === "*") {
                 continue;
             }
 
-            if (route.url === currentPath) {
-                return route.uuid;
+            if (currentPath && route.tokenizedUrl) {
+                if (matchTokenizedUrl(route.tokenizedUrl, currentPath)) {
+                    return route.uuid;
+                }
             }
         }
 
