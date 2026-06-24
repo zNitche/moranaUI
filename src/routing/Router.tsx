@@ -42,8 +42,8 @@ export default function Router({ children }: PropsWithChildren) {
         return routes.find((r) => !r.url)?.uuid;
     }, [currentPath, routes]);
 
-    const addRoute = useCallback(
-        (route: RouterData) => {
+    const __addRoute = useCallback(
+        (route: RouteData) => {
             const currentRoute = routes.find((r) => r.url === route.url);
 
             if (!currentRoute) {
@@ -71,12 +71,12 @@ export default function Router({ children }: PropsWithChildren) {
 
     const values: RouterContextType = useMemo(() => {
         return {
-            addRoute,
+            __addRoute,
             router,
             navigateTo,
             navigateBack,
         };
-    }, [addRoute, navigateTo, navigateBack, router]);
+    }, [__addRoute, navigateTo, navigateBack, router]);
 
     return (
         <RouterContext.Provider value={values}>

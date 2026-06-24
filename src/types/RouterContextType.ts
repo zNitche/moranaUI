@@ -1,4 +1,4 @@
-import type RouterData from "./RouteData";
+import type RouteData from "./RouteData";
 import type Router from "./Router";
 
 export default interface RouterContextType {
