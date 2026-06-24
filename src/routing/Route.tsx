@@ -9,7 +9,7 @@ import { generateUUID } from "../utils";
 import useRouterContext from "./hooks/useRouterContext";
 
 interface RouteProps {
-    readonly url?: string;
+    readonly url: string;
     readonly component: ComponentType;
     readonly wrapper?: ComponentType<{ children: ReactNode }>;
 }

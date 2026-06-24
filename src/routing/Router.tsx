@@ -38,8 +38,7 @@ export default function Router({ children }: PropsWithChildren) {
             }
         }
 
-        // find catch all route
-        return routes.find((r) => !r.url)?.uuid;
+        return routes.find((r) => r.url === "*")?.uuid;
     }, [currentPath, routes]);
 
     const __addRoute = useCallback(
