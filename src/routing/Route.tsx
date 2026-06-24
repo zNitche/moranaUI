@@ -1,19 +1,30 @@
-import { useEffect, useMemo } from "react";
+import {
+    Fragment,
+    useEffect,
+    useMemo,
+    type ComponentType,
+    type ReactNode,
+} from "react";
 import { generateUUID } from "../utils";
 import useRouterContext from "./hooks/useRouterContext";
 
 interface RouteProps {
     readonly url?: string;
-    readonly component: React.ComponentType;
+    readonly component: ComponentType;
+    readonly wrapper?: ComponentType<{ children: ReactNode }>;
 }
 
-export default function Route({ url, component }: RouteProps) {
+export default function Route({
+    url,
+    component,
+    wrapper = Fragment,
+}: RouteProps) {
     const routeUUID = useMemo(() => generateUUID(), []);
 
-    const { addRoute, router } = useRouterContext();
+    const { __addRoute, router } = useRouterContext();
 
     useEffect(() => {
-        addRoute({ uuid: routeUUID, url, component });
+        __addRoute({ uuid: routeUUID, url, component });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -22,6 +33,11 @@ export default function Route({ url, component }: RouteProps) {
     }
 
     const Component = component;
+    const Wrapper = wrapper;
 
-    return <Component />;
+    return (
+        <Wrapper>
+            <Component />
+        </Wrapper>
+    );
 }
