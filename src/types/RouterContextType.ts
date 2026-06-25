@@ -1,8 +1,8 @@
 import type RouteData from "./RouteData";
-import type Router from "./Router";
+import type RouterProps from "./RouterProps";
 
 export default interface RouterContextType {
-    router: Router;
+    router: RouterProps;
     __addRoute: (route: RouteData) => void;
     navigateTo: (url: string) => void;
     navigateBack: () => void;

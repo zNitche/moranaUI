@@ -28,7 +28,7 @@ export default function Route({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    if (routeUUID !== router.currentRoute) {
+    if (routeUUID !== router.currentRoute?.uuid) {
         return null;
     }
 

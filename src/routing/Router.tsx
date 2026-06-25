@@ -9,13 +9,24 @@ import { RouterContext } from "./context";
 import type RouteData from "../types/RouteData";
 import type RouterContextType from "../types/RouterContextType";
 import { matchTokenizedUrl, tokenizeUrl } from "../utils/url";
+import type RouterCurrentRoute from "../types/RouterCurrentRoute";
+import type RouterProps from "../types/RouterProps";
 
 export default function Router({ children }: PropsWithChildren) {
     const [routes, setRoutes] = useState<RouteData[]>([]);
-    const [currentPath, setCurrentPath] = useState(window.location.pathname);
+    const [currentPath, setCurrentPath] = useState<{
+        path: string;
+        search?: string;
+    }>({
+        path: window.location.pathname,
+        search: window.location.search,
+    });
 
     const __handleNavEvent = useCallback(() => {
-        setCurrentPath(window.location.pathname);
+        setCurrentPath({
+            path: window.location.pathname,
+            search: window.location.search,
+        });
     }, []);
 
     useEffect(() => {
@@ -78,10 +89,11 @@ export default function Router({ children }: PropsWithChildren) {
         window.history.back();
     }, []);
 
-    const router = useMemo(() => {
+    const router: RouterProps = useMemo(() => {
         return {
             currentRoute: currentRoute,
-            path: currentPath,
+            path: currentPath.path,
+            search: currentPath.search,
         };
     }, [currentRoute, currentPath]);
 
