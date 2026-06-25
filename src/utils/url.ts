@@ -1,7 +1,9 @@
 import type RouteUrlToken from "../types/RouteUrlToken";
 
 export function splitPath(path: string): string[] {
-    return path.split("/").filter((p) => !!p);
+    const urlObj = new URL(path, window.location.origin);
+
+    return urlObj.pathname.split("/").filter((p) => !!p);
 }
 
 export function tokenizeUrl(path: string): RouteUrlToken[] | undefined {
