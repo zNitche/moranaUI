@@ -1,2 +1,2 @@
-import MoranaTest from "./TestBanner/MoranaTest";
-export { MoranaTest };
+import MoranaPage from "./MoranaPage/MoranaPage";
+export { MoranaPage };
