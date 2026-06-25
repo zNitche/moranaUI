@@ -22,7 +22,11 @@ export default defineConfig([
             },
         },
         rules: {
-            "@typescript-eslint/no-unsafe-return": "off"
+            "@typescript-eslint/no-unsafe-return": "off",
+            '@typescript-eslint/no-unsafe-member-access': [
+                'error',
+                { 'allowOptionalChaining': true }
+            ],
         }
     },
 ])
