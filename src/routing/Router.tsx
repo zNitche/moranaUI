@@ -80,8 +80,13 @@ export default function Router({ children }: PropsWithChildren) {
         [routes],
     );
 
-    const navigateTo = useCallback((url: string) => {
-        window.history.pushState({}, "", url);
+    const navigateTo = useCallback((url: string, replace: boolean) => {
+        if (replace) {
+            window.history.replaceState({}, "", url);
+        } else {
+            window.history.pushState({}, "", url);
+        }
+
         window.dispatchEvent(new PopStateEvent("popstate"));
     }, []);
 

@@ -8,7 +8,7 @@ export const RouterContext = createContext<RouterContextType>({
         throw new Error("Function not implemented");
     },
     router: { currentRoute: undefined, path: "" },
-    navigateTo(_url: string): void {
+    navigateTo(_url: string, _replace: boolean ): void {
         throw new Error("Function not implemented");
     },
     navigateBack(): void {
