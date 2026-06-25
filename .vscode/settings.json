@@ -1,6 +1,4 @@
 {
     "typescript.tsdk": "node_modules/typescript/lib",
     "eslint.useFlatConfig": true,
-    // workaround for eslint extension error
-    "eslint.experimental.useFlatConfig": null,
 }

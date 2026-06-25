@@ -1,15 +1,27 @@
 {
-  "compilerOptions": {
-    "target": "es2025",
-    "declaration": true,
-    "emitDeclarationOnly": true,
-    "outDir": "dist/types",
-    "rootDir": "src",
-    "jsx": "react-jsx",
-    "isolatedModules": true,
-    "module": "esnext",
-    "moduleResolution": "bundler"
-  },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist", "example", "vite_plugins"]
+    "compilerOptions": {
+        "target": "es2025",
+        "declaration": true,
+        "emitDeclarationOnly": true,
+        "outDir": "dist/types",
+        "rootDir": "src",
+        "jsx": "react-jsx",
+        "paths": {
+            "@root/*": [
+                "./src/*"
+            ]
+        },
+        "isolatedModules": true,
+        "module": "esnext",
+        "moduleResolution": "bundler"
+    },
+    "include": [
+        "src"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist",
+        "example",
+        "vite_plugins"
+    ]
 }
