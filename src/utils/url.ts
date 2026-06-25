@@ -61,3 +61,20 @@ export function matchTokenizedUrl(
 
     return returnData;
 }
+
+export function buildUrl(
+    path: string,
+    params: Record<string, string | number | boolean | []>,
+) {
+    const urlObj = new URL(path, window.location.origin);
+
+    for (const [key, val] of Object.entries(params)) {
+        if (Array.isArray(val)) {
+            val.forEach((item) => urlObj.searchParams.append(key, item));
+        } else {
+            urlObj.searchParams.append(key, val.toString());
+        }
+    }
+
+    return urlObj.pathname + urlObj.search;
+}
