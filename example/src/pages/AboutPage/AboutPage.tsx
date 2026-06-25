@@ -1,12 +1,14 @@
-import { useRouter } from "moranaui";
+import { useRouter, MoranaPage } from "moranaui";
 
 export default function AboutPage() {
     const { navigateTo } = useRouter();
 
     return (
-        <div>
-            <div>About Page</div>
-            <div onClick={() => navigateTo("/")}>nav to home</div>
-        </div>
+        <MoranaPage>
+            <div>
+                <div>About Page</div>
+                <div onClick={() => navigateTo("/", false)}>nav to home</div>
+            </div>
+        </MoranaPage>
     );
 }
