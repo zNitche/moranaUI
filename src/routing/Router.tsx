@@ -27,20 +27,32 @@ export default function Router({ children }: PropsWithChildren) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const currentRoute = useMemo(() => {
+    const currentRoute: RouterCurrentRoute = useMemo(() => {
+        const responseData: RouterCurrentRoute = {};
+
         for (const route of routes) {
             if (route.url === "*") {
                 continue;
             }
 
             if (currentPath && route.tokenizedUrl) {
-                if (matchTokenizedUrl(route.tokenizedUrl, currentPath)) {
-                    return route.uuid;
+                const pathMatchData = matchTokenizedUrl(
+                    route.tokenizedUrl,
+                    currentPath.path,
+                );
+
+                if (pathMatchData.isMatching) {
+                    responseData.uuid = route.uuid;
+                    responseData.pathParams = pathMatchData.pathParams;
+
+                    break;
                 }
             }
         }
 
-        return routes.find((r) => r.url === "*")?.uuid;
+        responseData.uuid ??= routes.find((r) => r.url === "*")?.uuid;
+
+        return responseData;
     }, [currentPath, routes]);
 
     const __addRoute = useCallback(

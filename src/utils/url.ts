@@ -1,4 +1,5 @@
 import type RouteUrlToken from "../types/RouteUrlToken";
+import type UrlMatchResponse from "../types/UrlMatchResponse";
 
 export function splitPath(path: string): string[] {
     const urlObj = new URL(path, window.location.origin);
@@ -22,33 +23,41 @@ export function tokenizeUrl(path: string): RouteUrlToken[] | undefined {
 export function matchTokenizedUrl(
     routePath: RouteUrlToken[],
     currentPath: string,
-): boolean {
+): UrlMatchResponse {
     const splitCurrentPath = splitPath(currentPath);
 
+    const returnData: UrlMatchResponse = {
+        isMatching: false,
+        pathParams: undefined,
+    };
+
     if (routePath.length !== splitCurrentPath.length) {
-        return false;
+        return returnData;
     }
 
-    let check = true;
+    const params: Record<string, string> = {};
 
     for (let ind = 0; ind < routePath.length; ind++) {
         const baseToken = routePath.at(ind);
         const targetUrlSlice = splitCurrentPath.at(ind);
 
         if (!baseToken || !splitCurrentPath) {
-            check = false;
-            break;
+            return returnData;
         }
 
         if (baseToken.isPathParam) {
-            continue;
+            if (baseToken.pathParamName && targetUrlSlice) {
+                params[baseToken.pathParamName] = targetUrlSlice;
+            }
         } else {
             if (baseToken.token !== targetUrlSlice) {
-                check = false;
-                break;
+                return returnData;
             }
         }
     }
 
-    return check;
+    returnData.isMatching = true;
+    returnData.pathParams = params;
+
+    return returnData;
 }
