@@ -12,6 +12,7 @@ import type RouterCurrentRoute from "../types/RouterCurrentRoute";
 import type RouterProps from "../types/RouterProps";
 import type { NavigationState } from "../types/NavigationState";
 import { RouterContext } from "./context";
+import useMoranaAppContext from "@root/core/hooks/useMoranaAppContext";
 
 export default function Router({ children }: PropsWithChildren) {
     const [routes, setRoutes] = useState<RouteData[]>([]);
@@ -27,6 +28,8 @@ export default function Router({ children }: PropsWithChildren) {
         search: window.location.search,
     });
 
+    const { navAnimationBuilder } = useMoranaAppContext();
+
     const __handleNavEvent = useCallback(() => {
         setNavigationState("out");
 
@@ -40,10 +43,11 @@ export default function Router({ children }: PropsWithChildren) {
                 setNavigationState("in");
             },
 
-            200,
+            navAnimationBuilder?.duration ?? 200,
         );
-    }, []);
+    }, [navAnimationBuilder]);
 
+    // clean animation state
     useEffect(() => {
         if (navigationState === undefined) {
             return;
@@ -54,9 +58,11 @@ export default function Router({ children }: PropsWithChildren) {
                 setNavigationState(undefined);
             },
 
-            500,
+            navAnimationBuilder?.duration
+                ? navAnimationBuilder.duration * 2
+                : 400,
         );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPath.path]);
 
     useEffect(() => {

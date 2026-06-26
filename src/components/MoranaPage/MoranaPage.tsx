@@ -2,9 +2,11 @@ import { useMemo, type PropsWithChildren } from "react";
 import classes from "./MoranaPage.module.css";
 import { clsx } from "@root/utils";
 import { useRouter } from "@root/routing";
+import useMoranaAppContext from "@root/core/hooks/useMoranaAppContext";
 
 export default function MoranaPage({ children }: PropsWithChildren) {
     const { router } = useRouter();
+    const { navAnimationBuilder } = useMoranaAppContext();
 
     const classForNavState = useMemo(() => {
         if (!router?.navigationState) {
@@ -13,18 +15,24 @@ export default function MoranaPage({ children }: PropsWithChildren) {
 
         switch (router?.navigationState) {
             case "in":
-                return classes.fadeIn;
+                return navAnimationBuilder?.enterAnimation ?? classes.fadeIn;
 
             case "out":
-                return classes.fadeOut;
+                return navAnimationBuilder?.exitAnimation ?? classes.fadeOut;
 
             default:
                 return undefined;
         }
-    }, [router?.navigationState]);
+    }, [router?.navigationState, navAnimationBuilder]);
 
     return (
-        <div className={clsx(classes.moranaPage, classForNavState)}>
+        <div
+            className={clsx(
+                classes.moranaPage,
+                classForNavState,
+                navAnimationBuilder?.wrapperClassName,
+            )}
+        >
             {children}
         </div>
     );
