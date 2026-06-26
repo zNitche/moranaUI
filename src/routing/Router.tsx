@@ -5,15 +5,20 @@ import {
     useState,
     type PropsWithChildren,
 } from "react";
-import { RouterContext } from "./context";
 import type RouteData from "../types/RouteData";
 import type RouterContextType from "../types/RouterContextType";
 import { matchTokenizedUrl, tokenizeUrl } from "../utils/url";
 import type RouterCurrentRoute from "../types/RouterCurrentRoute";
 import type RouterProps from "../types/RouterProps";
+import type { NavigationState } from "../types/NavigationState";
+import { RouterContext } from "./context";
 
 export default function Router({ children }: PropsWithChildren) {
     const [routes, setRoutes] = useState<RouteData[]>([]);
+
+    const [navigationState, setNavigationState] =
+        useState<NavigationState>(undefined);
+
     const [currentPath, setCurrentPath] = useState<{
         path: string;
         search?: string;
@@ -23,11 +28,36 @@ export default function Router({ children }: PropsWithChildren) {
     });
 
     const __handleNavEvent = useCallback(() => {
-        setCurrentPath({
-            path: window.location.pathname,
-            search: window.location.search,
-        });
+        setNavigationState("out");
+
+        setTimeout(
+            () => {
+                setCurrentPath({
+                    path: window.location.pathname,
+                    search: window.location.search,
+                });
+
+                setNavigationState("in");
+            },
+
+            200,
+        );
     }, []);
+
+    useEffect(() => {
+        if (navigationState === undefined) {
+            return;
+        }
+
+        setTimeout(
+            () => {
+                setNavigationState(undefined);
+            },
+
+            500,
+        );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentPath.path]);
 
     useEffect(() => {
         window.addEventListener("popstate", __handleNavEvent);
@@ -99,8 +129,9 @@ export default function Router({ children }: PropsWithChildren) {
             currentRoute: currentRoute,
             path: currentPath.path,
             search: currentPath.search,
+            navigationState: navigationState,
         };
-    }, [currentRoute, currentPath]);
+    }, [currentRoute, currentPath, navigationState]);
 
     const values: RouterContextType = useMemo(() => {
         return {
