@@ -1,17 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+import type RouteData from "@root/types/RouteData";
+import type RouterContextType from "@root/types/RouterContextType";
 import { createContext } from "react";
-import type RouterContextType from "../types/RouterContextType";
-import type RouteData from "../types/RouteData";
 
 export const RouterContext = createContext<RouterContextType>({
-    __addRoute(_route: RouteData): void {
-        throw new Error("Function not implemented");
-    },
-    router: { currentRoute: undefined, path: "" },
-    navigateTo(_url: string, _replace: boolean ): void {
-        throw new Error("Function not implemented");
-    },
-    navigateBack(): void {
-        throw new Error("Function not implemented");
-    },
+    __addRoute: (_route: RouteData) => undefined,
+    router: { currentRoute: undefined, path: "", navigationState: undefined },
+    navigateTo: (_url: string, _replace: boolean) => undefined,
+    navigateBack: () => undefined,
 });
