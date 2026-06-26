@@ -1,2 +1,2 @@
-import MoranaApp from "./MoranaApp";
+import MoranaApp from "./MoranaApp/MoranaApp";
 export { MoranaApp };

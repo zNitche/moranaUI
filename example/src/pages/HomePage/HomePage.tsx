@@ -1,18 +1,42 @@
-import { useRouter, MoranaPage } from "moranaui";
+import {
+    useRouter,
+    MoranaPage,
+    buildUrl,
+    MoranaContent,
+    MoranaHeader,
+} from "moranaui";
 
 export default function HomePage() {
     const { navigateTo } = useRouter();
 
     return (
         <MoranaPage>
-            <div>
+            <MoranaHeader>
+                <span>Home Page</span>
+            </MoranaHeader>
+            <MoranaContent>
                 <div>
-                    <span>Home Page</span>
+                    <div onClick={() => navigateTo("/about", false)}>
+                        nav to about
+                    </div>
+                    <div
+                        onClick={() =>
+                            navigateTo(
+                                buildUrl(
+                                    "/test/idhere/param/where/qhere/pass",
+                                    {
+                                        q1: "param",
+                                        q2: ["test", "1"],
+                                    },
+                                ),
+                                true,
+                            )
+                        }
+                    >
+                        nav to params
+                    </div>
                 </div>
-                <div onClick={() => navigateTo("/about", false)}>
-                    nav to about
-                </div>
-            </div>
+            </MoranaContent>
         </MoranaPage>
     );
 }

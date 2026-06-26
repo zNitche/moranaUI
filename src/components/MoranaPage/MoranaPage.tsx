@@ -15,10 +15,10 @@ export default function MoranaPage({ children }: PropsWithChildren) {
 
         switch (router?.navigationState) {
             case "in":
-                return navAnimationBuilder?.enterAnimation ?? classes.fadeIn;
+                return navAnimationBuilder?.enterAnimation;
 
             case "out":
-                return navAnimationBuilder?.exitAnimation ?? classes.fadeOut;
+                return navAnimationBuilder?.exitAnimation;
 
             default:
                 return undefined;

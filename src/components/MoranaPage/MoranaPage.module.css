@@ -5,31 +5,3 @@
     width: 100%;
     box-sizing: border-box;
 }
-
-.fadeIn {
-    animation: fadeInKeyframes 0.2s forwards;
-}
-
-.fadeOut {
-    animation: fadeOutKeyframes 0.2s forwards;
-}
-
-@keyframes fadeInKeyframes {
-    0% {
-        opacity: 0;
-    }
-
-    100% {
-        opacity: 1;
-    }
-}
-
-@keyframes fadeOutKeyframes {
-    0% {
-        opacity: 1;
-    }
-
-    100% {
-        opacity: 0;
-    }
-}
