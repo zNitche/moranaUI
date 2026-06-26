@@ -31,6 +31,10 @@ export default function Router({ children }: PropsWithChildren) {
     const { navAnimationBuilder } = useMoranaAppContext();
 
     const __handleNavEvent = useCallback(() => {
+        if (navigationState !== undefined) {
+            return;
+        }
+
         setNavigationState("out");
 
         setTimeout(
@@ -45,7 +49,7 @@ export default function Router({ children }: PropsWithChildren) {
 
             navAnimationBuilder?.duration ?? 200,
         );
-    }, [navAnimationBuilder]);
+    }, [navAnimationBuilder, navigationState]);
 
     // clean animation state
     useEffect(() => {
@@ -59,8 +63,8 @@ export default function Router({ children }: PropsWithChildren) {
             },
 
             navAnimationBuilder?.duration
-                ? navAnimationBuilder.duration * 2
-                : 400,
+                ? navAnimationBuilder.duration * 2 + 100
+                : 500,
         );
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPath.path]);
