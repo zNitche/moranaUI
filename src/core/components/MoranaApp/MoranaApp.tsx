@@ -1,8 +1,8 @@
 import { useMemo, type PropsWithChildren } from "react";
-import { MoranaAppContext } from "../context";
 import classes from "./MorannaApp.module.css";
 import type NavAnimationBuilder from "@root/types/NavAnimationBuilder";
 import type MoranaAppContextType from "@root/types/MoranaAppContextType";
+import { MoranaAppContext } from "@root/core/context";
 
 const defaultNavAnimationBuilder: NavAnimationBuilder = {
     duration: 200,
