@@ -1,4 +1,4 @@
-import { useEffect, type PropsWithChildren } from "react";
+import { useLayoutEffect, type PropsWithChildren } from "react";
 import classes from "./MoranaHeader.module.css";
 import { clsx } from "@root/utils";
 import useMoranaPageContext from "@root/core/hooks/useMoranaPageContext";
@@ -19,7 +19,7 @@ export default function MoranaHeader({
         updatePageStructuralComponentsRegistry,
     } = useMoranaPageContext();
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         updatePageStructuralComponentsRegistry("header", true);
 
         return () => updatePageStructuralComponentsRegistry("header", false);

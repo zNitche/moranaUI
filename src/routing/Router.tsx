@@ -1,6 +1,7 @@
 import {
     useCallback,
     useEffect,
+    useLayoutEffect,
     useMemo,
     useState,
     type PropsWithChildren,
@@ -69,7 +70,7 @@ export default function Router({ children }: PropsWithChildren) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPath.path]);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         window.addEventListener("popstate", __handleNavEvent);
 
         return () => {
