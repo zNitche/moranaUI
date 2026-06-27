@@ -4,6 +4,7 @@ import {
     useSearchParams,
     MoranaPage,
 } from "moranaui";
+import Content from "../../components/Content/Content";
 
 export default function ParamsPage() {
     const { navigateTo } = useRouter();
@@ -16,8 +17,12 @@ export default function ParamsPage() {
 
     return (
         <MoranaPage>
-            <div>Params Page</div>
-            <div onClick={() => navigateTo("/", false)}>nav to home</div>
+            <div>
+                <div>Params Page</div>
+            </div>
+            <Content>
+                <div onClick={() => navigateTo("/", false)}>nav to home</div>
+            </Content>
         </MoranaPage>
     );
 }

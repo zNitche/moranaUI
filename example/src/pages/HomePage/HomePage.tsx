@@ -1,21 +1,18 @@
-import {
-    useRouter,
-    MoranaPage,
-    buildUrl,
-    MoranaContent,
-    MoranaHeader,
-} from "moranaui";
+import { useRouter, MoranaPage, buildUrl } from "moranaui";
+import classes from "./HomePage.module.css";
+import Header from "../../components/Header/Header";
+import Content from "../../components/Content/Content";
 
 export default function HomePage() {
     const { navigateTo } = useRouter();
 
     return (
         <MoranaPage>
-            <MoranaHeader>
-                <span>Home Page</span>
-            </MoranaHeader>
-            <MoranaContent>
-                <div>
+            <Header>
+                <div>Home Page</div>
+            </Header>
+            <Content>
+                <div className={classes.homePage}>
                     <div onClick={() => navigateTo("/about", false)}>
                         nav to about
                     </div>
@@ -36,7 +33,7 @@ export default function HomePage() {
                         nav to params
                     </div>
                 </div>
-            </MoranaContent>
+            </Content>
         </MoranaPage>
     );
 }
