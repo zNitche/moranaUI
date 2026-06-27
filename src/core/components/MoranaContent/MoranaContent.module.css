@@ -1,3 +1,4 @@
 .moranaContent {
-    
+    display: flex;
+    flex-direction: column;
 }
