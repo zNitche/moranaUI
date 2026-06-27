@@ -1,7 +1,8 @@
-import { useLayoutEffect, type PropsWithChildren } from "react";
+import { type PropsWithChildren } from "react";
 import classes from "./MoranaContent.module.css";
 import { clsx } from "@root/utils";
 import useMoranaPageContext from "@root/core/hooks/useMoranaPageContext";
+import useRegisterPageComponent from "@root/core/hooks/useRegisterPageComponent";
 
 interface MoranaContentProps {
     readonly className?: string;
@@ -13,17 +14,9 @@ export default function MoranaContent({
     className,
     childrenClassName,
 }: PropsWithChildren<MoranaContentProps>) {
-    const {
-        classForNavState,
-        shouldAnimatePage,
-        updatePageStructuralComponentsRegistry,
-    } = useMoranaPageContext();
+    const { classForNavState, shouldAnimatePage } = useMoranaPageContext();
 
-    useLayoutEffect(() => {
-        updatePageStructuralComponentsRegistry("content", true);
-
-        return () => updatePageStructuralComponentsRegistry("content", false);
-    }, []);
+    useRegisterPageComponent({ componentType: "content" });
 
     return (
         <div className={clsx(classes.moranaContent, className)}>

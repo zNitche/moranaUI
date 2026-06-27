@@ -1,3 +1,5 @@
+import type { PageStructuralComponentType } from "./PageStructuralComponentType";
+
 export default interface MoranaPageContextType {
     classForNavState?: string;
     pageStructuralComponentsRegistry: {
@@ -5,7 +7,7 @@ export default interface MoranaPageContextType {
         content: boolean;
     };
     updatePageStructuralComponentsRegistry: (
-        type: "header" | "content",
+        type: PageStructuralComponentType,
         val: boolean,
     ) => void;
     shouldAnimatePage: boolean;

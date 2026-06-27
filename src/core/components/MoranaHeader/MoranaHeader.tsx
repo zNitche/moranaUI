@@ -1,7 +1,8 @@
-import { useLayoutEffect, type PropsWithChildren } from "react";
+import { type PropsWithChildren } from "react";
 import classes from "./MoranaHeader.module.css";
 import { clsx } from "@root/utils";
 import useMoranaPageContext from "@root/core/hooks/useMoranaPageContext";
+import useRegisterPageComponent from "@root/core/hooks/useRegisterPageComponent";
 
 interface MoranaHeaderProps {
     readonly className?: string;
@@ -13,17 +14,9 @@ export default function MoranaHeader({
     className,
     childrenClassName,
 }: PropsWithChildren<MoranaHeaderProps>) {
-    const {
-        classForNavState,
-        shouldAnimatePage,
-        updatePageStructuralComponentsRegistry,
-    } = useMoranaPageContext();
+    const { classForNavState, shouldAnimatePage } = useMoranaPageContext();
 
-    useLayoutEffect(() => {
-        updatePageStructuralComponentsRegistry("header", true);
-
-        return () => updatePageStructuralComponentsRegistry("header", false);
-    }, []);
+    useRegisterPageComponent({ componentType: "header" });
 
     return (
         <div className={clsx(classes.moranaHeader, className)}>

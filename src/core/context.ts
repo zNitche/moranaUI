@@ -1,5 +1,6 @@
 import type MoranaAppContextType from "@root/types/MoranaAppContextType";
 import type MoranaPageContextType from "@root/types/MoranaPageContextType";
+import type { PageStructuralComponentType } from "@root/types/PageStructuralComponentType";
 import { createContext } from "react";
 
 export const MoranaAppContext = createContext<MoranaAppContextType>({
@@ -9,7 +10,7 @@ export const MoranaAppContext = createContext<MoranaAppContextType>({
 export const MoranaPageContext = createContext<MoranaPageContextType>({
     classForNavState: undefined,
     updatePageStructuralComponentsRegistry: (
-        _type: "header" | "content",
+        _type: PageStructuralComponentType,
         _val: boolean,
     ) => undefined,
     pageStructuralComponentsRegistry: {

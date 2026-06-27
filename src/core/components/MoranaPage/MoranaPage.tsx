@@ -5,6 +5,7 @@ import { useRouter } from "@root/routing";
 import useMoranaAppContext from "@root/core/hooks/useMoranaAppContext";
 import type MoranaPageContextType from "@root/types/MoranaPageContextType";
 import { MoranaPageContext } from "@root/core/context";
+import type { PageStructuralComponentType } from "@root/types/PageStructuralComponentType";
 
 export default function MoranaPage({ children }: PropsWithChildren) {
     const { router } = useRouter();
@@ -19,7 +20,7 @@ export default function MoranaPage({ children }: PropsWithChildren) {
     }>({ header: false, content: false });
 
     const updatePageStructuralComponentsRegistry = useCallback(
-        (type: "header" | "content", val: boolean) => {
+        (type: PageStructuralComponentType, val: boolean) => {
             switch (type) {
                 case "content":
                     setPageStructuralComponentsRegistry((current) => {
