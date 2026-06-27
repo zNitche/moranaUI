@@ -3,6 +3,8 @@ import classes from "./MoranaPage.module.css";
 import { clsx } from "@root/utils";
 import { useRouter } from "@root/routing";
 import useMoranaAppContext from "@root/core/hooks/useMoranaAppContext";
+import type MoranaPageContextType from "@root/types/MoranaPageContextType";
+import { MoranaPageContext } from "@root/core/context";
 
 export default function MoranaPage({ children }: PropsWithChildren) {
     const { router } = useRouter();
@@ -25,15 +27,21 @@ export default function MoranaPage({ children }: PropsWithChildren) {
         }
     }, [router?.navigationState, navAnimationBuilder]);
 
+    const values: MoranaPageContextType = useMemo(() => {
+        return { classForNavState };
+    }, [classForNavState]);
+
     return (
-        <div
-            className={clsx(
-                classes.moranaPage,
-                classForNavState,
-                navAnimationBuilder?.wrapperClassName,
-            )}
-        >
-            {children}
-        </div>
+        <MoranaPageContext.Provider value={values}>
+            <div
+                className={clsx(
+                    classes.moranaPage,
+                    classForNavState,
+                    navAnimationBuilder?.wrapperClassName,
+                )}
+            >
+                {children}
+            </div>
+        </MoranaPageContext.Provider>
     );
 }
