@@ -14,5 +14,6 @@ export default function useRouter() {
         router: context.router,
         navigateTo: context.navigateTo,
         navigateBack: context.navigateBack,
+        clearRouterCache: context.clearRouterCache,
     };
 }

@@ -14,9 +14,11 @@ import type RouterProps from "../types/RouterProps";
 import type { NavigationState } from "../types/NavigationState";
 import { RouterContext } from "./context";
 import useMoranaAppContext from "@root/core/hooks/useMoranaAppContext";
+import type { RouterCache } from "@root/types/RouterCache";
 
 export default function Router({ children }: PropsWithChildren) {
     const [routes, setRoutes] = useState<RouteData[]>([]);
+    const [routerCache, setRouterCache] = useState<RouterCache>([]);
 
     const [navigationState, setNavigationState] =
         useState<NavigationState>(undefined);
@@ -30,6 +32,20 @@ export default function Router({ children }: PropsWithChildren) {
     });
 
     const { navAnimationBuilder } = useMoranaAppContext();
+
+    const __addToRouterCache = useCallback((uuid: string) => {
+        if (routerCache.includes(uuid)) {
+            return;
+        }
+
+        queueMicrotask(() =>
+            setRouterCache((current) => {
+                return [...current, uuid];
+            }),
+        );
+    }, [routerCache]);
+
+    const clearRouterCache = useCallback(() => setRouterCache([]), []);
 
     const __handleNavEvent = useCallback(() => {
         if (navigationState !== undefined) {
@@ -147,11 +163,22 @@ export default function Router({ children }: PropsWithChildren) {
     const values: RouterContextType = useMemo(() => {
         return {
             __addRoute,
+            clearRouterCache,
+            __addToRouterCache,
             router,
             navigateTo,
             navigateBack,
+            routerCache,
         };
-    }, [__addRoute, navigateTo, navigateBack, router]);
+    }, [
+        __addRoute,
+        navigateTo,
+        navigateBack,
+        router,
+        routerCache,
+        __addToRouterCache,
+        clearRouterCache,
+    ]);
 
     return (
         <RouterContext.Provider value={values}>

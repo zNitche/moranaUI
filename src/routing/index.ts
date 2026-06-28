@@ -1,7 +1,7 @@
 import Router from "./Router";
 export { Router };
 
-import Route from "./Route";
+import Route from "./components/Route/Route";
 export { Route };
 
 import useRouter from "./hooks/useRouter";

@@ -4,6 +4,9 @@ import { createContext } from "react";
 
 export const RouterContext = createContext<RouterContextType>({
     __addRoute: (_route: RouteData) => undefined,
+    routerCache: [],
+    __addToRouterCache: (_uuid: string) => undefined,
+    clearRouterCache: () => undefined,
     router: { currentRoute: undefined, path: "", navigationState: undefined },
     navigateTo: (_url: string, _replace: boolean) => undefined,
     navigateBack: () => undefined,
