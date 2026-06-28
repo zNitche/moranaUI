@@ -33,17 +33,20 @@ export default function Router({ children }: PropsWithChildren) {
 
     const { navAnimationBuilder } = useMoranaAppContext();
 
-    const __addToRouterCache = useCallback((uuid: string) => {
-        if (routerCache.includes(uuid)) {
-            return;
-        }
+    const __addToRouterCache = useCallback(
+        (uuid: string) => {
+            if (routerCache.includes(uuid)) {
+                return;
+            }
 
-        queueMicrotask(() =>
-            setRouterCache((current) => {
-                return [...current, uuid];
-            }),
-        );
-    }, [routerCache]);
+            queueMicrotask(() =>
+                setRouterCache((current) => {
+                    return [...current, uuid];
+                }),
+            );
+        },
+        [routerCache],
+    );
 
     const clearRouterCache = useCallback(() => setRouterCache([]), []);
 
@@ -137,15 +140,25 @@ export default function Router({ children }: PropsWithChildren) {
         [routes],
     );
 
-    const navigateTo = useCallback((url: string, replace: boolean) => {
-        if (replace) {
-            window.history.replaceState({}, "", url);
-        } else {
-            window.history.pushState({}, "", url);
-        }
+    const navigateTo = useCallback(
+        ({
+            path,
+            replace,
+        }: {
+            path: string;
+            replace?: boolean;
+        }) => {
+            if (replace) {
+                setRouterCache([]);
+                window.history.replaceState({}, "", path);
+            } else {
+                window.history.pushState({}, "", path);
+            }
 
-        window.dispatchEvent(new PopStateEvent("popstate"));
-    }, []);
+            window.dispatchEvent(new PopStateEvent("popstate"));
+        },
+        [],
+    );
 
     const navigateBack = useCallback(() => {
         window.history.back();

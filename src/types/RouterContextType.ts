@@ -8,6 +8,12 @@ export default interface RouterContextType {
     routerCache: RouterCache;
     __addToRouterCache: (uuid: string) => void;
     clearRouterCache: () => void;
-    navigateTo: (url: string, replace: boolean) => void;
+    navigateTo: ({
+        path,
+        replace,
+    }: {
+        path: string;
+        replace?: boolean;
+    }) => void;
     navigateBack: () => void;
 }

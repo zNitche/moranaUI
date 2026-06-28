@@ -8,6 +8,6 @@ export const RouterContext = createContext<RouterContextType>({
     __addToRouterCache: (_uuid: string) => undefined,
     clearRouterCache: () => undefined,
     router: { currentRoute: undefined, path: "", navigationState: undefined },
-    navigateTo: (_url: string, _replace: boolean) => undefined,
+    navigateTo: (_params: { path: string; replace?: boolean }) => undefined,
     navigateBack: () => undefined,
 });
