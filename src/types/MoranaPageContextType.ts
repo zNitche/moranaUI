@@ -11,4 +11,8 @@ export default interface MoranaPageContextType {
         val: boolean,
     ) => void;
     shouldAnimatePage: boolean;
+    registerLifecycleHook: (
+        type: "enter" | "exit",
+        callback: () => void,
+    ) => void;
 }

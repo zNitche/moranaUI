@@ -9,3 +9,9 @@ export { MoranaHeader };
 
 import MoranaApp from "./components/MoranaApp/MoranaApp";
 export { MoranaApp };
+
+import useMoranaPageEnter from "./hooks/lifecycle/useMoranaPageEnter";
+export { useMoranaPageEnter };
+
+import useMoranaPageExit from "./hooks/lifecycle/useMoranaPageExit";
+export { useMoranaPageExit };

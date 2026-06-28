@@ -1,4 +1,10 @@
-import { useCallback, useMemo, useState, type PropsWithChildren } from "react";
+import {
+    useCallback,
+    useLayoutEffect,
+    useMemo,
+    useState,
+    type PropsWithChildren,
+} from "react";
 import classes from "./MoranaPage.module.css";
 import { clsx } from "@root/utils";
 import { useRouter } from "@root/routing";
@@ -25,6 +31,55 @@ export default function MoranaPage({
         header: boolean;
         content: boolean;
     }>({ header: false, content: false });
+
+    const [lifecycleHooks, setLifecycleHooks] = useState<
+        | {
+              onEnter?: () => void;
+              onExit?: () => void;
+          }
+        | undefined
+    >(undefined);
+
+    const registerLifecycleHook = useCallback(
+        (type: "enter" | "exit", callback: () => void) => {
+            switch (type) {
+                case "enter":
+                    setLifecycleHooks((current) => {
+                        return { ...current, onEnter: callback };
+                    });
+                    return;
+
+                case "exit":
+                    setLifecycleHooks((current) => {
+                        return { ...current, onExit: callback };
+                    });
+                    return;
+
+                default:
+                    return;
+            }
+        },
+        [],
+    );
+
+    useLayoutEffect(() => {
+        if (currentRouteUuid !== router.currentRoute?.uuid) {
+            return;
+        }
+
+        switch (router.navigationState) {
+            case "in":
+                lifecycleHooks?.onEnter?.();
+                return;
+
+            case "out":
+                lifecycleHooks?.onExit?.();
+                return;
+
+            default:
+                return;
+        }
+    }, [router.navigationState, router.currentRoute?.uuid, currentRouteUuid]);
 
     const updatePageStructuralComponentsRegistry = useCallback(
         (type: PageStructuralComponentType, val: boolean) => {
@@ -80,12 +135,14 @@ export default function MoranaPage({
             pageStructuralComponentsRegistry,
             updatePageStructuralComponentsRegistry,
             shouldAnimatePage,
+            registerLifecycleHook,
         };
     }, [
         classForNavState,
         pageStructuralComponentsRegistry,
         updatePageStructuralComponentsRegistry,
         shouldAnimatePage,
+        registerLifecycleHook,
     ]);
 
     return (
