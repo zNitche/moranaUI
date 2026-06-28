@@ -34,6 +34,7 @@ export default function App() {
                 />
                 <Route
                     url="*"
+                    cacheable={false}
                     wrapper={CatchAllWrapper}
                     component={CatchAllPage}
                 />

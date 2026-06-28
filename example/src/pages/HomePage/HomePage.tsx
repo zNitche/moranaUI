@@ -1,4 +1,9 @@
-import { useRouter, MoranaPage, buildUrl } from "moranaui";
+import {
+    useRouter,
+    buildUrl,
+    useMoranaPageEnter,
+    useMoranaPageExit,
+} from "moranaui";
 import classes from "./HomePage.module.css";
 import Header from "../../components/Header/Header";
 import Content from "../../components/Content/Content";
@@ -15,8 +20,11 @@ export default function HomePage() {
         };
     }, []);
 
+    useMoranaPageEnter({ callback: () => console.log("home page enter") });
+    useMoranaPageExit({ callback: () => console.log("home page exit") });
+
     return (
-        <MoranaPage>
+        <>
             <Header>
                 <div>Home Page</div>
             </Header>
@@ -43,6 +51,6 @@ export default function HomePage() {
                     <div onClick={clearRouterCache}>Clear router cache</div>
                 </div>
             </Content>
-        </MoranaPage>
+        </>
     );
 }
