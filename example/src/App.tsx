@@ -11,12 +11,12 @@ import ParamsPage from "./pages/ParamsPage/ParamsPage";
 export default function App() {
     return (
         <MoranaApp
-            // navAnimationBuilder={{
-            //     duration: 1000,
-            //     wrapperClassName: classes.navWrapper,
-            //     enterAnimation: classes.navEnterAnimation,
-            //     exitAnimation: classes.navExitAnimation,
-            // }}
+        // navAnimationBuilder={{
+        //     duration: 1000,
+        //     wrapperClassName: classes.navWrapper,
+        //     enterAnimation: classes.navEnterAnimation,
+        //     exitAnimation: classes.navExitAnimation,
+        // }}
         >
             <Router>
                 <Route
@@ -28,6 +28,7 @@ export default function App() {
                     component={AboutPage}
                 />
                 <Route
+                    cacheable={false}
                     url={"/test/:id/param/:w/:q/pass"}
                     component={ParamsPage}
                 />

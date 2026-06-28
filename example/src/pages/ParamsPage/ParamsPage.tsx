@@ -21,7 +21,7 @@ export default function ParamsPage() {
                 <div>Params Page</div>
             </div>
             <Content>
-                <div onClick={() => navigateTo("/", false)}>nav to home</div>
+                <div onClick={() => navigateTo({ path: "/" })}>nav to home</div>
             </Content>
         </MoranaPage>
     );
