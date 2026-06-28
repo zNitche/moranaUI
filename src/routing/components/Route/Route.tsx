@@ -13,12 +13,14 @@ interface RouteProps {
     readonly url: string;
     readonly component: ComponentType;
     readonly wrapper?: ComponentType<{ children: ReactNode }>;
+    readonly cacheable?: boolean;
 }
 
 export default function Route({
     url,
     component,
     wrapper = Fragment,
+    cacheable = true,
 }: RouteProps) {
     const routeUUID = useMemo(() => generateUUID(), []);
 
@@ -43,8 +45,10 @@ export default function Route({
         if (!inCache && !isCurrentRoute) {
             return;
         }
-
-        __addToRouterCache(routeUUID);
+        
+        if (cacheable) {
+            __addToRouterCache(routeUUID);
+        }
 
         const Component = component;
         const Wrapper = wrapper;
@@ -68,6 +72,7 @@ export default function Route({
         isCurrentRoute,
         routeUUID,
         wrapper,
+        cacheable,
     ]);
 
     return routeComponent;
