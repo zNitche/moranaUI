@@ -7,7 +7,14 @@ import type MoranaPageContextType from "@root/types/MoranaPageContextType";
 import { MoranaPageContext } from "@root/core/context";
 import type { PageStructuralComponentType } from "@root/types/PageStructuralComponentType";
 
-export default function MoranaPage({ children }: PropsWithChildren) {
+interface MoranaPageProps {
+    readonly currentRouteUuid?: string;
+}
+
+export default function MoranaPage({
+    children,
+    currentRouteUuid,
+}: PropsWithChildren<MoranaPageProps>) {
     const { router } = useRouter();
     const { navAnimationBuilder } = useMoranaAppContext();
 

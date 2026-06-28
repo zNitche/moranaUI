@@ -8,12 +8,14 @@ import {
 import classes from "./Route.module.css";
 import useRouterContext from "@root/routing/hooks/useRouterContext";
 import { generateUUID } from "@root/utils";
+import { MoranaPage } from "@root/core";
 
 interface RouteProps {
     readonly url: string;
     readonly component: ComponentType;
     readonly wrapper?: ComponentType<{ children: ReactNode }>;
     readonly cacheable?: boolean;
+    readonly wrapWithPage?: boolean;
 }
 
 export default function Route({
@@ -21,6 +23,7 @@ export default function Route({
     component,
     wrapper = Fragment,
     cacheable = true,
+    wrapWithPage = true,
 }: RouteProps) {
     const routeUUID = useMemo(() => generateUUID(), []);
 
@@ -45,13 +48,15 @@ export default function Route({
         if (!inCache && !isCurrentRoute) {
             return;
         }
-        
+
         if (cacheable) {
             __addToRouterCache(routeUUID);
         }
 
         const Component = component;
         const Wrapper = wrapper;
+
+        const CoreWrapper = wrapWithPage ? MoranaPage : Fragment;
 
         return (
             <div
@@ -60,9 +65,13 @@ export default function Route({
                 key={routeUUID}
                 style={{ display: isCurrentRoute ? "block" : "none" }}
             >
-                <Wrapper>
-                    <Component />
-                </Wrapper>
+                <CoreWrapper
+                    {...(wrapWithPage && { currentRouteUuid: routeUUID })}
+                >
+                    <Wrapper>
+                        <Component />
+                    </Wrapper>
+                </CoreWrapper>
             </div>
         );
     }, [
@@ -73,6 +82,7 @@ export default function Route({
         routeUUID,
         wrapper,
         cacheable,
+        wrapWithPage,
     ]);
 
     return routeComponent;
