@@ -1,6 +1,5 @@
 import {
     useCallback,
-    useEffect,
     useLayoutEffect,
     useMemo,
     useRef,
@@ -82,15 +81,9 @@ export default function Router({ children }: PropsWithChildren) {
         return responseData;
     }, [currentPath, routes]);
 
-    // sync currentRoute Ref + update enter navigation state
+    // sync currentRoute Ref
     useLayoutEffect(() => {
-        currentRouteRef.current = currentRoute;
-
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setNavigationState({
-            type: "enter",
-            target: currentRoute.uuid,
-        });
+        currentRouteRef.current = currentRoute;        
     }, [currentRoute]);
 
     const __handleNavEvent = useCallback(() => {
@@ -110,28 +103,30 @@ export default function Router({ children }: PropsWithChildren) {
                     search: window.location.search,
                 });
             },
-
             navAnimationBuilder?.duration ?? 200,
         );
     }, [navAnimationBuilder?.duration, navigationState]);
 
     // clean animation state
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (navigationState === undefined) {
             return;
         }
 
-        setTimeout(
-            () => {
-                setNavigationState(undefined);
-            },
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setNavigationState({
+            type: "enter",
+            target: currentRoute.uuid,
+        });
 
+        setTimeout(
+            () => setNavigationState(undefined),
             navAnimationBuilder?.duration
-                ? navAnimationBuilder.duration * 2 + 100
-                : 500,
+                ? navAnimationBuilder.duration * 2 + 1500
+                : 1500,
         );
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentPath.path]);
+    }, [currentPath]);
 
     useLayoutEffect(() => {
         window.addEventListener("popstate", __handleNavEvent);
