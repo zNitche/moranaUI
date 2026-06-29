@@ -15,3 +15,6 @@ export { useMoranaPageEnter };
 
 import useMoranaPageExit from "./hooks/lifecycle/useMoranaPageExit";
 export { useMoranaPageExit };
+
+import useIsPageActive from "./hooks/lifecycle/useIsPageActive";
+export { useIsPageActive };
