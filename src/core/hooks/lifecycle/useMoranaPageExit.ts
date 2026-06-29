@@ -1,12 +1,12 @@
 import { useLayoutEffect } from "react";
-import useMoranaPageContext from "../useMoranaPageContext";
+import useRouteContext from "@root/routing/hooks/useRouteContext";
 
 interface MoranaPageExitProps {
     readonly callback: () => void;
 }
 
 export default function useMoranaPageExit({ callback }: MoranaPageExitProps) {
-    const { registerLifecycleHook } = useMoranaPageContext();
+    const { registerLifecycleHook } = useRouteContext();
 
     useLayoutEffect(() => {
         registerLifecycleHook("exit", callback);

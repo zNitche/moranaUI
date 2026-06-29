@@ -1,10 +1,4 @@
-import {
-    useCallback,
-    useLayoutEffect,
-    useMemo,
-    useState,
-    type PropsWithChildren,
-} from "react";
+import { useCallback, useMemo, useState, type PropsWithChildren } from "react";
 import classes from "./MoranaPage.module.css";
 import { clsx } from "@root/utils";
 import { useRouter } from "@root/routing";
@@ -12,17 +6,12 @@ import useMoranaAppContext from "@root/core/hooks/useMoranaAppContext";
 import type MoranaPageContextType from "@root/types/MoranaPageContextType";
 import { MoranaPageContext } from "@root/core/context";
 import type { PageStructuralComponentType } from "@root/types/PageStructuralComponentType";
+import useRouteContext from "@root/routing/hooks/useRouteContext";
 
-interface MoranaPageProps {
-    readonly currentRouteUuid?: string;
-}
-
-export default function MoranaPage({
-    children,
-    currentRouteUuid,
-}: PropsWithChildren<MoranaPageProps>) {
+export default function MoranaPage({ children }: PropsWithChildren) {
     const { router } = useRouter();
     const { navAnimationBuilder } = useMoranaAppContext();
+    const { routeUUID } = useRouteContext();
 
     const [
         pageStructuralComponentsRegistry,
@@ -31,55 +20,6 @@ export default function MoranaPage({
         header: boolean;
         content: boolean;
     }>({ header: false, content: false });
-
-    const [lifecycleHooks, setLifecycleHooks] = useState<
-        | {
-              onEnter?: () => void;
-              onExit?: () => void;
-          }
-        | undefined
-    >(undefined);
-
-    const registerLifecycleHook = useCallback(
-        (type: "enter" | "exit", callback: () => void) => {
-            switch (type) {
-                case "enter":
-                    setLifecycleHooks((current) => {
-                        return { ...current, onEnter: callback };
-                    });
-                    return;
-
-                case "exit":
-                    setLifecycleHooks((current) => {
-                        return { ...current, onExit: callback };
-                    });
-                    return;
-
-                default:
-                    return;
-            }
-        },
-        [],
-    );
-
-    useLayoutEffect(() => {
-        if (currentRouteUuid !== router.currentRoute?.uuid) {
-            return;
-        }
-
-        switch (router.navigationState) {
-            case "in":
-                lifecycleHooks?.onEnter?.();
-                return;
-
-            case "out":
-                lifecycleHooks?.onExit?.();
-                return;
-
-            default:
-                return;
-        }
-    }, [router.navigationState, router.currentRoute?.uuid, currentRouteUuid]);
 
     const updatePageStructuralComponentsRegistry = useCallback(
         (type: PageStructuralComponentType, val: boolean) => {
@@ -101,24 +41,39 @@ export default function MoranaPage({
         [],
     );
 
+    console.log(router.navigationState)
+
     const classForNavState = useMemo(() => {
         if (!router?.navigationState) {
             return undefined;
         }
 
-        switch (router?.navigationState) {
-            case "in":
+        if (router.navigationState?.target !== routeUUID) {
+            return;
+        }
+
+        switch (router?.navigationState?.type) {
+            case "enter":
                 return navAnimationBuilder?.enterAnimation;
 
-            case "out":
+            case "exit":
                 return navAnimationBuilder?.exitAnimation;
 
             default:
                 return undefined;
         }
-    }, [router?.navigationState, navAnimationBuilder]);
+    }, [
+        router.navigationState,
+        routeUUID,
+        navAnimationBuilder?.enterAnimation,
+        navAnimationBuilder?.exitAnimation,
+    ]);
 
     const shouldAnimatePage = useMemo(() => {
+        if (navAnimationBuilder?.animateWholePageOverride) {
+            return true;
+        }
+
         if (
             pageStructuralComponentsRegistry.content ||
             pageStructuralComponentsRegistry.header
@@ -127,7 +82,7 @@ export default function MoranaPage({
         }
 
         return true;
-    }, [pageStructuralComponentsRegistry]);
+    }, [pageStructuralComponentsRegistry, navAnimationBuilder]);
 
     const values: MoranaPageContextType = useMemo(() => {
         return {
@@ -135,14 +90,12 @@ export default function MoranaPage({
             pageStructuralComponentsRegistry,
             updatePageStructuralComponentsRegistry,
             shouldAnimatePage,
-            registerLifecycleHook,
         };
     }, [
         classForNavState,
         pageStructuralComponentsRegistry,
         updatePageStructuralComponentsRegistry,
         shouldAnimatePage,
-        registerLifecycleHook,
     ]);
 
     return (

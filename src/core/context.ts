@@ -18,6 +18,4 @@ export const MoranaPageContext = createContext<MoranaPageContextType>({
         content: false,
     },
     shouldAnimatePage: true,
-    registerLifecycleHook: (_type: "enter" | "exit", _callback: () => void) =>
-        undefined,
 });

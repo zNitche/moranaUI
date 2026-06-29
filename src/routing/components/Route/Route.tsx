@@ -1,21 +1,24 @@
 import {
     Fragment,
+    useCallback,
     useEffect,
+    useLayoutEffect,
     useMemo,
+    useState,
     type ComponentType,
     type ReactNode,
 } from "react";
 import classes from "./Route.module.css";
 import useRouterContext from "@root/routing/hooks/useRouterContext";
 import { generateUUID } from "@root/utils";
-import { MoranaPage } from "@root/core";
+import type RouteContextType from "@root/types/RouteContextType";
+import { RouteContext } from "@root/routing/context";
 
 interface RouteProps {
     readonly url: string;
     readonly component: ComponentType;
     readonly wrapper?: ComponentType<{ children: ReactNode }>;
     readonly cacheable?: boolean;
-    readonly wrapWithPage?: boolean;
 }
 
 export default function Route({
@@ -23,7 +26,6 @@ export default function Route({
     component,
     wrapper = Fragment,
     cacheable = true,
-    wrapWithPage = true,
 }: RouteProps) {
     const routeUUID = useMemo(() => generateUUID(), []);
 
@@ -56,22 +58,18 @@ export default function Route({
         const Component = component;
         const Wrapper = wrapper;
 
-        const CoreWrapper = wrapWithPage ? MoranaPage : Fragment;
-
         return (
             <div
                 className={classes.route}
                 id={routeUUID}
                 key={routeUUID}
-                style={{ display: isCurrentRoute ? "block" : "none" }}
+                style={{
+                    display: isCurrentRoute ? "block" : "none",
+                }}
             >
-                <CoreWrapper
-                    {...(wrapWithPage && { currentRouteUuid: routeUUID })}
-                >
-                    <Wrapper>
-                        <Component />
-                    </Wrapper>
-                </CoreWrapper>
+                <Wrapper>
+                    <Component />
+                </Wrapper>
             </div>
         );
     }, [
@@ -82,8 +80,69 @@ export default function Route({
         routeUUID,
         wrapper,
         cacheable,
-        wrapWithPage,
     ]);
 
-    return routeComponent;
+    const [lifecycleHooks, setLifecycleHooks] = useState<
+        | {
+              onEnter?: () => void;
+              onExit?: () => void;
+          }
+        | undefined
+    >(undefined);
+
+    const registerLifecycleHook = useCallback(
+        (type: "enter" | "exit", callback: () => void) => {
+            switch (type) {
+                case "enter":
+                    setLifecycleHooks((current) => {
+                        return { ...current, onEnter: callback };
+                    });
+                    return;
+
+                case "exit":
+                    setLifecycleHooks((current) => {
+                        return { ...current, onExit: callback };
+                    });
+                    return;
+
+                default:
+                    return;
+            }
+        },
+        [],
+    );
+
+    useLayoutEffect(() => {
+        if (routeUUID !== router.currentRoute?.uuid) {
+            return;
+        }
+
+        switch (router.navigationState?.type) {
+            case "enter":
+                lifecycleHooks?.onEnter?.();
+                return;
+
+            case "exit":
+                lifecycleHooks?.onExit?.();
+                return;
+
+            default:
+                return;
+        }
+    }, [
+        router.navigationState,
+        router.currentRoute?.uuid,
+        routeUUID,
+        lifecycleHooks,
+    ]);
+
+    const contextValues: RouteContextType = useMemo(() => {
+        return { routeUUID, registerLifecycleHook, isCurrentRoute };
+    }, [routeUUID, registerLifecycleHook, isCurrentRoute]);
+
+    return (
+        <RouteContext.Provider value={contextValues}>
+            {routeComponent}
+        </RouteContext.Provider>
+    );
 }
