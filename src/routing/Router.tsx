@@ -3,6 +3,7 @@ import {
     useEffect,
     useLayoutEffect,
     useMemo,
+    useRef,
     useState,
     type PropsWithChildren,
 } from "react";
@@ -11,17 +12,20 @@ import type RouterContextType from "../types/RouterContextType";
 import { matchTokenizedUrl, tokenizeUrl } from "../utils/url";
 import type RouterCurrentRoute from "../types/RouterCurrentRoute";
 import type RouterProps from "../types/RouterProps";
-import type { NavigationState } from "../types/NavigationState";
 import { RouterContext } from "./context";
 import useMoranaAppContext from "@root/core/hooks/useMoranaAppContext";
 import type { RouterCache } from "@root/types/RouterCache";
+import type NavigationState from "@root/types/NavigationState";
 
 export default function Router({ children }: PropsWithChildren) {
     const [routes, setRoutes] = useState<RouteData[]>([]);
     const [routerCache, setRouterCache] = useState<RouterCache>([]);
 
-    const [navigationState, setNavigationState] =
-        useState<NavigationState>(undefined);
+    const currentRouteRef = useRef<RouterCurrentRoute>(null);
+
+    const [navigationState, setNavigationState] = useState<
+        NavigationState | undefined
+    >(undefined);
 
     const [currentPath, setCurrentPath] = useState<{
         path: string;
@@ -49,54 +53,6 @@ export default function Router({ children }: PropsWithChildren) {
     );
 
     const clearRouterCache = useCallback(() => setRouterCache([]), []);
-
-    const __handleNavEvent = useCallback(() => {
-        if (navigationState !== undefined) {
-            return;
-        }
-
-        setNavigationState("out");
-
-        setTimeout(
-            () => {
-                setCurrentPath({
-                    path: window.location.pathname,
-                    search: window.location.search,
-                });
-
-                setNavigationState("in");
-            },
-
-            navAnimationBuilder?.duration ?? 200,
-        );
-    }, [navAnimationBuilder, navigationState]);
-
-    // clean animation state
-    useEffect(() => {
-        if (navigationState === undefined) {
-            return;
-        }
-
-        setTimeout(
-            () => {
-                setNavigationState(undefined);
-            },
-
-            navAnimationBuilder?.duration
-                ? navAnimationBuilder.duration * 2 + 100
-                : 500,
-        );
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentPath.path]);
-
-    useLayoutEffect(() => {
-        window.addEventListener("popstate", __handleNavEvent);
-
-        return () => {
-            window.removeEventListener("popstate", __handleNavEvent);
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
 
     const currentRoute: RouterCurrentRoute = useMemo(() => {
         const responseData: RouterCurrentRoute = {};
@@ -126,6 +82,66 @@ export default function Router({ children }: PropsWithChildren) {
         return responseData;
     }, [currentPath, routes]);
 
+    // sync currentRoute Ref + update enter navigation state
+    useLayoutEffect(() => {
+        currentRouteRef.current = currentRoute;
+
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setNavigationState({
+            type: "enter",
+            target: currentRoute.uuid,
+        });
+    }, [currentRoute]);
+
+    const __handleNavEvent = useCallback(() => {
+        if (navigationState !== undefined) {
+            return;
+        }
+
+        setNavigationState({
+            type: "exit",
+            target: currentRouteRef.current?.uuid,
+        });
+
+        setTimeout(
+            () => {
+                setCurrentPath({
+                    path: window.location.pathname,
+                    search: window.location.search,
+                });
+            },
+
+            navAnimationBuilder?.duration ?? 200,
+        );
+    }, [navAnimationBuilder?.duration, navigationState]);
+
+    // clean animation state
+    useEffect(() => {
+        if (navigationState === undefined) {
+            return;
+        }
+
+        setTimeout(
+            () => {
+                setNavigationState(undefined);
+            },
+
+            navAnimationBuilder?.duration
+                ? navAnimationBuilder.duration * 2 + 100
+                : 500,
+        );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentPath.path]);
+
+    useLayoutEffect(() => {
+        window.addEventListener("popstate", __handleNavEvent);
+
+        return () => {
+            window.removeEventListener("popstate", __handleNavEvent);
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     const __addRoute = useCallback(
         (route: RouteData) => {
             const currentRoute = routes.find((r) => r.url === route.url);
@@ -141,13 +157,7 @@ export default function Router({ children }: PropsWithChildren) {
     );
 
     const navigateTo = useCallback(
-        ({
-            path,
-            replace,
-        }: {
-            path: string;
-            replace?: boolean;
-        }) => {
+        ({ path, replace }: { path: string; replace?: boolean }) => {
             if (replace) {
                 setRouterCache([]);
                 window.history.replaceState({}, "", path);

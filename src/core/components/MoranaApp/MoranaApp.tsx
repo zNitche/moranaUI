@@ -9,6 +9,7 @@ const defaultNavAnimationBuilder: NavAnimationBuilder = {
     wrapperClassName: undefined,
     enterAnimation: classes.defaultEnterAnimation,
     exitAnimation: classes.defaultExitAnimation,
+    animateWholePageOverride: false,
 };
 
 interface MoranaAppProps {

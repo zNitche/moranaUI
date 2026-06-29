@@ -3,4 +3,5 @@ export default interface NavAnimationBuilder {
     wrapperClassName?: string;
     enterAnimation?: string;
     exitAnimation?: string;
+    animateWholePageOverride?: boolean;
 }
