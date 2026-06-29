@@ -3,6 +3,8 @@ import {
     buildUrl,
     useMoranaPageEnter,
     useMoranaPageExit,
+    MoranaPage,
+    useIsPageActive,
 } from "moranaui";
 import classes from "./HomePage.module.css";
 import Header from "../../components/Header/Header";
@@ -11,6 +13,9 @@ import { useEffect } from "react";
 
 export default function HomePage() {
     const { navigateTo, clearRouterCache } = useRouter();
+    const isPageActive = useIsPageActive();
+
+    console.log(`is home active: ${isPageActive}`);
 
     useEffect(() => {
         console.log("home mount");
@@ -24,7 +29,7 @@ export default function HomePage() {
     useMoranaPageExit({ callback: () => console.log("home page exit") });
 
     return (
-        <>
+        <MoranaPage>
             <Header>
                 <div>Home Page</div>
             </Header>
@@ -51,6 +56,6 @@ export default function HomePage() {
                     <div onClick={clearRouterCache}>Clear router cache</div>
                 </div>
             </Content>
-        </>
+        </MoranaPage>
     );
 }

@@ -2,6 +2,7 @@ import {
     useRouter,
     usePathParams,
     useSearchParams,
+    MoranaPage,
 } from "moranaui";
 import Content from "../../components/Content/Content";
 
@@ -15,13 +16,13 @@ export default function ParamsPage() {
     console.log(searchParams);
 
     return (
-        <>
+        <MoranaPage>
             <div>
                 <div>Params Page</div>
             </div>
             <Content>
                 <div onClick={() => navigateTo({ path: "/" })}>nav to home</div>
             </Content>
-        </>
+        </MoranaPage>
     );
 }
