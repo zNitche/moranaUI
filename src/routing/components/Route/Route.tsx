@@ -32,6 +32,14 @@ export default function Route({
     const { __addRoute, router, routerCache, __addToRouterCache } =
         useRouterContext();
 
+    const [lifecycleHooks, setLifecycleHooks] = useState<
+        | {
+              onEnter?: () => void;
+              onExit?: () => void;
+          }
+        | undefined
+    >(undefined);
+
     useEffect(() => {
         __addRoute({ uuid: routeUUID, url, component });
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -45,50 +53,6 @@ export default function Route({
         () => routerCache.includes(routeUUID),
         [routeUUID, routerCache],
     );
-
-    const routeComponent = useMemo(() => {
-        if (!inCache && !isCurrentRoute) {
-            return;
-        }
-
-        if (cacheable) {
-            __addToRouterCache(routeUUID);
-        }
-
-        const Component = component;
-        const Wrapper = wrapper;
-
-        return (
-            <div
-                className={classes.route}
-                id={routeUUID}
-                key={routeUUID}
-                style={{
-                    display: isCurrentRoute ? "block" : "none",
-                }}
-            >
-                <Wrapper>
-                    <Component />
-                </Wrapper>
-            </div>
-        );
-    }, [
-        __addToRouterCache,
-        component,
-        inCache,
-        isCurrentRoute,
-        routeUUID,
-        wrapper,
-        cacheable,
-    ]);
-
-    const [lifecycleHooks, setLifecycleHooks] = useState<
-        | {
-              onEnter?: () => void;
-              onExit?: () => void;
-          }
-        | undefined
-    >(undefined);
 
     const registerLifecycleHook = useCallback(
         (type: "enter" | "exit", callback: () => void) => {
@@ -134,6 +98,42 @@ export default function Route({
         router.currentRoute?.uuid,
         routeUUID,
         lifecycleHooks,
+    ]);
+
+    const routeComponent = useMemo(() => {
+        if (!inCache && !isCurrentRoute) {
+            return;
+        }
+
+        if (cacheable) {
+            __addToRouterCache(routeUUID);
+        }
+
+        const Component = component;
+        const Wrapper = wrapper;
+
+        return (
+            <div
+                className={classes.route}
+                id={routeUUID}
+                key={routeUUID}
+                style={{
+                    display: isCurrentRoute ? "block" : "none",
+                }}
+            >
+                <Wrapper>
+                    <Component />
+                </Wrapper>
+            </div>
+        );
+    }, [
+        __addToRouterCache,
+        component,
+        inCache,
+        isCurrentRoute,
+        routeUUID,
+        wrapper,
+        cacheable,
     ]);
 
     const contextValues: RouteContextType = useMemo(() => {

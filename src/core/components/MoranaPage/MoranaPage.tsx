@@ -41,8 +41,6 @@ export default function MoranaPage({ children }: PropsWithChildren) {
         [],
     );
 
-    console.log(router.navigationState)
-
     const classForNavState = useMemo(() => {
         if (!router?.navigationState) {
             return undefined;
