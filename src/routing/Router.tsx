@@ -5,6 +5,7 @@ import {
     useRef,
     useState,
     type PropsWithChildren,
+    type RefObject,
 } from "react";
 import type RouteData from "../types/RouteData";
 import type RouterContextType from "../types/RouterContextType";
@@ -18,7 +19,7 @@ import type NavigationState from "@root/types/NavigationState";
 
 export default function Router({ children }: PropsWithChildren) {
     const [routes, setRoutes] = useState<RouteData[]>([]);
-    const [routerCache, setRouterCache] = useState<RouterCache>([]);
+    const [routerCache, setRouterCache] = useState<RouterCache>({});
 
     const currentRouteRef = useRef<RouterCurrentRoute>(null);
 
@@ -37,21 +38,21 @@ export default function Router({ children }: PropsWithChildren) {
     const { navAnimationBuilder } = useMoranaAppContext();
 
     const __addToRouterCache = useCallback(
-        (uuid: string) => {
-            if (routerCache.includes(uuid)) {
+        (uuid: string, ref: RefObject<HTMLDivElement | null> | null) => {
+            if (Object.keys(routerCache).includes(uuid)) {
                 return;
             }
 
             queueMicrotask(() =>
                 setRouterCache((current) => {
-                    return [...current, uuid];
+                    return { ...current, [uuid]: ref };
                 }),
             );
         },
         [routerCache],
     );
 
-    const clearRouterCache = useCallback(() => setRouterCache([]), []);
+    const clearRouterCache = useCallback(() => setRouterCache({}), []);
 
     const currentRoute: RouterCurrentRoute = useMemo(() => {
         const responseData: RouterCurrentRoute = {};
@@ -83,7 +84,7 @@ export default function Router({ children }: PropsWithChildren) {
 
     // sync currentRoute Ref
     useLayoutEffect(() => {
-        currentRouteRef.current = currentRoute;        
+        currentRouteRef.current = currentRoute;
     }, [currentRoute]);
 
     const __handleNavEvent = useCallback(() => {
@@ -154,7 +155,7 @@ export default function Router({ children }: PropsWithChildren) {
     const navigateTo = useCallback(
         ({ path, replace }: { path: string; replace?: boolean }) => {
             if (replace) {
-                setRouterCache([]);
+                setRouterCache({});
                 window.history.replaceState({}, "", path);
             } else {
                 window.history.pushState({}, "", path);

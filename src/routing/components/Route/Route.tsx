@@ -4,6 +4,7 @@ import {
     useEffect,
     useLayoutEffect,
     useMemo,
+    useRef,
     useState,
     type ComponentType,
     type ReactNode,
@@ -28,6 +29,7 @@ export default function Route({
     cacheable = true,
 }: RouteProps) {
     const routeUUID = useMemo(() => generateUUID(), []);
+    const wrapperRef = useRef<HTMLDivElement>(null);
 
     const { __addRoute, router, routerCache, __addToRouterCache } =
         useRouterContext();
@@ -50,7 +52,7 @@ export default function Route({
         [routeUUID, router.currentRoute?.uuid],
     );
     const inCache = useMemo(
-        () => routerCache.includes(routeUUID),
+        () => Object.keys(routerCache).includes(routeUUID),
         [routeUUID, routerCache],
     );
 
@@ -106,7 +108,8 @@ export default function Route({
         }
 
         if (cacheable) {
-            __addToRouterCache(routeUUID);
+            // eslint-disable-next-line react-hooks/refs
+            __addToRouterCache(routeUUID, wrapperRef);
         }
 
         const Component = component;
@@ -114,6 +117,7 @@ export default function Route({
 
         return (
             <div
+                ref={wrapperRef}
                 className={classes.route}
                 id={routeUUID}
                 key={routeUUID}

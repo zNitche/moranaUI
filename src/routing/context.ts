@@ -1,12 +1,15 @@
 import type RouteContextType from "@root/types/RouteContextType";
 import type RouteData from "@root/types/RouteData";
 import type RouterContextType from "@root/types/RouterContextType";
-import { createContext } from "react";
+import { createContext, type RefObject } from "react";
 
 export const RouterContext = createContext<RouterContextType>({
     __addRoute: (_route: RouteData) => undefined,
-    routerCache: [],
-    __addToRouterCache: (_uuid: string) => undefined,
+    routerCache: {},
+    __addToRouterCache: (
+        _uuid: string,
+        _ref: RefObject<HTMLDivElement | null> | null,
+    ) => undefined,
     clearRouterCache: () => undefined,
     router: { currentRoute: undefined, path: "", navigationState: undefined },
     navigateTo: (_params: { path: string; replace?: boolean }) => undefined,
