@@ -1,9 +1,9 @@
 .defaultEnterAnimation {
-    animation: fadeInKeyframes 0.2s forwards;
+    /* animation: fadeInKeyframes 0.2s forwards; */
 }
 
 .defaultExitAnimation {
-    animation: fadeOutKeyframes 0.2s forwards;
+    /* animation: fadeOutKeyframes 0.2s forwards; */
 }
 
 @keyframes fadeInKeyframes {

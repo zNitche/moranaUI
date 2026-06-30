@@ -4,4 +4,11 @@
     max-height: 100dvh;
     box-sizing: border-box;
     overflow: hidden;
+
+    position: absolute;
+    transition: transform 0.2s linear;
+}
+
+.away {
+    transform: translateX(100%);
 }

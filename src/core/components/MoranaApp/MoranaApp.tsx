@@ -5,11 +5,11 @@ import type MoranaAppContextType from "@root/types/MoranaAppContextType";
 import { MoranaAppContext } from "@root/core/context";
 
 const defaultNavAnimationBuilder: NavAnimationBuilder = {
-    duration: 200,
+    duration: 1,
     wrapperClassName: undefined,
     enterAnimation: classes.defaultEnterAnimation,
     exitAnimation: classes.defaultExitAnimation,
-    animateWholePageOverride: false,
+    animateWholePageOverride: true,
 };
 
 interface MoranaAppProps {

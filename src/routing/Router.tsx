@@ -82,6 +82,36 @@ export default function Router({ children }: PropsWithChildren) {
         return responseData;
     }, [currentPath, routes]);
 
+    useLayoutEffect(() => {
+        // tests
+
+        if (!navigationState?.target) {
+            return;
+        }
+
+        const g = routerCache[navigationState?.target];
+
+        if (!g?.current) {
+            return;
+        }
+
+        if (navigationState.type === "exit") {
+            g.current.style.transform = "translateX(100%)";
+        } else {
+            g.current.style.transition = "none";
+            g.current.style.transform = "translateX(0%)";
+
+            setTimeout(() => {
+                if (!g?.current) {
+                    return;
+                }
+                g.current.style.transition = "transform 0.2s linear";
+            }, 200);
+        }
+        // endtests
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [navigationState]);
+
     // sync currentRoute Ref
     useLayoutEffect(() => {
         currentRouteRef.current = currentRoute;

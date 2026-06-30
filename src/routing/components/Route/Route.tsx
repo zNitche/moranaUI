@@ -11,7 +11,7 @@ import {
 } from "react";
 import classes from "./Route.module.css";
 import useRouterContext from "@root/routing/hooks/useRouterContext";
-import { generateUUID } from "@root/utils";
+import { clsx, generateUUID } from "@root/utils";
 import type RouteContextType from "@root/types/RouteContextType";
 import { RouteContext } from "@root/routing/context";
 
@@ -118,11 +118,12 @@ export default function Route({
         return (
             <div
                 ref={wrapperRef}
-                className={classes.route}
+                className={clsx(classes.route, !isCurrentRoute && classes.away)}
                 id={routeUUID}
                 key={routeUUID}
                 style={{
-                    display: isCurrentRoute ? "block" : "none",
+                    display: isCurrentRoute ? "block" : "block",
+                    zIndex: isCurrentRoute ? "1" : "2",
                 }}
             >
                 <Wrapper>
