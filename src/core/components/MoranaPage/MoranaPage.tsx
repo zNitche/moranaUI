@@ -1,7 +1,6 @@
 import { useCallback, useMemo, useState, type PropsWithChildren } from "react";
 import classes from "./MoranaPage.module.css";
 import { clsx } from "@root/utils";
-import { useRouter } from "@root/routing";
 import useMoranaAppContext from "@root/core/hooks/useMoranaAppContext";
 import type MoranaPageContextType from "@root/types/MoranaPageContextType";
 import { MoranaPageContext } from "@root/core/context";
@@ -9,9 +8,8 @@ import type { PageStructuralComponentType } from "@root/types/PageStructuralComp
 import useRouteContext from "@root/routing/hooks/useRouteContext";
 
 export default function MoranaPage({ children }: PropsWithChildren) {
-    const { router } = useRouter();
     const { navAnimationBuilder } = useMoranaAppContext();
-    const { routeUUID } = useRouteContext();
+    const { classForNavState } = useRouteContext();
 
     const [
         pageStructuralComponentsRegistry,
@@ -40,32 +38,6 @@ export default function MoranaPage({ children }: PropsWithChildren) {
         },
         [],
     );
-
-    const classForNavState = useMemo(() => {
-        if (!router?.navigationState) {
-            return undefined;
-        }
-
-        if (router.navigationState?.target !== routeUUID) {
-            return;
-        }
-
-        switch (router?.navigationState?.type) {
-            case "enter":
-                return navAnimationBuilder?.enterAnimation;
-
-            case "exit":
-                return navAnimationBuilder?.exitAnimation;
-
-            default:
-                return undefined;
-        }
-    }, [
-        router.navigationState,
-        routeUUID,
-        navAnimationBuilder?.enterAnimation,
-        navAnimationBuilder?.exitAnimation,
-    ]);
 
     const shouldAnimatePage = useMemo(() => {
         if (navAnimationBuilder?.animateWholePageOverride) {

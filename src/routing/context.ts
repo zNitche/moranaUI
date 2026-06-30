@@ -21,4 +21,5 @@ export const RouteContext = createContext<RouteContextType>({
     registerLifecycleHook: (_type: "enter" | "exit", _callback: () => void) =>
         undefined,
     isCurrentRoute: false,
+    classForNavState: undefined,
 });

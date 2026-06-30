@@ -5,4 +5,5 @@ export default interface RouteContextType {
         callback: () => void,
     ) => void;
     isCurrentRoute: boolean;
+    classForNavState?: string;
 }

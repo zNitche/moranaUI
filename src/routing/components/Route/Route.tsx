@@ -14,6 +14,7 @@ import useRouterContext from "@root/routing/hooks/useRouterContext";
 import { clsx, generateUUID } from "@root/utils";
 import type RouteContextType from "@root/types/RouteContextType";
 import { RouteContext } from "@root/routing/context";
+import useMoranaAppContext from "@root/core/hooks/useMoranaAppContext";
 
 interface RouteProps {
     readonly url: string;
@@ -33,6 +34,7 @@ export default function Route({
 
     const { __addRoute, router, routerCache, __addToRouterCache } =
         useRouterContext();
+    const { navAnimationBuilder } = useMoranaAppContext();
 
     const [lifecycleHooks, setLifecycleHooks] = useState<
         | {
@@ -102,6 +104,32 @@ export default function Route({
         lifecycleHooks,
     ]);
 
+    const classForNavState = useMemo(() => {
+        if (!router?.navigationState) {
+            return undefined;
+        }
+
+        if (router.navigationState?.target !== routeUUID) {
+            return;
+        }
+
+        switch (router?.navigationState?.type) {
+            case "enter":
+                return navAnimationBuilder?.enterAnimation;
+
+            case "exit":
+                return navAnimationBuilder?.exitAnimation;
+
+            default:
+                return undefined;
+        }
+    }, [
+        router.navigationState,
+        routeUUID,
+        navAnimationBuilder?.enterAnimation,
+        navAnimationBuilder?.exitAnimation,
+    ]);
+
     const routeComponent = useMemo(() => {
         if (!inCache && !isCurrentRoute) {
             return;
@@ -142,8 +170,13 @@ export default function Route({
     ]);
 
     const contextValues: RouteContextType = useMemo(() => {
-        return { routeUUID, registerLifecycleHook, isCurrentRoute };
-    }, [routeUUID, registerLifecycleHook, isCurrentRoute]);
+        return {
+            routeUUID,
+            registerLifecycleHook,
+            isCurrentRoute,
+            classForNavState,
+        };
+    }, [routeUUID, registerLifecycleHook, isCurrentRoute, classForNavState]);
 
     return (
         <RouteContext.Provider value={contextValues}>
