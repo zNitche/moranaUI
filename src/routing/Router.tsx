@@ -120,12 +120,14 @@ export default function Router({ children }: PropsWithChildren) {
             target: currentRoute.uuid,
         });
 
-        setTimeout(
+        const timeout = setTimeout(
             () => setNavigationState(undefined),
             navAnimationBuilder?.duration
                 ? navAnimationBuilder.duration * 2 + 1500
                 : 1500,
         );
+
+        return () => clearTimeout(timeout);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPath]);
 
