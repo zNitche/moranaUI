@@ -125,8 +125,8 @@ export default function Router({ children }: PropsWithChildren) {
                 path: window.location.pathname,
                 search: window.location.search,
             });
-        }, navAnimationBuilder?.transitionDuration?.post ?? 200);
-    }, [navAnimationBuilder?.transitionDuration?.post, navigationState]);
+        }, navAnimationBuilder?.transitionDuration?.pre ?? 200);
+    }, [navAnimationBuilder?.transitionDuration?.pre, navigationState]);
 
     // clean animation state
     useLayoutEffect(() => {
