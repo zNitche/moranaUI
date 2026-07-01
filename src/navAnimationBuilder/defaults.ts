@@ -9,45 +9,47 @@ export const defaultSlideNavAnimationBuilder: NavAnimationBuilder = {
         navDebounce: 1500,
         cleanupDelay: 100,
     },
-    routeWrapperClassName: classes.routeTransition,
-    onRouteEnterAnimation: (routeRef: AnimationWrapperRef) => {
-        const ref = routeRef.current;
+    route: {
+        wrapperClassName: classes.routeTransition,
+        onEnterAnimation: (routeRef: AnimationWrapperRef) => {
+            const ref = routeRef.current;
 
-        if (!ref) {
-            return;
-        }
+            if (!ref) {
+                return;
+            }
 
-        ref.classList.remove(classes.routeTransition);
-        ref.classList.remove(classes.defaultAwayRoute);
-        ref.classList.add(classes.defaultCurrentRoute);
+            ref.classList.remove(classes.routeTransition);
+            ref.classList.remove(classes.defaultAwayRoute);
+            ref.classList.add(classes.defaultCurrentRoute);
 
-        ref.classList.add(classes.defaultRouteEnterAnimation);
-    },
-    onRouteExitAnimation: (routeRef: AnimationWrapperRef) => {
-        const ref = routeRef.current;
+            ref.classList.add(classes.defaultRouteEnterAnimation);
+        },
+        onExitAnimation: (routeRef: AnimationWrapperRef) => {
+            const ref = routeRef.current;
 
-        if (!ref) {
-            return;
-        }
+            if (!ref) {
+                return;
+            }
 
-        ref.classList.add(classes.routeTransition);
+            ref.classList.add(classes.routeTransition);
 
-        ref.classList.remove(classes.defaultCurrentRoute);
-        ref.classList.add(classes.defaultAwayRoute);
+            ref.classList.remove(classes.defaultCurrentRoute);
+            ref.classList.add(classes.defaultAwayRoute);
 
-        ref.classList.add(classes.defaultRouteExitAnimation);
-    },
+            ref.classList.add(classes.defaultRouteExitAnimation);
+        },
 
-    onRouteAnimationCleanup: (routeRef: AnimationWrapperRef) => {
-        const ref = routeRef.current;
+        onAnimationCleanup: (routeRef: AnimationWrapperRef) => {
+            const ref = routeRef.current;
 
-        if (!ref) {
-            return;
-        }
+            if (!ref) {
+                return;
+            }
 
-        setTimeout(() => {
-            ref.classList.remove(classes.defaultRouteExitAnimation);
-            ref.classList.remove(classes.defaultRouteEnterAnimation);
-        }, 200);
+            setTimeout(() => {
+                ref.classList.remove(classes.defaultRouteExitAnimation);
+                ref.classList.remove(classes.defaultRouteEnterAnimation);
+            }, 200);
+        },
     },
 };

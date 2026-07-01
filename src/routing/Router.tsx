@@ -94,13 +94,13 @@ export default function Router({ children }: PropsWithChildren) {
         }
 
         if (navigationState.type === "exit") {
-            navAnimationBuilder?.onRouteExitAnimation?.(routeRef);
+            navAnimationBuilder?.route?.onExitAnimation?.(routeRef);
         } else {
-            navAnimationBuilder?.onRouteEnterAnimation?.(routeRef);
+            navAnimationBuilder?.route?.onEnterAnimation?.(routeRef);
         }
 
         setTimeout(() => {
-            navAnimationBuilder?.onRouteAnimationCleanup?.(routeRef);
+            navAnimationBuilder?.route?.onAnimationCleanup?.(routeRef);
         }, navAnimationBuilder?.transitionDuration?.cleanupDelay ?? 0);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [navigationState]);

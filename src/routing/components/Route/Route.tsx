@@ -122,7 +122,7 @@ export default function Route({
                 ref={wrapperRef}
                 className={clsx(
                     classes.route,
-                    navAnimationBuilder?.routeWrapperClassName,
+                    navAnimationBuilder?.route?.wrapperClassName,
                 )}
                 id={routeUUID}
                 key={routeUUID}

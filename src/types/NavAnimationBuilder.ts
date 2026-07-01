@@ -9,14 +9,16 @@ export default interface NavAnimationBuilder {
         navDebounce?: number;
         cleanupDelay?: number;
     };
-    
-    pageWrapperClassName?: string;
-    onPageEnterAnimation?: (pageRef: AnimationWrapperRef) => void;
-    onPageExitAnimation?: (pageRef: AnimationWrapperRef) => void;
-    onPageAnimationCleanup?: (pageRef: AnimationWrapperRef) => void;
 
-    routeWrapperClassName?: string;
-    onRouteEnterAnimation?: (routeRef: AnimationWrapperRef) => void;
-    onRouteExitAnimation?: (routeRef: AnimationWrapperRef) => void;
-    onRouteAnimationCleanup?: (routeRef: AnimationWrapperRef) => void;
+    page?: {
+        wrapperClassName?: string;
+        onEnterAnimation?: (pageRef: AnimationWrapperRef) => void;
+        onExitAnimation?: (pageRef: AnimationWrapperRef) => void;
+    };
+    route?: {
+        wrapperClassName?: string;
+        onEnterAnimation?: (routeRef: AnimationWrapperRef) => void;
+        onExitAnimation?: (routeRef: AnimationWrapperRef) => void;
+        onAnimationCleanup?: (routeRef: AnimationWrapperRef) => void;
+    };
 }
