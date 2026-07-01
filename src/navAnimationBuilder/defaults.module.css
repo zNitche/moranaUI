@@ -1,3 +1,7 @@
+.routeTransition {
+    transition: transform 0.2s linear;
+}
+
 .defaultCurrentRoute {
     z-index: 1;
 }
@@ -16,15 +20,19 @@
     transform: translateX(100%);
 }
 
-.routeTransition {
-    transition: transform 0.2s linear;
+.defaultCurrentRouteFade {
+    display: block;
 }
 
-/* .defaultEnterAnimation {
+.defaultAwayRouteFade {
+    display: none;
+}
+
+.defaultFadeInAnimation {
     animation: fadeInKeyframes 0.2s forwards;
 }
 
-.defaultExitAnimation {
+.defaultFadeOutAnimation {
     animation: fadeOutKeyframes 0.2s forwards;
 }
 
@@ -46,4 +54,4 @@
     100% {
         opacity: 0;
     }
-} */
+}

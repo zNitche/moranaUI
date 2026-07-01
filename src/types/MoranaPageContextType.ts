@@ -10,5 +10,4 @@ export default interface MoranaPageContextType {
         type: PageStructuralComponentType,
         ref: RefObject<HTMLDivElement | null>,
     ) => void;
-    shouldAnimatePage: boolean;
 }

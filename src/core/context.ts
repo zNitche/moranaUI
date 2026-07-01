@@ -16,5 +16,4 @@ export const MoranaPageContext = createContext<MoranaPageContextType>({
         header: null,
         content: null,
     },
-    shouldAnimatePage: true,
 });

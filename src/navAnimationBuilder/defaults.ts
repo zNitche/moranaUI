@@ -53,3 +53,61 @@ export const defaultSlideNavAnimationBuilder: NavAnimationBuilder = {
         },
     },
 };
+
+export const defaultFadeNavAnimationBuilder: NavAnimationBuilder = {
+    transitionDuration: {
+        pre: 1,
+        post: 200,
+        navDebounce: 1500,
+    },
+    route: {
+        onEnterAnimation: (routeRef: AnimationWrapperRef) => {
+            const ref = routeRef.current;
+
+            if (!ref) {
+                return;
+            }
+
+            ref.classList.remove(classes.defaultAwayRouteFade);
+            ref.classList.add(classes.defaultCurrentRouteFade);
+        },
+        onExitAnimation: (routeRef: AnimationWrapperRef) => {
+            const ref = routeRef.current;
+
+            if (!ref) {
+                return;
+            }
+
+            ref.classList.remove(classes.defaultCurrentRouteFade);
+            ref.classList.add(classes.defaultAwayRouteFade);
+        },
+    },
+    page: {
+        onEnterAnimation: (routeRef: AnimationWrapperRef) => {
+            const ref = routeRef.current;
+
+            if (!ref) {
+                return;
+            }
+
+            ref.classList.add(classes.defaultFadeInAnimation);
+
+            setTimeout(() => {
+                ref.classList.remove(classes.defaultFadeInAnimation);
+            }, 200);
+        },
+        onExitAnimation: (routeRef: AnimationWrapperRef) => {
+            const ref = routeRef.current;
+
+            if (!ref) {
+                return;
+            }
+
+            ref.classList.add(classes.defaultFadeOutAnimation);
+
+            setTimeout(() => {
+                ref.classList.remove(classes.defaultFadeOutAnimation);
+            }, 200);
+        },
+    },
+};
