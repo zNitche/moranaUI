@@ -1,16 +1,11 @@
 import { useCallback, useMemo, useState, type PropsWithChildren } from "react";
 import classes from "./MoranaPage.module.css";
 import { clsx } from "@root/utils";
-import useMoranaAppContext from "@root/core/hooks/useMoranaAppContext";
 import type MoranaPageContextType from "@root/types/MoranaPageContextType";
 import { MoranaPageContext } from "@root/core/context";
 import type { PageStructuralComponentType } from "@root/types/PageStructuralComponentType";
-import useRouteContext from "@root/routing/hooks/useRouteContext";
 
 export default function MoranaPage({ children }: PropsWithChildren) {
-    const { navAnimationBuilder } = useMoranaAppContext();
-    const { classForNavState } = useRouteContext();
-
     const [
         pageStructuralComponentsRegistry,
         setPageStructuralComponentsRegistry,
@@ -40,10 +35,6 @@ export default function MoranaPage({ children }: PropsWithChildren) {
     );
 
     const shouldAnimatePage = useMemo(() => {
-        if (navAnimationBuilder?.animateWholePageOverride) {
-            return true;
-        }
-
         if (
             pageStructuralComponentsRegistry.content ||
             pageStructuralComponentsRegistry.header
@@ -52,17 +43,15 @@ export default function MoranaPage({ children }: PropsWithChildren) {
         }
 
         return true;
-    }, [pageStructuralComponentsRegistry, navAnimationBuilder]);
+    }, [pageStructuralComponentsRegistry]);
 
     const values: MoranaPageContextType = useMemo(() => {
         return {
-            classForNavState,
             pageStructuralComponentsRegistry,
             updatePageStructuralComponentsRegistry,
             shouldAnimatePage,
         };
     }, [
-        classForNavState,
         pageStructuralComponentsRegistry,
         updatePageStructuralComponentsRegistry,
         shouldAnimatePage,
@@ -70,15 +59,7 @@ export default function MoranaPage({ children }: PropsWithChildren) {
 
     return (
         <MoranaPageContext.Provider value={values}>
-            <div
-                className={clsx(
-                    classes.moranaPage,
-                    shouldAnimatePage && classForNavState,
-                    shouldAnimatePage && navAnimationBuilder?.wrapperClassName,
-                )}
-            >
-                {children}
-            </div>
+            <div className={clsx(classes.moranaPage)}>{children}</div>
         </MoranaPageContext.Provider>
     );
 }

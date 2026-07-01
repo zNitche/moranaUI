@@ -8,7 +8,6 @@ export const MoranaAppContext = createContext<MoranaAppContextType>({
 });
 
 export const MoranaPageContext = createContext<MoranaPageContextType>({
-    classForNavState: undefined,
     updatePageStructuralComponentsRegistry: (
         _type: PageStructuralComponentType,
         _val: boolean,

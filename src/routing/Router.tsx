@@ -83,32 +83,25 @@ export default function Router({ children }: PropsWithChildren) {
     }, [currentPath, routes]);
 
     useLayoutEffect(() => {
-        // tests
-
         if (!navigationState?.target) {
             return;
         }
 
-        const g = routerCache[navigationState?.target];
+        const routeRef = routerCache[navigationState?.target];
 
-        if (!g?.current) {
+        if (!routeRef?.current) {
             return;
         }
 
         if (navigationState.type === "exit") {
-            g.current.style.transform = "translateX(100%)";
+            navAnimationBuilder?.onRouteExitAnimation?.(routeRef);
         } else {
-            g.current.style.transition = "none";
-            g.current.style.transform = "translateX(0%)";
-
-            setTimeout(() => {
-                if (!g?.current) {
-                    return;
-                }
-                g.current.style.transition = "transform 0.2s linear";
-            }, 200);
+            navAnimationBuilder?.onRouteEnterAnimation?.(routeRef);
         }
-        // endtests
+
+        setTimeout(() => {
+            navAnimationBuilder?.onRouteAnimationCleanup?.(routeRef);
+        }, navAnimationBuilder?.transitionDuration?.cleanupDelay ?? 0);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [navigationState]);
 
@@ -127,16 +120,13 @@ export default function Router({ children }: PropsWithChildren) {
             target: currentRouteRef.current?.uuid,
         });
 
-        setTimeout(
-            () => {
-                setCurrentPath({
-                    path: window.location.pathname,
-                    search: window.location.search,
-                });
-            },
-            navAnimationBuilder?.duration ?? 200,
-        );
-    }, [navAnimationBuilder?.duration, navigationState]);
+        setTimeout(() => {
+            setCurrentPath({
+                path: window.location.pathname,
+                search: window.location.search,
+            });
+        }, navAnimationBuilder?.transitionDuration?.post ?? 200);
+    }, [navAnimationBuilder?.transitionDuration?.post, navigationState]);
 
     // clean animation state
     useLayoutEffect(() => {
@@ -150,10 +140,12 @@ export default function Router({ children }: PropsWithChildren) {
             target: currentRoute.uuid,
         });
 
+        const tDuration = navAnimationBuilder?.transitionDuration;
+
         const timeout = setTimeout(
             () => setNavigationState(undefined),
-            navAnimationBuilder?.duration
-                ? navAnimationBuilder.duration * 2 + 1500
+            tDuration?.post
+                ? tDuration?.post * 2 + (tDuration?.navDebounce ?? 0)
                 : 1500,
         );
 

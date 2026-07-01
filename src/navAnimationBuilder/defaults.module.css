@@ -1,0 +1,49 @@
+.defaultCurrentRoute {
+    z-index: 1;
+}
+
+.defaultAwayRoute {
+    z-index: 2;
+    transform: translateX(100%);
+}
+
+.defaultRouteEnterAnimation {
+    transition: none;
+    transform: translateX(0%);
+}
+
+.defaultRouteExitAnimation {
+    transform: translateX(100%);
+}
+
+.routeTransition {
+    transition: transform 0.2s linear;
+}
+
+/* .defaultEnterAnimation {
+    animation: fadeInKeyframes 0.2s forwards;
+}
+
+.defaultExitAnimation {
+    animation: fadeOutKeyframes 0.2s forwards;
+}
+
+@keyframes fadeInKeyframes {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOutKeyframes {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+} */

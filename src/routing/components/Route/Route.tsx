@@ -104,32 +104,6 @@ export default function Route({
         lifecycleHooks,
     ]);
 
-    const classForNavState = useMemo(() => {
-        if (!router?.navigationState) {
-            return undefined;
-        }
-
-        if (router.navigationState?.target !== routeUUID) {
-            return;
-        }
-
-        switch (router?.navigationState?.type) {
-            case "enter":
-                return navAnimationBuilder?.enterAnimation;
-
-            case "exit":
-                return navAnimationBuilder?.exitAnimation;
-
-            default:
-                return undefined;
-        }
-    }, [
-        router.navigationState,
-        routeUUID,
-        navAnimationBuilder?.enterAnimation,
-        navAnimationBuilder?.exitAnimation,
-    ]);
-
     const routeComponent = useMemo(() => {
         if (!inCache && !isCurrentRoute) {
             return;
@@ -146,13 +120,12 @@ export default function Route({
         return (
             <div
                 ref={wrapperRef}
-                className={clsx(classes.route, !isCurrentRoute && classes.away)}
+                className={clsx(
+                    classes.route,
+                    navAnimationBuilder?.routeWrapperClassName,
+                )}
                 id={routeUUID}
                 key={routeUUID}
-                style={{
-                    display: isCurrentRoute ? "block" : "block",
-                    zIndex: isCurrentRoute ? "1" : "2",
-                }}
             >
                 <Wrapper>
                     <Component />
@@ -167,6 +140,7 @@ export default function Route({
         routeUUID,
         wrapper,
         cacheable,
+        navAnimationBuilder,
     ]);
 
     const contextValues: RouteContextType = useMemo(() => {
@@ -174,9 +148,8 @@ export default function Route({
             routeUUID,
             registerLifecycleHook,
             isCurrentRoute,
-            classForNavState,
         };
-    }, [routeUUID, registerLifecycleHook, isCurrentRoute, classForNavState]);
+    }, [routeUUID, registerLifecycleHook, isCurrentRoute]);
 
     return (
         <RouteContext.Provider value={contextValues}>

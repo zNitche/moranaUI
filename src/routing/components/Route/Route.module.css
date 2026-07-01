@@ -6,9 +6,4 @@
     overflow: hidden;
 
     position: absolute;
-    transition: transform 0.2s linear;
-}
-
-.away {
-    transform: translateX(100%);
 }
