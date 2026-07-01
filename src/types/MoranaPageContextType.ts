@@ -1,13 +1,14 @@
+import type { RefObject } from "react";
 import type { PageStructuralComponentType } from "./PageStructuralComponentType";
 
 export default interface MoranaPageContextType {
     pageStructuralComponentsRegistry: {
-        header: boolean;
-        content: boolean;
+        header: RefObject<HTMLDivElement | null> | null;
+        content: RefObject<HTMLDivElement | null> | null;
     };
     updatePageStructuralComponentsRegistry: (
         type: PageStructuralComponentType,
-        val: boolean,
+        ref: RefObject<HTMLDivElement | null>,
     ) => void;
     shouldAnimatePage: boolean;
 }

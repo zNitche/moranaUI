@@ -1,4 +1,12 @@
-import { useCallback, useMemo, useState, type PropsWithChildren } from "react";
+import {
+    useCallback,
+    useLayoutEffect,
+    useMemo,
+    useRef,
+    useState,
+    type PropsWithChildren,
+    type RefObject,
+} from "react";
 import classes from "./MoranaPage.module.css";
 import { clsx } from "@root/utils";
 import type MoranaPageContextType from "@root/types/MoranaPageContextType";
@@ -10,21 +18,24 @@ export default function MoranaPage({ children }: PropsWithChildren) {
         pageStructuralComponentsRegistry,
         setPageStructuralComponentsRegistry,
     ] = useState<{
-        header: boolean;
-        content: boolean;
-    }>({ header: false, content: false });
+        header: RefObject<HTMLDivElement | null> | null;
+        content: RefObject<HTMLDivElement | null> | null;
+    }>({ header: null, content: null });
 
     const updatePageStructuralComponentsRegistry = useCallback(
-        (type: PageStructuralComponentType, val: boolean) => {
+        (
+            type: PageStructuralComponentType,
+            ref: RefObject<HTMLDivElement | null>,
+        ) => {
             switch (type) {
                 case "content":
                     setPageStructuralComponentsRegistry((current) => {
-                        return { ...current, content: val };
+                        return { ...current, content: ref };
                     });
                     return;
                 case "header":
                     setPageStructuralComponentsRegistry((current) => {
-                        return { ...current, header: val };
+                        return { ...current, header: ref };
                     });
                     return;
                 default:

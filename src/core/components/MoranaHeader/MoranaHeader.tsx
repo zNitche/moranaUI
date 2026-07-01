@@ -1,4 +1,4 @@
-import { type PropsWithChildren } from "react";
+import { useRef, type PropsWithChildren } from "react";
 import classes from "./MoranaHeader.module.css";
 import { clsx } from "@root/utils";
 import useRegisterPageComponent from "@root/core/hooks/useRegisterPageComponent";
@@ -13,11 +13,21 @@ export default function MoranaHeader({
     className,
     childrenClassName,
 }: PropsWithChildren<MoranaHeaderProps>) {
-    useRegisterPageComponent({ componentType: "header" });
+    const contentRef = useRef<HTMLDivElement>(null);
+
+    useRegisterPageComponent({
+        componentType: "header",
+        componentRef: contentRef,
+    });
 
     return (
         <div className={clsx(classes.moranaHeader, className)}>
-            <div className={clsx(childrenClassName)}>{children}</div>
+            <div
+                ref={contentRef}
+                className={clsx(childrenClassName)}
+            >
+                {children}
+            </div>
         </div>
     );
 }

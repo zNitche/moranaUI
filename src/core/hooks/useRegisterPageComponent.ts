@@ -1,20 +1,23 @@
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, type RefObject } from "react";
 import useMoranaPageContext from "./useMoranaPageContext";
 import type { PageStructuralComponentType } from "@root/types/PageStructuralComponentType";
 
 interface RegisterPageComponentProps {
     readonly componentType: PageStructuralComponentType;
+    readonly componentRef: RefObject<HTMLDivElement | null>;
 }
 
 export default function useRegisterPageComponent({
     componentType,
+    componentRef,
 }: RegisterPageComponentProps) {
     const { updatePageStructuralComponentsRegistry } = useMoranaPageContext();
 
     useLayoutEffect(() => {
-        updatePageStructuralComponentsRegistry(componentType, true);
+        updatePageStructuralComponentsRegistry(componentType, componentRef);
 
         return () =>
-            updatePageStructuralComponentsRegistry(componentType, false);
-    }, []);
+            updatePageStructuralComponentsRegistry(componentType, componentRef);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [componentRef]);
 }
