@@ -2,7 +2,7 @@ import { useMemo, type PropsWithChildren } from "react";
 import type NavAnimationBuilder from "@root/types/NavAnimationBuilder";
 import type MoranaAppContextType from "@root/types/MoranaAppContextType";
 import { MoranaAppContext } from "@root/core/context";
-import { defaultFadeNavAnimationBuilder } from "@root/navAnimationBuilder/defaults";
+import { defaultSlideNavAnimationBuilder } from "@root/navAnimationBuilder/defaults";
 
 interface MoranaAppProps {
     navAnimationBuilder?: NavAnimationBuilder;
@@ -10,7 +10,7 @@ interface MoranaAppProps {
 
 export default function MoranaApp({
     children,
-    navAnimationBuilder = defaultFadeNavAnimationBuilder,
+    navAnimationBuilder = defaultSlideNavAnimationBuilder,
 }: PropsWithChildren<MoranaAppProps>) {
     const values: MoranaAppContextType = useMemo(() => {
         return { navAnimationBuilder };

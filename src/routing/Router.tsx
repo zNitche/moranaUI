@@ -2,7 +2,6 @@ import {
     useCallback,
     useLayoutEffect,
     useMemo,
-    useRef,
     useState,
     type PropsWithChildren,
     type RefObject,
@@ -13,19 +12,15 @@ import { matchTokenizedUrl, tokenizeUrl } from "../utils/url";
 import type RouterCurrentRoute from "../types/RouterCurrentRoute";
 import type RouterProps from "../types/RouterProps";
 import { RouterContext } from "./context";
-import useMoranaAppContext from "@root/core/hooks/useMoranaAppContext";
 import type { RouterCache } from "@root/types/RouterCache";
-import type NavigationState from "@root/types/NavigationState";
 
 export default function Router({ children }: PropsWithChildren) {
     const [routes, setRoutes] = useState<RouteData[]>([]);
+
     const [routerCache, setRouterCache] = useState<RouterCache>({});
+    const [navigationStack, setNavigationStack] = useState<string[]>([]);
 
-    const currentRouteRef = useRef<RouterCurrentRoute>(null);
-
-    const [navigationState, setNavigationState] = useState<
-        NavigationState | undefined
-    >(undefined);
+    const [canNavigate, setCanNavigate] = useState(true);
 
     const [currentPath, setCurrentPath] = useState<{
         path: string;
@@ -35,7 +30,30 @@ export default function Router({ children }: PropsWithChildren) {
         search: window.location.search,
     });
 
-    const { navAnimationBuilder } = useMoranaAppContext();
+    const __updateNavigationStack = useCallback(
+        (routeUUID: string | undefined) => {
+            const MAX_STACK_ITEMS = 10;
+
+            if (!routeUUID) {
+                return;
+            }
+
+            setNavigationStack((current) => {
+                if (current.at(-1) === routeUUID) {
+                    return current;
+                }
+
+                const len = current.push(routeUUID);
+
+                if (len + 1 > MAX_STACK_ITEMS) {
+                    current.shift();
+                }
+
+                return current;
+            });
+        },
+        [setNavigationStack],
+    );
 
     const __addToRouterCache = useCallback(
         (uuid: string, ref: RefObject<HTMLDivElement | null> | null) => {
@@ -79,79 +97,21 @@ export default function Router({ children }: PropsWithChildren) {
 
         responseData.uuid ??= routes.find((r) => r.url === "*")?.uuid;
 
+        __updateNavigationStack(responseData.uuid);
+
         return responseData;
-    }, [currentPath, routes]);
-
-    useLayoutEffect(() => {
-        if (!navigationState?.target) {
-            return;
-        }
-
-        const routeRef = routerCache[navigationState?.target];
-
-        if (!routeRef?.current) {
-            return;
-        }
-
-        if (navigationState.type === "exit") {
-            navAnimationBuilder?.route?.onExitAnimation?.(routeRef);
-        } else {
-            navAnimationBuilder?.route?.onEnterAnimation?.(routeRef);
-        }
-
-        setTimeout(() => {
-            navAnimationBuilder?.route?.onAnimationCleanup?.(routeRef);
-        }, navAnimationBuilder?.transitionDuration?.cleanupDelay ?? 0);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [navigationState]);
-
-    // sync currentRoute Ref
-    useLayoutEffect(() => {
-        currentRouteRef.current = currentRoute;
-    }, [currentRoute]);
+    }, [currentPath, routes, __updateNavigationStack]);
 
     const __handleNavEvent = useCallback(() => {
-        if (navigationState !== undefined) {
-            return;
-        }
-
-        setNavigationState({
-            type: "exit",
-            target: currentRouteRef.current?.uuid,
+        setCurrentPath({
+            path: window.location.pathname,
+            search: window.location.search,
         });
 
-        setTimeout(() => {
-            setCurrentPath({
-                path: window.location.pathname,
-                search: window.location.search,
-            });
-        }, navAnimationBuilder?.transitionDuration?.pre ?? 200);
-    }, [navAnimationBuilder?.transitionDuration?.pre, navigationState]);
+        setCanNavigate(false);
 
-    // clean animation state
-    useLayoutEffect(() => {
-        if (navigationState === undefined) {
-            return;
-        }
-
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setNavigationState({
-            type: "enter",
-            target: currentRoute.uuid,
-        });
-
-        const tDuration = navAnimationBuilder?.transitionDuration;
-
-        const timeout = setTimeout(
-            () => setNavigationState(undefined),
-            tDuration?.post
-                ? tDuration?.post * 2 + (tDuration?.navDebounce ?? 0)
-                : 1500,
-        );
-
-        return () => clearTimeout(timeout);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentPath]);
+        queueMicrotask(() => setTimeout(() => setCanNavigate(true), 1000));
+    }, []);
 
     useLayoutEffect(() => {
         window.addEventListener("popstate", __handleNavEvent);
@@ -178,6 +138,10 @@ export default function Router({ children }: PropsWithChildren) {
 
     const navigateTo = useCallback(
         ({ path, replace }: { path: string; replace?: boolean }) => {
+            if (!canNavigate) {
+                return;
+            }
+
             if (replace) {
                 setRouterCache({});
                 window.history.replaceState({}, "", path);
@@ -187,7 +151,7 @@ export default function Router({ children }: PropsWithChildren) {
 
             window.dispatchEvent(new PopStateEvent("popstate"));
         },
-        [],
+        [canNavigate],
     );
 
     const navigateBack = useCallback(() => {
@@ -199,9 +163,9 @@ export default function Router({ children }: PropsWithChildren) {
             currentRoute: currentRoute,
             path: currentPath.path,
             search: currentPath.search,
-            navigationState: navigationState,
+            navigationStack: navigationStack,
         };
-    }, [currentRoute, currentPath, navigationState]);
+    }, [currentRoute, currentPath, navigationStack]);
 
     const values: RouterContextType = useMemo(() => {
         return {

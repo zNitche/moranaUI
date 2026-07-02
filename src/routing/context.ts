@@ -11,7 +11,11 @@ export const RouterContext = createContext<RouterContextType>({
         _ref: RefObject<HTMLDivElement | null> | null,
     ) => undefined,
     clearRouterCache: () => undefined,
-    router: { currentRoute: undefined, path: "", navigationState: undefined },
+    router: {
+        currentRoute: undefined,
+        path: "",
+        navigationStack: [],
+    },
     navigateTo: (_params: { path: string; replace?: boolean }) => undefined,
     navigateBack: () => undefined,
 });

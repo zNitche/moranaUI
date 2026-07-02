@@ -1,6 +1,5 @@
 import {
     useCallback,
-    useLayoutEffect,
     useMemo,
     useRef,
     useState,
@@ -12,14 +11,12 @@ import { clsx } from "@root/utils";
 import type MoranaPageContextType from "@root/types/MoranaPageContextType";
 import { MoranaPageContext } from "@root/core/context";
 import type { PageStructuralComponentType } from "@root/types/PageStructuralComponentType";
-import useMoranaAppContext from "@root/core/hooks/useMoranaAppContext";
-import useRouterContext from "@root/routing/hooks/useRouterContext";
 
 export default function MoranaPage({ children }: PropsWithChildren) {
     const wrapperRef = useRef<HTMLDivElement>(null);
 
-    const { navAnimationBuilder } = useMoranaAppContext();
-    const { router } = useRouterContext();
+    // const { navAnimationBuilder } = useMoranaAppContext();
+    // const { router } = useRouterContext();
 
     const [
         pageStructuralComponentsRegistry,
@@ -52,44 +49,44 @@ export default function MoranaPage({ children }: PropsWithChildren) {
         [],
     );
 
-    useLayoutEffect(() => {
-        const navigationState = router?.navigationState;
+    // useLayoutEffect(() => {
+    //     const navigationState = router?.navigationState;
 
-        if (!navigationState?.target) {
-            return;
-        }
+    //     if (!navigationState?.target) {
+    //         return;
+    //     }
 
-        if (!wrapperRef?.current) {
-            return;
-        }
+    //     if (!wrapperRef?.current) {
+    //         return;
+    //     }
 
-        if (navigationState.type === "exit") {
-            if (pageStructuralComponentsRegistry?.content) {
-                navAnimationBuilder?.page?.onExitAnimation?.(
-                    pageStructuralComponentsRegistry?.content,
-                );
-            }
+    //     if (navigationState.type === "exit") {
+    //         if (pageStructuralComponentsRegistry?.content) {
+    //             navAnimationBuilder?.page?.onExitAnimation?.(
+    //                 pageStructuralComponentsRegistry?.content,
+    //             );
+    //         }
 
-            if (pageStructuralComponentsRegistry?.header) {
-                navAnimationBuilder?.page?.onExitAnimation?.(
-                    pageStructuralComponentsRegistry?.header,
-                );
-            }
-        } else {
-            if (pageStructuralComponentsRegistry?.content) {
-                navAnimationBuilder?.page?.onEnterAnimation?.(
-                    pageStructuralComponentsRegistry?.content,
-                );
-            }
+    //         if (pageStructuralComponentsRegistry?.header) {
+    //             navAnimationBuilder?.page?.onExitAnimation?.(
+    //                 pageStructuralComponentsRegistry?.header,
+    //             );
+    //         }
+    //     } else {
+    //         if (pageStructuralComponentsRegistry?.content) {
+    //             navAnimationBuilder?.page?.onEnterAnimation?.(
+    //                 pageStructuralComponentsRegistry?.content,
+    //             );
+    //         }
 
-            if (pageStructuralComponentsRegistry?.header) {
-                navAnimationBuilder?.page?.onEnterAnimation?.(
-                    pageStructuralComponentsRegistry?.header,
-                );
-            }
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [router?.navigationState]);
+    //         if (pageStructuralComponentsRegistry?.header) {
+    //             navAnimationBuilder?.page?.onEnterAnimation?.(
+    //                 pageStructuralComponentsRegistry?.header,
+    //             );
+    //         }
+    //     }
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [router?.navigationState]);
 
     const values: MoranaPageContextType = useMemo(() => {
         return {

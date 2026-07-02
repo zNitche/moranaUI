@@ -34,6 +34,7 @@ export default function Route({
 
     const { __addRoute, router, routerCache, __addToRouterCache } =
         useRouterContext();
+
     const { navAnimationBuilder } = useMoranaAppContext();
 
     const [lifecycleHooks, setLifecycleHooks] = useState<
@@ -80,29 +81,37 @@ export default function Route({
         [],
     );
 
+    const handleAnimations = useCallback(
+        async (isEntering: boolean) => {
+            if (isEntering) {
+                await navAnimationBuilder?.route?.onEnterAnimation?.(
+                    wrapperRef,
+                );
+            } else {
+                await navAnimationBuilder?.route?.onExitAnimation?.(wrapperRef);
+            }
+
+            await navAnimationBuilder?.route?.onAnimationCleanup?.(wrapperRef);
+        },
+        [navAnimationBuilder],
+    );
+
     useLayoutEffect(() => {
-        if (routeUUID !== router.currentRoute?.uuid) {
+        const isCurrentlyEntering = router.navigationStack.at(-1) === routeUUID;
+        const isCurrentlyExiting = router.navigationStack.at(-2) === routeUUID;
+
+        if (!isCurrentlyEntering && !isCurrentlyExiting) {
             return;
         }
 
-        switch (router.navigationState?.type) {
-            case "enter":
-                lifecycleHooks?.onEnter?.();
-                return;
+        void handleAnimations(isCurrentlyEntering);
 
-            case "exit":
-                lifecycleHooks?.onExit?.();
-                return;
-
-            default:
-                return;
+        if (isCurrentlyEntering) {
+            lifecycleHooks?.onEnter?.();
+        } else {
+            lifecycleHooks?.onExit?.();
         }
-    }, [
-        router.navigationState,
-        router.currentRoute?.uuid,
-        routeUUID,
-        lifecycleHooks,
-    ]);
+    }, [handleAnimations, lifecycleHooks, routeUUID, router]);
 
     const routeComponent = useMemo(() => {
         if (!inCache && !isCurrentRoute) {

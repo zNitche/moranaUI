@@ -12,13 +12,13 @@ export default interface NavAnimationBuilder {
 
     page?: {
         wrapperClassName?: string;
-        onEnterAnimation?: (pageRef: AnimationWrapperRef) => void;
-        onExitAnimation?: (pageRef: AnimationWrapperRef) => void;
+        onEnterAnimation?: (pageRef: AnimationWrapperRef) => Promise<void>;
+        onExitAnimation?: (pageRef: AnimationWrapperRef) => Promise<void>;
     };
     route?: {
         wrapperClassName?: string;
-        onEnterAnimation?: (routeRef: AnimationWrapperRef) => void;
-        onExitAnimation?: (routeRef: AnimationWrapperRef) => void;
-        onAnimationCleanup?: (routeRef: AnimationWrapperRef) => void;
+        onEnterAnimation?: (routeRef: AnimationWrapperRef) => Promise<void>;
+        onExitAnimation?: (routeRef: AnimationWrapperRef) => Promise<void>;
+        onAnimationCleanup?: (routeRef: AnimationWrapperRef) => Promise<void>;
     };
 }
