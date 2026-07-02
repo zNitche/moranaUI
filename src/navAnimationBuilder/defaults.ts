@@ -4,12 +4,6 @@ import type { AnimationWrapperRef } from "@root/types/NavAnimationBuilder";
 import { sleep } from "@root/utils";
 
 export const defaultSlideNavAnimationBuilder: NavAnimationBuilder = {
-    transitionDuration: {
-        pre: 0,
-        post: 0,
-        navDebounce: 1500,
-        cleanupDelay: 0,
-    },
     route: {
         // eslint-disable-next-line @typescript-eslint/require-await
         onEnterAnimation: async (routeRef: AnimationWrapperRef) => {
@@ -20,6 +14,7 @@ export const defaultSlideNavAnimationBuilder: NavAnimationBuilder = {
             }
 
             ref.classList.remove(classes.defaultAwayRoute);
+            ref.classList.remove(classes.parked);
 
             ref.classList.add(classes.defaultCurrentRoute);
             ref.classList.add(classes.defaultRouteEnterAnimation);
@@ -47,11 +42,15 @@ export const defaultSlideNavAnimationBuilder: NavAnimationBuilder = {
                 return;
             }
 
-            await sleep(200);
+            await sleep(300);
 
             ref.classList.remove(classes.routeTransition);
             ref.classList.remove(classes.defaultRouteExitAnimation);
             ref.classList.remove(classes.defaultRouteEnterAnimation);
+
+            if (ref.classList.contains(classes.defaultAwayRoute)) {
+                ref.classList.add(classes.parked);
+            }
         },
     },
 };
