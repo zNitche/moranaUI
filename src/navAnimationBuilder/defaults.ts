@@ -13,13 +13,14 @@ export const defaultSlideNavAnimationBuilder: NavAnimationBuilder = {
                 return;
             }
 
+            ref.classList.add(classes.routeTransition);
+
             ref.classList.remove(classes.defaultAwayRoute);
             ref.classList.remove(classes.parked);
 
             ref.classList.add(classes.defaultCurrentRoute);
             ref.classList.add(classes.defaultRouteEnterAnimation);
         },
-        // eslint-disable-next-line @typescript-eslint/require-await
         onExitAnimation: async (routeRef: AnimationWrapperRef) => {
             const ref = routeRef.current;
 
@@ -27,12 +28,14 @@ export const defaultSlideNavAnimationBuilder: NavAnimationBuilder = {
                 return;
             }
 
-            ref.classList.add(classes.routeTransition);
-
             ref.classList.remove(classes.defaultCurrentRoute);
             ref.classList.add(classes.defaultAwayRoute);
 
             ref.classList.add(classes.defaultRouteExitAnimation);
+
+            await sleep(300);
+
+            ref.classList.add(classes.parked);
         },
 
         onAnimationCleanup: async (routeRef: AnimationWrapperRef) => {
@@ -47,10 +50,6 @@ export const defaultSlideNavAnimationBuilder: NavAnimationBuilder = {
             ref.classList.remove(classes.routeTransition);
             ref.classList.remove(classes.defaultRouteExitAnimation);
             ref.classList.remove(classes.defaultRouteEnterAnimation);
-
-            if (ref.classList.contains(classes.defaultAwayRoute)) {
-                ref.classList.add(classes.parked);
-            }
         },
     },
 };

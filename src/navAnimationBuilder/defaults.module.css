@@ -1,14 +1,15 @@
+/* slide in/out */
+
 .routeTransition {
     transition: transform 0.3s linear;
 }
 
 .defaultCurrentRoute {
-    z-index: 1;
-} 
+    z-index: 2;
+}
 
 .defaultAwayRoute {
-    z-index: 2;
-    transform: translateX(100%);
+    z-index: 1;
 }
 
 .defaultAwayRoute.parked {
@@ -27,12 +28,21 @@
 }
 
 .defaultRouteEnterAnimation {
-    transition: none;
-    transform: translateX(0%);
+    animation: slideInKeyframes 0.3s ease-out forwards;
 }
 
 .defaultRouteExitAnimation {
+    transform: none;
+}
+
+@keyframes slideInKeyframes {
+  from {
+    /* transform: translateX(-100%); */
     transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }
 
 /* fade in/out */
