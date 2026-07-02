@@ -97,6 +97,10 @@ export default function Route({
     );
 
     useLayoutEffect(() => {
+        if (router.navigationStack.length < 2) {
+            return;
+        }
+
         const isCurrentlyEntering = router.navigationStack.at(-1) === routeUUID;
         const isCurrentlyExiting = router.navigationStack.at(-2) === routeUUID;
 
