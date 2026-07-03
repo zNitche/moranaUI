@@ -15,6 +15,8 @@ import { clsx, generateUUID } from "@root/utils";
 import type RouteContextType from "@root/types/RouteContextType";
 import { RouteContext } from "@root/routing/context";
 import useMoranaAppContext from "@root/core/hooks/useMoranaAppContext";
+import useDetectTransition from "@root/core/hooks/useDetectTransition";
+import useHandleTransitionAnimation from "@root/core/hooks/useHandleTransitionAnimation";
 
 interface RouteProps {
     readonly url: string;
@@ -44,6 +46,9 @@ export default function Route({
           }
         | undefined
     >(undefined);
+
+    const { transitionDetails } = useDetectTransition(routeUUID);
+    const { handleTransitionAnimation } = useHandleTransitionAnimation();
 
     useEffect(() => {
         __addRoute({ uuid: routeUUID, url, component });
@@ -81,41 +86,32 @@ export default function Route({
         [],
     );
 
-    const handleAnimations = useCallback(
-        async (isEntering: boolean) => {
-            if (isEntering) {
-                await navAnimationBuilder?.route?.onEnterAnimation?.(
-                    wrapperRef,
-                );
-            } else {
-                await navAnimationBuilder?.route?.onExitAnimation?.(wrapperRef);
-            }
-
-            await navAnimationBuilder?.route?.onAnimationCleanup?.(wrapperRef);
-        },
-        [navAnimationBuilder],
-    );
-
     useLayoutEffect(() => {
-        if (router.navigationStack.length < 2) {
+        if (!transitionDetails.detected) {
             return;
         }
 
-        const isCurrentlyEntering = router.navigationStack.at(-1) === routeUUID;
-        const isCurrentlyExiting = router.navigationStack.at(-2) === routeUUID;
+        void handleTransitionAnimation({
+            transitionDetails: transitionDetails,
+            onAnimationCleanup: navAnimationBuilder?.route?.onAnimationCleanup,
+            onEnterAnimation: navAnimationBuilder?.route?.onEnterAnimation,
+            onExitAnimation: navAnimationBuilder?.route?.onExitAnimation,
+            wrapperRef: wrapperRef,
+        });
 
-        if (!isCurrentlyEntering && !isCurrentlyExiting) {
-            return;
-        }
-
-        void handleAnimations(isCurrentlyEntering);
-
-        if (isCurrentlyEntering) {
+        if (transitionDetails.isCurrentlyEntering) {
             lifecycleHooks?.onEnter?.();
         } else {
             lifecycleHooks?.onExit?.();
         }
-    }, [handleAnimations, lifecycleHooks, routeUUID, router]);
+    }, [
+        handleTransitionAnimation,
+        lifecycleHooks,
+        navAnimationBuilder?.route,
+        routeUUID,
+        router,
+        transitionDetails,
+    ]);
 
     const routeComponent = useMemo(() => {
         if (!inCache && !isCurrentRoute) {
@@ -127,6 +123,12 @@ export default function Route({
             __addToRouterCache(routeUUID, wrapperRef);
         }
 
+        const builtInCssClasses: (string | undefined)[] = [];
+
+        if (navAnimationBuilder?.route?.includeDefaultCssClasses) {
+            builtInCssClasses.push(classes.hidden);
+        }
+
         const Component = component;
         const Wrapper = wrapper;
 
@@ -135,6 +137,7 @@ export default function Route({
                 ref={wrapperRef}
                 className={clsx(
                     classes.route,
+                    ...builtInCssClasses,
                     navAnimationBuilder?.route?.wrapperClassName,
                 )}
                 id={routeUUID}
