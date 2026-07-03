@@ -1,5 +1,6 @@
 import {
     useCallback,
+    useLayoutEffect,
     useMemo,
     useRef,
     useState,
@@ -11,12 +12,19 @@ import { clsx } from "@root/utils";
 import type MoranaPageContextType from "@root/types/MoranaPageContextType";
 import { MoranaPageContext } from "@root/core/context";
 import type { PageStructuralComponentType } from "@root/types/PageStructuralComponentType";
+import useMoranaAppContext from "@root/core/hooks/useMoranaAppContext";
+import useDetectTransition from "@root/core/hooks/useDetectTransition";
+import useRouteContext from "@root/routing/hooks/useRouteContext";
+import useHandleTransitionAnimation from "@root/core/hooks/useHandleTransitionAnimation";
 
 export default function MoranaPage({ children }: PropsWithChildren) {
     const wrapperRef = useRef<HTMLDivElement>(null);
 
-    // const { navAnimationBuilder } = useMoranaAppContext();
-    // const { router } = useRouterContext();
+    const { routeUUID } = useRouteContext();
+    const { navAnimationBuilder } = useMoranaAppContext();
+
+    const { transitionDetails } = useDetectTransition(routeUUID);
+    const { handleTransitionAnimation } = useHandleTransitionAnimation();
 
     const [
         pageStructuralComponentsRegistry,
@@ -49,44 +57,25 @@ export default function MoranaPage({ children }: PropsWithChildren) {
         [],
     );
 
-    // useLayoutEffect(() => {
-    //     const navigationState = router?.navigationState;
+    useLayoutEffect(() => {
+        if (!transitionDetails.detected) {
+            return;
+        }
 
-    //     if (!navigationState?.target) {
-    //         return;
-    //     }
-
-    //     if (!wrapperRef?.current) {
-    //         return;
-    //     }
-
-    //     if (navigationState.type === "exit") {
-    //         if (pageStructuralComponentsRegistry?.content) {
-    //             navAnimationBuilder?.page?.onExitAnimation?.(
-    //                 pageStructuralComponentsRegistry?.content,
-    //             );
-    //         }
-
-    //         if (pageStructuralComponentsRegistry?.header) {
-    //             navAnimationBuilder?.page?.onExitAnimation?.(
-    //                 pageStructuralComponentsRegistry?.header,
-    //             );
-    //         }
-    //     } else {
-    //         if (pageStructuralComponentsRegistry?.content) {
-    //             navAnimationBuilder?.page?.onEnterAnimation?.(
-    //                 pageStructuralComponentsRegistry?.content,
-    //             );
-    //         }
-
-    //         if (pageStructuralComponentsRegistry?.header) {
-    //             navAnimationBuilder?.page?.onEnterAnimation?.(
-    //                 pageStructuralComponentsRegistry?.header,
-    //             );
-    //         }
-    //     }
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [router?.navigationState]);
+        void handleTransitionAnimation({
+            transitionDetails: transitionDetails,
+            onAnimationCleanup: navAnimationBuilder?.page?.onAnimationCleanup,
+            onEnterAnimation: navAnimationBuilder?.page?.onEnterAnimation,
+            onExitAnimation: navAnimationBuilder?.page?.onExitAnimation,
+            wrapperRef: wrapperRef,
+        });
+    }, [
+        handleTransitionAnimation,
+        navAnimationBuilder?.page,
+        transitionDetails,
+        transitionDetails.detected,
+        transitionDetails.isCurrentlyEntering,
+    ]);
 
     const values: MoranaPageContextType = useMemo(() => {
         return {
