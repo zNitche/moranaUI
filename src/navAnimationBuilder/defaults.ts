@@ -5,6 +5,7 @@ import { sleep } from "@root/utils";
 
 export const defaultSlideNavAnimationBuilder: NavAnimationBuilder = {
     route: {
+        includeDefaultCssClasses: false,
         // eslint-disable-next-line @typescript-eslint/require-await
         onEnterAnimation: async (routeRef: AnimationWrapperRef) => {
             const ref = routeRef.current;
@@ -37,7 +38,6 @@ export const defaultSlideNavAnimationBuilder: NavAnimationBuilder = {
 
             ref.classList.add(classes.parked);
         },
-
         onAnimationCleanup: async (routeRef: AnimationWrapperRef) => {
             const ref = routeRef.current;
 
@@ -54,60 +54,79 @@ export const defaultSlideNavAnimationBuilder: NavAnimationBuilder = {
     },
 };
 
-// export const defaultFadeNavAnimationBuilder: NavAnimationBuilder = {
-//     transitionDuration: {
-//         pre: 1,
-//         post: 200,
-//         navDebounce: 1500,
-//     },
-//     route: {
-//         onEnterAnimation: (routeRef: AnimationWrapperRef) => {
-//             const ref = routeRef.current;
+export const defaultFadeNavAnimationBuilder: NavAnimationBuilder = {
+    route: {
+        includeDefaultCssClasses: false,
+        // eslint-disable-next-line @typescript-eslint/require-await
+        onEnterAnimation: async (routeRef: AnimationWrapperRef) => {
+            const ref = routeRef.current;
 
-//             if (!ref) {
-//                 return;
-//             }
+            if (!ref) {
+                return;
+            }
 
-//             ref.classList.remove(classes.defaultAwayRouteFade);
-//             ref.classList.add(classes.defaultCurrentRouteFade);
-//         },
-//         onExitAnimation: (routeRef: AnimationWrapperRef) => {
-//             const ref = routeRef.current;
+            ref.classList.remove(classes.defaultAwayRouteFade);
+            ref.classList.remove(classes.hidden);
 
-//             if (!ref) {
-//                 return;
-//             }
+            ref.classList.add(classes.defaultCurrentRouteFade);
+        },
+        // eslint-disable-next-line @typescript-eslint/require-await
+        onExitAnimation: async (routeRef: AnimationWrapperRef) => {
+            const ref = routeRef.current;
 
-//             ref.classList.remove(classes.defaultCurrentRouteFade);
-//             ref.classList.add(classes.defaultAwayRouteFade);
-//         },
-//     },
-//     page: {
-//         onEnterAnimation: (routeRef: AnimationWrapperRef) => {
-//             const ref = routeRef.current;
+            if (!ref) {
+                return;
+            }
 
-//             if (!ref) {
-//                 return;
-//             }
+            ref.classList.remove(classes.defaultCurrentRouteFade);
+            ref.classList.add(classes.defaultAwayRouteFade);
+        },
+        onAnimationCleanup: async (routeRef: AnimationWrapperRef) => {
+            const ref = routeRef.current;
 
-//             ref.classList.add(classes.defaultFadeInAnimation);
+            if (!ref) {
+                return;
+            }
 
-//             setTimeout(() => {
-//                 ref.classList.remove(classes.defaultFadeInAnimation);
-//             }, 200);
-//         },
-//         onExitAnimation: (routeRef: AnimationWrapperRef) => {
-//             const ref = routeRef.current;
+            await sleep(300);
 
-//             if (!ref) {
-//                 return;
-//             }
+            if (ref.classList.contains(classes.defaultAwayRouteFade)) {
+                ref.classList.add(classes.hidden);
+            }
+        },
+    },
+    page: {
+        // eslint-disable-next-line @typescript-eslint/require-await
+        onEnterAnimation: async (pageRef: AnimationWrapperRef) => {
+            const ref = pageRef.current;
 
-//             ref.classList.add(classes.defaultFadeOutAnimation);
+            if (!ref) {
+                return;
+            }
 
-//             setTimeout(() => {
-//                 ref.classList.remove(classes.defaultFadeOutAnimation);
-//             }, 200);
-//         },
-//     },
-// };
+            ref.classList.add(classes.defaultFadeInAnimation);
+        },
+        // eslint-disable-next-line @typescript-eslint/require-await
+        onExitAnimation: async (pageRef: AnimationWrapperRef) => {
+            const ref = pageRef.current;
+
+            if (!ref) {
+                return;
+            }
+
+            ref.classList.add(classes.defaultFadeOutAnimation);
+        },
+        onAnimationCleanup: async (pageRef: AnimationWrapperRef) => {
+            const ref = pageRef.current;
+
+            if (!ref) {
+                return;
+            }
+
+            await sleep(300);
+
+            ref.classList.remove(classes.defaultFadeInAnimation)
+            ref.classList.remove(classes.defaultFadeOutAnimation)
+        },
+    },
+};

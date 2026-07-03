@@ -48,19 +48,23 @@
 /* fade in/out */
 
 .defaultCurrentRouteFade {
-    display: block;
+    z-index: 1;
 }
 
 .defaultAwayRouteFade {
+    z-index: 2;
+}
+
+.defaultAwayRouteFade.hidden {
     display: none;
 }
 
 .defaultFadeInAnimation {
-    animation: fadeInKeyframes 0.2s forwards;
+    animation: fadeInKeyframes 0.3s forwards;
 }
 
 .defaultFadeOutAnimation {
-    animation: fadeOutKeyframes 0.2s forwards;
+    animation: fadeOutKeyframes 0.3s forwards;
 }
 
 @keyframes fadeInKeyframes {
