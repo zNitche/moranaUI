@@ -22,12 +22,18 @@ export default function useHandleTransitionAnimation() {
             }
 
             if (transitionDetails.isCurrentlyEntering) {
-                await onEnterAnimation?.(wrapperRef);
+                await onEnterAnimation?.(
+                    wrapperRef,
+                    transitionDetails.direction,
+                );
             } else {
-                await onExitAnimation?.(wrapperRef);
+                await onExitAnimation?.(
+                    wrapperRef,
+                    transitionDetails.direction,
+                );
             }
 
-            await onAnimationCleanup?.(wrapperRef);
+            await onAnimationCleanup?.(wrapperRef, transitionDetails.direction);
         },
         [],
     );

@@ -17,18 +17,30 @@
     animation: slideInKeyframes 0.3s ease-out forwards;
 }
 
+.defaultRouteEnterAnimation.back {
+    animation: slideInKeyframesBackward 0.3s ease-out forwards;
+}
+
 .defaultRouteExitAnimation {
     transform: none;
 }
 
 @keyframes slideInKeyframes {
-  from {
-    /* transform: translateX(-100%); */
-    transform: translateX(100%);
-  }
-  to {
-    transform: translateX(0);
-  }
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInKeyframesBackward {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(0);
+    }
 }
 
 /* fade in/out */

@@ -2,25 +2,31 @@ import type NavAnimationBuilder from "@root/types/NavAnimationBuilder";
 import classes from "./defaults.module.css";
 import type { AnimationWrapperRef } from "@root/types/NavAnimationBuilder";
 import { sleep } from "@root/utils";
+import type { NavigationTransitionDirection } from "@root/types/NavigationTransitionDirection";
 
 export const defaultSlideNavAnimationBuilder: NavAnimationBuilder = {
     route: {
         includeDefaultCssClasses: false,
         // eslint-disable-next-line @typescript-eslint/require-await
-        onEnterAnimation: async (routeRef: AnimationWrapperRef) => {
+        onEnterAnimation: async (
+            routeRef: AnimationWrapperRef,
+            direction: NavigationTransitionDirection | undefined,
+        ) => {
             const ref = routeRef.current;
 
             if (!ref) {
                 return;
             }
 
-            ref.classList.add(classes.routeTransition);
-
             ref.classList.remove(classes.defaultAwayRoute);
             ref.classList.remove(classes.parked);
 
             ref.classList.add(classes.defaultCurrentRoute);
             ref.classList.add(classes.defaultRouteEnterAnimation);
+
+            if (direction === "back") {
+                ref.classList.add(classes.back);
+            }
         },
         // eslint-disable-next-line @typescript-eslint/require-await
         onExitAnimation: async (routeRef: AnimationWrapperRef) => {
@@ -49,7 +55,9 @@ export const defaultSlideNavAnimationBuilder: NavAnimationBuilder = {
             }
 
             ref.classList.remove(classes.defaultRouteExitAnimation);
+
             ref.classList.remove(classes.defaultRouteEnterAnimation);
+            ref.classList.remove(classes.back);
         },
     },
 };
