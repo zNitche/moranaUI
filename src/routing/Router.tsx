@@ -13,12 +13,15 @@ import type RouterCurrentRoute from "../types/RouterCurrentRoute";
 import type RouterProps from "../types/RouterProps";
 import { RouterContext } from "./context";
 import type { RouterCache } from "@root/types/RouterCache";
+import type RouterNavigationStackItem from "@root/types/RouterNavigationStack";
 
 export default function Router({ children }: PropsWithChildren) {
     const [routes, setRoutes] = useState<RouteData[]>([]);
 
     const [routerCache, setRouterCache] = useState<RouterCache>({});
-    const [navigationStack, setNavigationStack] = useState<string[]>([]);
+    const [navigationStack, setNavigationStack] = useState<
+        RouterNavigationStackItem[]
+    >([]);
 
     const [canNavigate, setCanNavigate] = useState(true);
 
@@ -39,11 +42,11 @@ export default function Router({ children }: PropsWithChildren) {
             }
 
             setNavigationStack((current) => {
-                if (current.at(-1) === routeUUID) {
+                if (current.at(-1)?.routeUUID === routeUUID) {
                     return current;
                 }
 
-                const len = current.push(routeUUID);
+                const len = current.push({ routeUUID: routeUUID });
 
                 if (len + 1 > MAX_STACK_ITEMS) {
                     current.shift();
