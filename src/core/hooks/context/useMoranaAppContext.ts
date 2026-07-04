@@ -1,5 +1,5 @@
+import { MoranaAppContext } from "@root/core/context";
 import { useContext } from "react";
-import { MoranaAppContext } from "../context";
 
 export default function useMoranaAppContext() {
     const context = useContext(MoranaAppContext);

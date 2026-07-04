@@ -14,9 +14,9 @@ import useRouterContext from "@root/routing/hooks/useRouterContext";
 import { clsx, generateUUID } from "@root/utils";
 import type RouteContextType from "@root/types/RouteContextType";
 import { RouteContext } from "@root/routing/context";
-import useMoranaAppContext from "@root/core/hooks/useMoranaAppContext";
 import useDetectTransition from "@root/core/hooks/useDetectTransition";
 import useHandleTransitionAnimation from "@root/core/hooks/useHandleTransitionAnimation";
+import useMoranaAppContext from "@root/core/hooks/context/useMoranaAppContext";
 
 interface RouteProps {
     readonly url: string;
