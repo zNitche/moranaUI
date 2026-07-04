@@ -29,7 +29,10 @@ export const defaultSlideNavAnimationBuilder: NavAnimationBuilder = {
             }
         },
         // eslint-disable-next-line @typescript-eslint/require-await
-        onExitAnimation: async (routeRef: AnimationWrapperRef) => {
+        onExitAnimation: async (
+            routeRef: AnimationWrapperRef,
+            direction: NavigationTransitionDirection | undefined,
+        ) => {
             const ref = routeRef.current;
 
             if (!ref) {
@@ -40,6 +43,10 @@ export const defaultSlideNavAnimationBuilder: NavAnimationBuilder = {
             ref.classList.add(classes.defaultAwayRoute);
 
             ref.classList.add(classes.defaultRouteExitAnimation);
+
+            if (direction === "back") {
+                ref.classList.add(classes.back);
+            }
         },
         onAnimationCleanup: async (routeRef: AnimationWrapperRef) => {
             const ref = routeRef.current;
@@ -48,7 +55,7 @@ export const defaultSlideNavAnimationBuilder: NavAnimationBuilder = {
                 return;
             }
 
-            await sleep(400);
+            await sleep(600);
 
             if (ref.classList.contains(classes.defaultAwayRoute)) {
                 ref.classList.add(classes.parked);

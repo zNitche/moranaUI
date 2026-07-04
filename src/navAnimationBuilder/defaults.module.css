@@ -1,12 +1,22 @@
-/* slide in/out */
+/* ANIMATION slide in/out */
 
 .defaultCurrentRoute {
     z-index: 2;
     box-shadow: 5px 5px 100px rgba(0, 0, 0, 0.5);
 }
 
+.defaultCurrentRoute.back {
+    z-index: 1;
+    box-shadow: none;
+}
+
 .defaultAwayRoute {
     z-index: 1;
+}
+
+.defaultAwayRoute.back {
+    z-index: 2;
+    box-shadow: 5px 5px 100px rgba(0, 0, 0, 0.5);
 }
 
 .defaultAwayRoute.parked {
@@ -14,15 +24,19 @@
 }
 
 .defaultRouteEnterAnimation {
-    animation: slideInKeyframes 0.3s ease-out forwards;
+    animation: slideInKeyframes 0.5s ease-out forwards;
 }
 
 .defaultRouteEnterAnimation.back {
-    animation: slideInKeyframesBackward 0.3s ease-out forwards;
+   animation: none;
 }
 
 .defaultRouteExitAnimation {
     transform: none;
+}
+
+.defaultRouteExitAnimation.back {
+    animation: slideInKeyframesBackward 0.5s ease-out forwards;
 }
 
 @keyframes slideInKeyframes {
@@ -36,14 +50,14 @@
 
 @keyframes slideInKeyframesBackward {
     from {
-        transform: translateX(-100%);
+        transform: translateX(0%);
     }
     to {
-        transform: translateX(0);
+        transform: translateX(100%);
     }
 }
 
-/* fade in/out */
+/* ANIMATION fade in/out */
 
 .defaultCurrentRouteFade {
     z-index: 1;
