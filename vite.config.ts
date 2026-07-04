@@ -1,6 +1,6 @@
 import { defineConfig, esmExternalRequirePlugin } from "vite";
 import react from "@vitejs/plugin-react";
-import { resolve } from "path";
+import { resolve } from "node:path";
 import { dts_generator, rename_styles } from "./vite_plugins";
 
 // https://vite.dev/config/
@@ -11,9 +11,13 @@ export default defineConfig({
         emptyOutDir: true,
         target: "es2024",
         lib: {
-            entry: resolve(__dirname, "src/index.ts"),
+            entry: {
+                index: resolve(import.meta.dirname, "src/index.ts"),
+            },
             name: "moranaui",
-            fileName: (format) => `moranaui.${format}.js`,
+            fileName: (format, entryName) => {
+                return `moranaui.${entryName}.${format}.js`;
+            },
             formats: ["es"],
             // ignored in current entrypoint setup, rename_styles works as workaround
             // cssFileName: "styles",
