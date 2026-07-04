@@ -1,11 +1,11 @@
 import { defineConfig, esmExternalRequirePlugin } from "vite";
 import react from "@vitejs/plugin-react";
 import { resolve } from "node:path";
-import { dts_generator, rename_styles } from "./vite_plugins";
+import { dts_generator } from "./vite_plugins";
 
 // https://vite.dev/config/
 export default defineConfig({
-    plugins: [react(), dts_generator(), rename_styles()],
+    plugins: [react(), dts_generator()],
     build: {
         outDir: "dist",
         emptyOutDir: true,
@@ -19,8 +19,7 @@ export default defineConfig({
                 return `moranaui.${entryName}.${format}.js`;
             },
             formats: ["es"],
-            // ignored in current entrypoint setup, rename_styles works as workaround
-            // cssFileName: "styles",
+            cssFileName: "styles.css",
         },
         cssCodeSplit: true,
         rollupOptions: {
@@ -29,6 +28,19 @@ export default defineConfig({
                     external: ["react", "react-dom"],
                 }),
             ],
+            output: {
+                chunkFileNames: "moranaui.[format].js",
+                assetFileNames: (asset) => {
+                    if (
+                        asset.names.length === 1 &&
+                        asset.names[0].endsWith(".css")
+                    ) {
+                        return "styles.css";
+                    }
+
+                    return "[name].[ext]";
+                },
+            },
         },
     },
     resolve: {
