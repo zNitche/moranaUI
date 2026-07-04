@@ -11,9 +11,7 @@ export default defineConfig({
         emptyOutDir: true,
         target: "es2024",
         lib: {
-            entry: {
-                index: resolve(import.meta.dirname, "src/index.ts"),
-            },
+            entry: resolve(import.meta.dirname, "src/index.ts"),
             name: "moranaui",
             fileName: (format, entryName) => {
                 return `moranaui.${entryName}.${format}.js`;
