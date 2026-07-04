@@ -73,8 +73,6 @@ export default function Router({ children }: PropsWithChildren) {
         [routerCache],
     );
 
-    const clearRouterCache = useCallback(() => setRouterCache({}), []);
-
     const currentRoute: RouterCurrentRoute = useMemo(() => {
         const responseData: RouterCurrentRoute = {};
 
@@ -138,6 +136,14 @@ export default function Router({ children }: PropsWithChildren) {
         },
         [routes],
     );
+
+    const clearRouterCache = useCallback(() => {
+        setRouterCache({});
+
+        if (currentRoute.uuid) {
+            setNavigationStack([{ routeUUID: currentRoute.uuid }]);
+        }
+    }, [currentRoute]);
 
     const navigateTo = useCallback(
         ({ path, replace }: { path: string; replace?: boolean }) => {
