@@ -33,6 +33,7 @@
     },
     "include": [
         "src",
-        "vite_plugins"
+        "vite_plugins",
+        "tests"
     ]
 }

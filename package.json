@@ -35,7 +35,9 @@
     "scripts": {
         "build": "tsc -b && vite build",
         "lint": "eslint .",
-        "watch": "vite build --watch"
+        "watch": "vite build --watch",
+        "test": "vitest",
+        "test:coverage": "vitest run --coverage"
     },
     "peerDependencies": {
         "react": "19.2.6",
