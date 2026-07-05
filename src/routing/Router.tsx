@@ -58,6 +58,23 @@ export default function Router({ children }: PropsWithChildren) {
         [setNavigationStack],
     );
 
+    const __popFromRouterCache = useCallback(
+        (routeUUID: string) => {
+            setRouterCache((current) => {
+                const output: RouterCache = {};
+
+                for (const [key, val] of Object.entries(current)) {
+                    if (key !== routeUUID) {
+                        output[key] = val;
+                    }
+                }
+
+                return output;
+            });
+        },
+        [setRouterCache],
+    );
+
     const __addToRouterCache = useCallback(
         (uuid: string, ref: RefObject<HTMLDivElement | null> | null) => {
             if (Object.keys(routerCache).includes(uuid)) {
@@ -146,21 +163,35 @@ export default function Router({ children }: PropsWithChildren) {
     }, [currentRoute]);
 
     const navigateTo = useCallback(
-        ({ path, replace }: { path: string; replace?: boolean }) => {
+        ({
+            path,
+            replace,
+            popFromCache,
+        }: {
+            path: string;
+            replace?: boolean;
+            popFromCache?: boolean;
+        }) => {
             if (!canNavigate) {
                 return;
             }
 
             if (replace) {
-                setRouterCache({});
+                clearRouterCache();
                 window.history.replaceState({}, "", path);
             } else {
                 window.history.pushState({}, "", path);
             }
 
+            if (popFromCache) {
+                if (currentRoute.uuid) {
+                    __popFromRouterCache(currentRoute.uuid);
+                }
+            }
+
             window.dispatchEvent(new PopStateEvent("popstate"));
         },
-        [canNavigate],
+        [canNavigate, clearRouterCache, currentRoute, __popFromRouterCache],
     );
 
     const navigateBack = useCallback(() => {

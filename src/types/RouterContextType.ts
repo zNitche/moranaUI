@@ -15,9 +15,11 @@ export default interface RouterContextType {
     navigateTo: ({
         path,
         replace,
+        popFromCache,
     }: {
         path: string;
         replace?: boolean;
+        popFromCache?: boolean;
     }) => void;
     navigateBack: () => void;
 }

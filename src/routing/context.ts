@@ -16,7 +16,11 @@ export const RouterContext = createContext<RouterContextType>({
         path: "",
         navigationStack: [],
     },
-    navigateTo: (_params: { path: string; replace?: boolean }) => undefined,
+    navigateTo: (_params: {
+        path: string;
+        replace?: boolean;
+        popFromCache?: boolean;
+    }) => undefined,
     navigateBack: () => undefined,
 });
 
