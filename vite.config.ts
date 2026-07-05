@@ -21,7 +21,7 @@ export default defineConfig({
             formats: ["es"],
             cssFileName: "styles.css",
         },
-        cssCodeSplit: true,
+        cssCodeSplit: false,
         rollupOptions: {
             plugins: [
                 esmExternalRequirePlugin({
