@@ -4,6 +4,7 @@ import { defineConfig, esmExternalRequirePlugin } from "vite";
 import react from "@vitejs/plugin-react";
 import { resolve } from "node:path";
 import { dts_generator } from "./vite_plugins";
+import libPkg from "./package.json";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -25,7 +26,7 @@ export default defineConfig({
         rollupOptions: {
             plugins: [
                 esmExternalRequirePlugin({
-                    external: ["react", "react-dom"],
+                    external: [...Object.keys(libPkg.peerDependencies)],
                 }),
             ],
             output: {
