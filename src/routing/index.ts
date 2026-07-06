@@ -4,6 +4,9 @@ export { Router };
 import Route from "./components/Route/Route";
 export { Route };
 
+import MoranaRoutesWrapper from "./components/MoranaRoutesWrapper/MoranaRoutesWrapper";
+export { MoranaRoutesWrapper };
+
 import useRouter from "./hooks/useRouter";
 export { useRouter };
 

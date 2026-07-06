@@ -14,6 +14,7 @@ import type RouterProps from "../types/RouterProps";
 import { RouterContext } from "./context";
 import type { RouterCache } from "@root/types/RouterCache";
 import type RouterNavigationStackItem from "@root/types/RouterNavigationStack";
+import RouterContent from "./components/RouterContent/RouterContent";
 
 export default function Router({ children }: PropsWithChildren) {
     const [routes, setRoutes] = useState<RouteData[]>([]);
@@ -229,7 +230,7 @@ export default function Router({ children }: PropsWithChildren) {
 
     return (
         <RouterContext.Provider value={values}>
-            {children}
+            <RouterContent>{children}</RouterContent>
         </RouterContext.Provider>
     );
 }
