@@ -1,8 +1,14 @@
 {
     "name": "moranaui_workspace",
     "private": true,
+    "type": "module",
     "workspaces": [
         "lib",
         "example_app"
-    ]
+    ],
+    "scripts": {
+        "test:lib": "npm run test --workspace=moranaui",
+        "lint:lib": "npm run lint --workspace=moranaui",
+        "build:lib": "npm run build --workspace=moranaui"
+    }
 }
