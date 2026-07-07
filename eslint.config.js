@@ -5,7 +5,7 @@ import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-    globalIgnores(['node_modules', "./public", "vite.config.ts"]),
+    globalIgnores(["**/dist", "**/node_modules", "vite.config.ts"]),
     {
         files: ['**/*.{ts,tsx}'],
         extends: [
@@ -17,7 +17,7 @@ export default defineConfig([
         ],
         languageOptions: {
             parserOptions: {
-                project: ['./tsconfig.json'],
+                project: true,
                 tsconfigRootDir: import.meta.dirname,
             },
         },
