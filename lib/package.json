@@ -13,7 +13,8 @@
     ],
     "exports": {
         ".": {
-            "import": "./dist/moranaui.index.es.js"
+            "import": "./dist/moranaui.index.es.js",
+            "types": "./dist/types/index.d.ts"
         },
         "./styles.css": "./dist/styles.css"
     },
