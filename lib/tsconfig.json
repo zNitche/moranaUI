@@ -34,6 +34,7 @@
     "include": [
         "src",
         "vite_plugins",
-        "tests"
+        "tests",
+        "./vite.config.ts",
     ]
 }
