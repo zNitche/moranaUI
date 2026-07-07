@@ -13,6 +13,9 @@ export default defineConfig({
         target: "es2024",
         sourcemap: false,
     },
+    optimizeDeps: {
+        exclude: ["moranaui"]
+    },
     resolve: {
         alias: {
             "@": resolve(__dirname, "./src"),

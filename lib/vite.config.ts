@@ -26,7 +26,10 @@ export default defineConfig({
         rollupOptions: {
             plugins: [
                 esmExternalRequirePlugin({
-                    external: [...Object.keys(libPkg.peerDependencies)],
+                    external: [
+                        ...Object.keys(libPkg.peerDependencies),
+                        /^react(\/.*)?&/,
+                    ],
                 }),
             ],
             output: {
