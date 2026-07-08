@@ -18,23 +18,27 @@ export default function useDetectTransition(routeUUID: string) {
         }
 
         const nextStackItem = router.navigationStack.at(-1);
-        const currentStackItemStackItem = router.navigationStack.at(-2);
+        const currentStackItem = router.navigationStack.at(-2);
+        const backTargetStackItem = router.navigationStack.at(-3);
 
         const isCurrentlyEntering = nextStackItem?.routeUUID === routeUUID;
-        const isCurrentlyExiting =
-            currentStackItemStackItem?.routeUUID === routeUUID;
+        const isCurrentlyExiting = currentStackItem?.routeUUID === routeUUID;
 
         if (!isCurrentlyEntering && !isCurrentlyExiting) {
             return ret;
         }
 
-        if (router.navigationStack.length >= 3) {
-            const backTargetItem = router.navigationStack.at(-3);
-
-            if (backTargetItem?.routeUUID === nextStackItem?.routeUUID) {
-                ret.direction = "back";
-            } else {
-                ret.direction = "forward";
+        if (nextStackItem?.originDirection) {
+            ret.direction = nextStackItem.originDirection;
+        } else {
+            if (backTargetStackItem) {
+                if (
+                    backTargetStackItem.routeUUID === nextStackItem?.routeUUID
+                ) {
+                    ret.direction = "back";
+                } else {
+                    ret.direction = "forward";
+                }
             }
         }
 
