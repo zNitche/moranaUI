@@ -18,3 +18,6 @@ export { useMoranaPageExit };
 
 import useIsPageActive from "./hooks/lifecycle/useIsPageActive";
 export { useIsPageActive };
+
+import useMoranaApp from "./hooks/context/useMoranaApp";
+export { useMoranaApp };
