@@ -1,3 +1,4 @@
+import type { NavigationTransitionDirection } from "@root/types/NavigationTransitionDirection";
 import type RouteContextType from "@root/types/RouteContextType";
 import type RouteData from "@root/types/RouteData";
 import type RouterContextType from "@root/types/RouterContextType";
@@ -20,6 +21,7 @@ export const RouterContext = createContext<RouterContextType>({
         path: string;
         replace?: boolean;
         popFromCache?: boolean;
+        direction?: NavigationTransitionDirection;
     }) => undefined,
     navigateBack: () => undefined,
 });

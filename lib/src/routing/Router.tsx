@@ -16,6 +16,7 @@ import type { RouterCache } from "@root/types/RouterCache";
 import type RouterNavigationStackItem from "@root/types/RouterNavigationStackItem";
 import RouterContent from "./components/RouterContent/RouterContent";
 import type { RouterPath } from "@root/types/RouterPath";
+import type { NavigationTransitionDirection } from "@root/types/NavigationTransitionDirection";
 
 export default function Router({ children }: PropsWithChildren) {
     const [routes, setRoutes] = useState<RouteData[]>([]);
@@ -33,7 +34,10 @@ export default function Router({ children }: PropsWithChildren) {
     });
 
     const __updateNavigationStack = useCallback(
-        (routeUUID: string | undefined) => {
+        (
+            routeUUID: string | undefined,
+            originDirection?: NavigationTransitionDirection,
+        ) => {
             const MAX_STACK_ITEMS = 4;
 
             if (!routeUUID) {
@@ -45,7 +49,10 @@ export default function Router({ children }: PropsWithChildren) {
                     return current;
                 }
 
-                const len = current.push({ routeUUID: routeUUID });
+                const len = current.push({
+                    routeUUID: routeUUID,
+                    originDirection: originDirection,
+                });
 
                 if (len + 1 > MAX_STACK_ITEMS) {
                     current.shift();
@@ -123,15 +130,19 @@ export default function Router({ children }: PropsWithChildren) {
     const currentRoute: RouterCurrentRoute = useMemo(() => {
         const responseData: RouterCurrentRoute = __getCurrentRoute(currentPath);
 
-        __updateNavigationStack(responseData.uuid);
+        __updateNavigationStack(
+            responseData.uuid,
+            currentPath?.originDirection,
+        );
 
         return responseData;
     }, [__getCurrentRoute, __updateNavigationStack, currentPath]);
 
-    const __handleNavEvent = useCallback(() => {
+    const __handleNavEvent = useCallback((event: PopStateEvent) => {
         setCurrentPath({
             path: window.location.pathname,
             search: window.location.search,
+            originDirection: event.state?.originDirection,
         });
 
         setCanNavigate(false);
@@ -175,10 +186,12 @@ export default function Router({ children }: PropsWithChildren) {
             path,
             replace,
             popFromCache,
+            direction,
         }: {
             path: string;
             replace?: boolean;
             popFromCache?: boolean;
+            direction?: NavigationTransitionDirection;
         }) => {
             if (!canNavigate) {
                 return;
@@ -197,7 +210,11 @@ export default function Router({ children }: PropsWithChildren) {
                 }
             }
 
-            window.dispatchEvent(new PopStateEvent("popstate"));
+            window.dispatchEvent(
+                new PopStateEvent("popstate", {
+                    state: { originDirection: direction },
+                }),
+            );
         },
         [canNavigate, clearRouterCache, currentRoute, __popFromRouterCache],
     );
