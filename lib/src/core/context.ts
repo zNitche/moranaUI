@@ -5,6 +5,8 @@ import { createContext, type RefObject } from "react";
 
 export const MoranaAppContext = createContext<MoranaAppContextType>({
     navAnimationBuilder: undefined,
+    setIsNavbarVisible: undefined,
+    isNavbarVisible: false,
 });
 
 export const MoranaPageContext = createContext<MoranaPageContextType>({
