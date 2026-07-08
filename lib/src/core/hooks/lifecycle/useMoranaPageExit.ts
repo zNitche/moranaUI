@@ -10,5 +10,6 @@ export default function useMoranaPageExit({ callback }: MoranaPageExitProps) {
 
     useLayoutEffect(() => {
         registerLifecycleHook("exit", callback);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 }

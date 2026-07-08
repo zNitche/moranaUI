@@ -10,5 +10,6 @@ export default function useMoranaPageEnter({ callback }: MoranaPageEnterProps) {
 
     useLayoutEffect(() => {
         registerLifecycleHook("enter", callback);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 }
