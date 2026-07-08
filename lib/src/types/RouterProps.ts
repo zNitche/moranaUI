@@ -1,5 +1,5 @@
 import type RouterCurrentRoute from "./RouterCurrentRoute";
-import type RouterNavigationStackItem from "./RouterNavigationStack";
+import type RouterNavigationStackItem from "./RouterNavigationStackItem";
 
 export default interface RouterProps {
     currentRoute?: RouterCurrentRoute;

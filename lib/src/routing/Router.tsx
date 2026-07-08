@@ -13,7 +13,7 @@ import type RouterCurrentRoute from "../types/RouterCurrentRoute";
 import type RouterProps from "../types/RouterProps";
 import { RouterContext } from "./context";
 import type { RouterCache } from "@root/types/RouterCache";
-import type RouterNavigationStackItem from "@root/types/RouterNavigationStack";
+import type RouterNavigationStackItem from "@root/types/RouterNavigationStackItem";
 import RouterContent from "./components/RouterContent/RouterContent";
 import type { RouterPath } from "@root/types/RouterPath";
 
