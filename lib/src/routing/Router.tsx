@@ -15,6 +15,7 @@ import { RouterContext } from "./context";
 import type { RouterCache } from "@root/types/RouterCache";
 import type RouterNavigationStackItem from "@root/types/RouterNavigationStack";
 import RouterContent from "./components/RouterContent/RouterContent";
+import type { RouterPath } from "@root/types/RouterPath";
 
 export default function Router({ children }: PropsWithChildren) {
     const [routes, setRoutes] = useState<RouteData[]>([]);
@@ -26,17 +27,14 @@ export default function Router({ children }: PropsWithChildren) {
 
     const [canNavigate, setCanNavigate] = useState(true);
 
-    const [currentPath, setCurrentPath] = useState<{
-        path: string;
-        search?: string;
-    }>({
+    const [currentPath, setCurrentPath] = useState<RouterPath>({
         path: window.location.pathname,
         search: window.location.search,
     });
 
     const __updateNavigationStack = useCallback(
         (routeUUID: string | undefined) => {
-            const MAX_STACK_ITEMS = 10;
+            const MAX_STACK_ITEMS = 4;
 
             if (!routeUUID) {
                 return;
@@ -91,35 +89,44 @@ export default function Router({ children }: PropsWithChildren) {
         [routerCache],
     );
 
-    const currentRoute: RouterCurrentRoute = useMemo(() => {
-        const responseData: RouterCurrentRoute = {};
+    const __getCurrentRoute = useCallback(
+        (path?: RouterPath) => {
+            const responseData: RouterCurrentRoute = {};
 
-        for (const route of routes) {
-            if (route.url === "*") {
-                continue;
-            }
+            for (const route of routes) {
+                if (route.url === "*") {
+                    continue;
+                }
 
-            if (currentPath && route.tokenizedUrl) {
-                const pathMatchData = matchTokenizedUrl(
-                    route.tokenizedUrl,
-                    currentPath.path,
-                );
+                if (path && route.tokenizedUrl) {
+                    const pathMatchData = matchTokenizedUrl(
+                        route.tokenizedUrl,
+                        path.path,
+                    );
 
-                if (pathMatchData.isMatching) {
-                    responseData.uuid = route.uuid;
-                    responseData.pathParams = pathMatchData.pathParams;
+                    if (pathMatchData.isMatching) {
+                        responseData.uuid = route.uuid;
+                        responseData.pathParams = pathMatchData.pathParams;
 
-                    break;
+                        break;
+                    }
                 }
             }
-        }
 
-        responseData.uuid ??= routes.find((r) => r.url === "*")?.uuid;
+            responseData.uuid ??= routes.find((r) => r.url === "*")?.uuid;
+
+            return responseData;
+        },
+        [routes],
+    );
+
+    const currentRoute: RouterCurrentRoute = useMemo(() => {
+        const responseData: RouterCurrentRoute = __getCurrentRoute(currentPath);
 
         __updateNavigationStack(responseData.uuid);
 
         return responseData;
-    }, [currentPath, routes, __updateNavigationStack]);
+    }, [__getCurrentRoute, __updateNavigationStack, currentPath]);
 
     const __handleNavEvent = useCallback(() => {
         setCurrentPath({
