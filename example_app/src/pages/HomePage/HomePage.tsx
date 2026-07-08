@@ -38,7 +38,14 @@ export default function HomePage() {
             <MoranaContent>
                 <Content>
                     <div className={classes.homePage}>
-                        <div onClick={() => navigateTo({ path: "/about" })}>
+                        <div
+                            onClick={() =>
+                                navigateTo({
+                                    path: "/about",
+                                    direction: "forward",
+                                })
+                            }
+                        >
                             nav to about
                         </div>
                         <div

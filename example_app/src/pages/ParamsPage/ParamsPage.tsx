@@ -5,12 +5,19 @@ import {
     MoranaPage,
     MoranaContent,
     MoranaHeader,
+    useMoranaApp,
+    useMoranaPageExit,
+    useMoranaPageEnter,
 } from "moranaui";
 import Content from "../../components/Content/Content";
 import Header from "../../components/Header/Header";
 
 export default function ParamsPage() {
+    const { setIsNavbarVisible } = useMoranaApp();
     const { navigateTo } = useRouter();
+
+    useMoranaPageEnter({ callback: () => setIsNavbarVisible(false) });
+    useMoranaPageExit({ callback: () => setIsNavbarVisible(true) });
 
     const pathParams = usePathParams<{ id: string; w: string; q: string }>();
     const searchParams = useSearchParams<{}>();

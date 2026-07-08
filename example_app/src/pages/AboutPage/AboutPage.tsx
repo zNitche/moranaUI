@@ -28,7 +28,11 @@ export default function AboutPage() {
             <MoranaContent>
                 <Content>
                     <div>
-                        <div onClick={() => navigateTo({ path: "/" })}>
+                        <div
+                            onClick={() =>
+                                navigateTo({ path: "/", direction: "back" })
+                            }
+                        >
                             nav to home
                         </div>
                     </div>
