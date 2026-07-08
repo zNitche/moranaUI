@@ -1,4 +1,8 @@
-:root {
+#root {
+    height: 100dvh;
+    overflow: hidden;
+    position: relative;
+    background: #444;
 }
 
 html,
