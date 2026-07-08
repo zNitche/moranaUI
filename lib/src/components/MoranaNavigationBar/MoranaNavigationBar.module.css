@@ -4,4 +4,12 @@
     align-items: center;
     justify-content: space-between;
     z-index: 3;
+    transition: transform 0.3s linear;
+}
+
+.hidden {
+    position: absolute;
+    width: 100%;
+    transform: translateY(var(--height));
+    bottom: 0;
 }
