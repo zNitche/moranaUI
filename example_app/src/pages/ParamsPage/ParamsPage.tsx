@@ -3,8 +3,11 @@ import {
     usePathParams,
     useSearchParams,
     MoranaPage,
+    MoranaContent,
+    MoranaHeader,
 } from "moranaui";
 import Content from "../../components/Content/Content";
+import Header from "../../components/Header/Header";
 
 export default function ParamsPage() {
     const { navigateTo } = useRouter();
@@ -17,12 +20,19 @@ export default function ParamsPage() {
 
     return (
         <MoranaPage>
-            <div>
-                <div>Params Page</div>
-            </div>
-            <Content>
-                <div onClick={() => navigateTo({ path: "/" })}>nav to home</div>
-            </Content>
+            <MoranaHeader>
+                <Header title="ParamsPage" />
+            </MoranaHeader>
+            <MoranaContent>
+                <Content>
+                    <div>
+                        <div>Params Page</div>
+                    </div>
+                    <div onClick={() => navigateTo({ path: "/" })}>
+                        nav to home
+                    </div>
+                </Content>
+            </MoranaContent>
         </MoranaPage>
     );
 }

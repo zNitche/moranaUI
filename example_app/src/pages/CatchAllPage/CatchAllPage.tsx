@@ -5,7 +5,7 @@ export default function CatchAppPage() {
 
     return (
         <div>
-            <div onClick={() => navigateTo("/")}>go home</div>
+            <div onClick={() => navigateTo({ path: "/" })}>go home</div>
         </div>
     );
 }

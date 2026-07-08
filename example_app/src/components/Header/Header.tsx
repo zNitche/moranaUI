@@ -1,7 +1,9 @@
-import { MoranaHeader } from "moranaui";
 import classes from "./Header.module.css";
-import type { PropsWithChildren } from "react";
 
-export default function Header({ children }: PropsWithChildren) {
-    return <MoranaHeader className={classes.header}>{children}</MoranaHeader>;
+interface HeaderProps {
+    readonly title?: string;
+}
+
+export default function Header({ title }: HeaderProps) {
+    return <div className={classes.header}>{title}</div>;
 }

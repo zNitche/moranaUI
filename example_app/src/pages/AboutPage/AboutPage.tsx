@@ -4,6 +4,8 @@ import {
     useMoranaPageExit,
     MoranaPage,
     useIsPageActive,
+    MoranaHeader,
+    MoranaContent,
 } from "moranaui";
 import Header from "../../components/Header/Header";
 import Content from "../../components/Content/Content";
@@ -20,16 +22,18 @@ export default function AboutPage() {
 
     return (
         <MoranaPage>
-            <Header>
-                <div>About Page</div>
-            </Header>
-            <Content>
-                <div>
-                    <div onClick={() => navigateTo({ path: "/" })}>
-                        nav to home
+            <MoranaHeader>
+                <Header title="About" />
+            </MoranaHeader>
+            <MoranaContent>
+                <Content>
+                    <div>
+                        <div onClick={() => navigateTo({ path: "/" })}>
+                            nav to home
+                        </div>
                     </div>
-                </div>
-            </Content>
+                </Content>
+            </MoranaContent>
         </MoranaPage>
     );
 }

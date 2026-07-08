@@ -11,6 +11,7 @@ import AboutPage from "./pages/AboutPage/AboutPage";
 import CatchAllPage from "./pages/CatchAllPage/CatchAllPage";
 import CatchAllWrapper from "./wrappers/CatchAllWrapper";
 import ParamsPage from "./pages/ParamsPage/ParamsPage";
+import NavigationBar from "./components/NavigationBar/NavigationBar";
 
 export default function App() {
     return (
@@ -36,6 +37,8 @@ export default function App() {
                         component={CatchAllPage}
                     />
                 </MoranaRoutesWrapper>
+
+                <NavigationBar />
             </Router>
         </MoranaApp>
     );

@@ -1,0 +1,14 @@
+.navigationBar {
+    max-height: 48px;
+    min-height: 48px;
+    box-sizing: border-box;
+    padding: 0 32px;
+    align-items: center;
+    justify-content: space-between;
+    background: #acacac;
+}
+
+.navItem {
+    width: 52px;
+    font-size: 16px;
+}
