@@ -5,29 +5,25 @@ import useRegisterPageComponent from "@root/core/hooks/useRegisterPageComponent"
 
 interface MoranaContentProps {
     readonly className?: string;
-    readonly childrenClassName?: string;
 }
 
 export default function MoranaContent({
     children,
     className,
-    childrenClassName,
 }: PropsWithChildren<MoranaContentProps>) {
-    const contentRef = useRef<HTMLDivElement>(null);
+    const elemRef = useRef<HTMLDivElement>(null);
 
     useRegisterPageComponent({
         componentType: "content",
-        componentRef: contentRef,
+        componentRef: elemRef,
     });
 
     return (
-        <div className={clsx(classes.moranaContent, className)}>
-            <div
-                ref={contentRef}
-                className={clsx(childrenClassName)}
-            >
-                {children}
-            </div>
+        <div
+            ref={elemRef}
+            className={clsx(classes.moranaContent, className)}
+        >
+            {children}
         </div>
     );
 }

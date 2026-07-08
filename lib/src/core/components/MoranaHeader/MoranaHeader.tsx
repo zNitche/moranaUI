@@ -5,29 +5,25 @@ import useRegisterPageComponent from "@root/core/hooks/useRegisterPageComponent"
 
 interface MoranaHeaderProps {
     readonly className?: string;
-    readonly childrenClassName?: string;
 }
 
 export default function MoranaHeader({
     children,
     className,
-    childrenClassName,
 }: PropsWithChildren<MoranaHeaderProps>) {
-    const contentRef = useRef<HTMLDivElement>(null);
+    const elemRef = useRef<HTMLDivElement>(null);
 
     useRegisterPageComponent({
         componentType: "header",
-        componentRef: contentRef,
+        componentRef: elemRef,
     });
 
     return (
-        <div className={clsx(classes.moranaHeader, className)}>
-            <div
-                ref={contentRef}
-                className={clsx(childrenClassName)}
-            >
-                {children}
-            </div>
+        <div
+            ref={elemRef}
+            className={clsx(classes.moranaHeader, className)}
+        >
+            {children}
         </div>
     );
 }
