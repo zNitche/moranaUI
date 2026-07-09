@@ -1,0 +1,74 @@
+import {
+    useEffect,
+    useMemo,
+    useState,
+    type Dispatch,
+    type PropsWithChildren,
+    type SetStateAction,
+} from "react";
+import classes from "./Drawer.module.css";
+import { clsx } from "@root/utils";
+import { createPortal } from "react-dom";
+
+interface DrawerProps {
+    readonly isOpen: boolean;
+    readonly setIsOpen: Dispatch<SetStateAction<boolean>>;
+    readonly className?: string;
+    readonly overlayClassName?: string;
+    readonly contentWrapperClassName?: string;
+}
+
+export default function Drawer({
+    children,
+    isOpen,
+    setIsOpen,
+    className,
+    overlayClassName,
+    contentWrapperClassName,
+}: PropsWithChildren<DrawerProps>) {
+    const [internalIsOpen, setInternalIsOpen] = useState(isOpen);
+
+    useEffect(() => {
+        if (isOpen) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setInternalIsOpen(isOpen);
+        }
+    }, [isOpen]);
+
+    const isClosing = useMemo(
+        () => Boolean(!isOpen && internalIsOpen),
+        [isOpen, internalIsOpen],
+    );
+
+    return (
+        internalIsOpen &&
+        createPortal(
+            <div className={clsx(classes.drawer, className)}>
+                <div
+                    onAnimationEnd={() => {
+                        if (isClosing) {
+                            setInternalIsOpen(false);
+                        }
+                    }}
+                    className={clsx(
+                        classes.content,
+                        isClosing && classes.close,
+                        isOpen && classes.open,
+                        contentWrapperClassName,
+                    )}
+                >
+                    {children}
+                </div>
+                <div
+                    className={clsx(
+                        classes.overlay,
+                        isOpen && classes.open,
+                        overlayClassName,
+                    )}
+                    onClick={() => setIsOpen(false)}
+                />
+            </div>,
+            document.body,
+        )
+    );
+}
