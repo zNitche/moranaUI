@@ -1,5 +1,3 @@
-import "@root/styles.css";
-
 import { useMemo, useState, type PropsWithChildren } from "react";
 import type NavAnimationBuilder from "@root/types/NavAnimationBuilder";
 import type MoranaAppContextType from "@root/types/MoranaAppContextType";
