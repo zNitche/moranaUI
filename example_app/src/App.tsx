@@ -21,6 +21,7 @@ export default function App() {
                     <Route
                         url={"/"}
                         component={HomePage}
+                        name={"home"}
                     />
                     <Route
                         url={"/about"}

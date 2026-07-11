@@ -6,12 +6,12 @@ import {
     useIsPageActive,
     MoranaHeader,
     MoranaContent,
-    Modal,
-    FullScreenOverlay,
-    Drawer,
+    MoranaModal,
+    MoranaFullScreenOverlay,
+    MoranaDrawer,
 } from "moranaui";
-import Header from "../../components/Header/Header";
-import Content from "../../components/Content/Content";
+import Header from "@root/components/Header/Header";
+import Content from "@root/components/Content/Content";
 import { useState } from "react";
 
 export default function AboutPage() {
@@ -68,26 +68,26 @@ export default function AboutPage() {
                 </Content>
             </MoranaContent>
 
-            <FullScreenOverlay
+            <MoranaFullScreenOverlay
                 isOpen={isOverlayOpen}
                 setIsOpen={setIsOverlayOpen}
             >
                 test overlay
-            </FullScreenOverlay>
+            </MoranaFullScreenOverlay>
 
-            <Modal
+            <MoranaModal
                 isOpen={isModalOpen}
                 setIsOpen={setIsModalOpen}
             >
                 test modal
-            </Modal>
+            </MoranaModal>
 
-            <Drawer
+            <MoranaDrawer
                 isOpen={isDrawerOpen}
                 setIsOpen={setIsDrawerOpen}
             >
                 test drawer
-            </Drawer>
+            </MoranaDrawer>
         </MoranaPage>
     );
 }

@@ -9,15 +9,16 @@ import {
     MoranaContent,
 } from "moranaui";
 import classes from "./HomePage.module.css";
-import Header from "../../components/Header/Header";
-import Content from "../../components/Content/Content";
 import { useEffect } from "react";
+import Content from "@root/components/Content/Content";
+import Header from "@root/components/Header/Header";
 
 export default function HomePage() {
-    const { navigateTo, clearRouterCache } = useRouter();
+    const { navigateTo, clearRouterCache, getRouteUUIDByName } = useRouter();
     const isPageActive = useIsPageActive();
 
     console.log(`is home active: ${isPageActive}`);
+    console.log(`current route UUID: ${getRouteUUIDByName("home")}`);
 
     useEffect(() => {
         console.log("home mount");
