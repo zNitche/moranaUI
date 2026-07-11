@@ -2,15 +2,16 @@ import {
     useEffect,
     useMemo,
     useState,
+    type CSSProperties,
     type Dispatch,
     type PropsWithChildren,
     type SetStateAction,
 } from "react";
-import classes from "./Drawer.module.css";
+import classes from "./MoranaModal.module.css";
 import { clsx } from "@root/utils";
 import { createPortal } from "react-dom";
 
-interface DrawerProps {
+interface MoranaModalProps {
     readonly isOpen: boolean;
     readonly setIsOpen: Dispatch<SetStateAction<boolean>>;
     readonly className?: string;
@@ -18,14 +19,15 @@ interface DrawerProps {
     readonly contentWrapperClassName?: string;
 }
 
-export default function Drawer({
+export default function MoranaModal({
     children,
     isOpen,
     setIsOpen,
     className,
     overlayClassName,
     contentWrapperClassName,
-}: PropsWithChildren<DrawerProps>) {
+}: PropsWithChildren<MoranaModalProps>) {
+    const [modalRef, setModalRef] = useState<HTMLDivElement | null>(null);
     const [internalIsOpen, setInternalIsOpen] = useState(isOpen);
 
     useEffect(() => {
@@ -43,7 +45,15 @@ export default function Drawer({
     return (
         internalIsOpen &&
         createPortal(
-            <div className={clsx(classes.drawer, className)}>
+            <div
+                ref={(ref) => setModalRef(ref)}
+                className={clsx(classes.moranaModal, className)}
+                style={
+                    {
+                        "--base-height": `${modalRef?.clientHeight}px`,
+                    } as CSSProperties
+                }
+            >
                 <div
                     onAnimationEnd={() => {
                         if (isClosing) {

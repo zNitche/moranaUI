@@ -6,11 +6,11 @@ import {
     type PropsWithChildren,
     type SetStateAction,
 } from "react";
-import classes from "./FullScreenOverlay.module.css";
+import classes from "./MoranaFullScreenOverlay.module.css";
 import { clsx } from "@root/utils";
 import { createPortal } from "react-dom";
 
-interface FullScreenOverlayProps {
+interface MoranaFullScreenOverlayProps {
     readonly isOpen: boolean;
     readonly setIsOpen: Dispatch<SetStateAction<boolean>>;
     readonly className?: string;
@@ -18,14 +18,14 @@ interface FullScreenOverlayProps {
     readonly contentWrapperClassName?: string;
 }
 
-export default function FullScreenOverlay({
+export default function MoranaFullScreenOverlay({
     children,
     isOpen,
     setIsOpen,
     className,
     overlayClassName,
     contentWrapperClassName,
-}: PropsWithChildren<FullScreenOverlayProps>) {
+}: PropsWithChildren<MoranaFullScreenOverlayProps>) {
     const [internalIsOpen, setInternalIsOpen] = useState(isOpen);
 
     useEffect(() => {
@@ -43,7 +43,7 @@ export default function FullScreenOverlay({
     return (
         internalIsOpen &&
         createPortal(
-            <div className={clsx(classes.fullScreenOverlay, className)}>
+            <div className={clsx(classes.moranaFullScreenOverlay, className)}>
                 <div
                     onAnimationEnd={() => {
                         if (isClosing) {

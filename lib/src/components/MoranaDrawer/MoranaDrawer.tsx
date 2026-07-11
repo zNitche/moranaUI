@@ -2,16 +2,15 @@ import {
     useEffect,
     useMemo,
     useState,
-    type CSSProperties,
     type Dispatch,
     type PropsWithChildren,
     type SetStateAction,
 } from "react";
-import classes from "./Modal.module.css";
+import classes from "./MoranaDrawer.module.css";
 import { clsx } from "@root/utils";
 import { createPortal } from "react-dom";
 
-interface ModalProps {
+interface MoranaDrawerProps {
     readonly isOpen: boolean;
     readonly setIsOpen: Dispatch<SetStateAction<boolean>>;
     readonly className?: string;
@@ -19,15 +18,14 @@ interface ModalProps {
     readonly contentWrapperClassName?: string;
 }
 
-export default function Modal({
+export default function MoranaDrawer({
     children,
     isOpen,
     setIsOpen,
     className,
     overlayClassName,
     contentWrapperClassName,
-}: PropsWithChildren<ModalProps>) {
-    const [modalRef, setModalRef] = useState<HTMLDivElement | null>(null);
+}: PropsWithChildren<MoranaDrawerProps>) {
     const [internalIsOpen, setInternalIsOpen] = useState(isOpen);
 
     useEffect(() => {
@@ -45,15 +43,7 @@ export default function Modal({
     return (
         internalIsOpen &&
         createPortal(
-            <div
-                ref={(ref) => setModalRef(ref)}
-                className={clsx(classes.modal, className)}
-                style={
-                    {
-                        "--base-height": `${modalRef?.clientHeight}px`,
-                    } as CSSProperties
-                }
-            >
+            <div className={clsx(classes.moranaDrawer, className)}>
                 <div
                     onAnimationEnd={() => {
                         if (isClosing) {

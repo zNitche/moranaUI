@@ -1,4 +1,4 @@
-.drawer {
+.moranaFullScreenOverlay {
     display: flex;
     z-index: 10;
     position: absolute;
@@ -7,8 +7,6 @@
     height: 100%;
     box-sizing: border-box;
     overflow: hidden;
-    align-items: flex-end;
-    justify-content: center;
 }
 
 .content {
@@ -41,20 +39,20 @@
     opacity: 0.4;
 }
 
-@keyframes slideOutKeyframes {
+@keyframes slideInKeyframes {
     from {
-        transform: translateY(0);
+        transform: translateX(-100%);
     }
     to {
-        transform: translateY(100%);
+        transform: translateX(0);
     }
 }
 
-@keyframes slideInKeyframes {
+@keyframes slideOutKeyframes {
     from {
-        transform: translateY(100%);
+        transform: translateX(0);
     }
     to {
-        transform: translateY(0);
+        transform: translateX(-100%);
     }
 }

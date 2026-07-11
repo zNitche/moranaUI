@@ -1,11 +1,11 @@
 import MoranaNavigationBar from "./MoranaNavigationBar/MoranaNavigationBar";
 export { MoranaNavigationBar };
 
-import Modal from "./Modal/Modal";
-export { Modal };
+import MoranaModal from "./MoranaModal/MoranaModal";
+export { MoranaModal };
 
-import FullScreenOverlay from "./FullScreenOverlay/FullScreenOverlay";
-export { FullScreenOverlay };
+import MoranaFullScreenOverlay from "./MoranaFullScreenOverlay/MoranaFullScreenOverlay";
+export { MoranaFullScreenOverlay };
 
-import Drawer from "./Drawer/Drawer";
-export { Drawer };
+import MoranaDrawer from "./MoranaDrawer/MoranaDrawer";
+export { MoranaDrawer };
