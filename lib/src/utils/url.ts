@@ -64,13 +64,22 @@ export function matchTokenizedUrl(
 
 export function buildUrl(
     path: string,
-    params: Record<string, string | number | boolean | []>,
+    params: Record<
+        string,
+        string | number | boolean | (string | number | undefined)[]
+    >,
 ) {
     const urlObj = new URL(path, window.location.origin);
 
     for (const [key, val] of Object.entries(params)) {
         if (Array.isArray(val)) {
-            val.forEach((item) => urlObj.searchParams.append(key, item));
+            val.forEach((item) => {
+                if (item === undefined) {
+                    return;
+                }
+
+                return urlObj.searchParams.append(key, item.toString());
+            });
         } else {
             urlObj.searchParams.append(key, val.toString());
         }
