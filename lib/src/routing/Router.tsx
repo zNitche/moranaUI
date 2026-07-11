@@ -159,19 +159,29 @@ export default function Router({ children }: PropsWithChildren) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const __addRoute = useCallback(
-        (route: RouteData) => {
-            const currentRoute = routes.find((r) => r.url === route.url);
-
-            if (!currentRoute) {
-                if (route.url && route.url !== "*")
-                    route.tokenizedUrl = tokenizeUrl(route.url);
-
-                setRoutes((current) => [...current, route]);
+    const __addRoute = useCallback((route: RouteData) => {
+        setRoutes((current) => {
+            if (route.url && route.url !== "*") {
+                route.tokenizedUrl = tokenizeUrl(route.url);
             }
-        },
-        [routes],
-    );
+
+            const currentRoute = current.find((r) => {
+                if (r.uuid === route.uuid) {
+                    return r;
+                }
+
+                if (r.url === route.url) {
+                    return r;
+                }
+            });
+
+            if (currentRoute) {
+                return current;
+            }
+
+            return [...current, route];
+        });
+    }, []);
 
     const clearRouterCache = useCallback(() => {
         setRouterCache({});
