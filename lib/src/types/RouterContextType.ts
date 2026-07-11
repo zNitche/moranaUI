@@ -25,4 +25,5 @@ export default interface RouterContextType {
         direction?: NavigationTransitionDirection;
     }) => void;
     navigateBack: () => void;
+    getRouteUUIDByName: (name: string) => string | undefined;
 }

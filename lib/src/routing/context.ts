@@ -24,6 +24,7 @@ export const RouterContext = createContext<RouterContextType>({
         direction?: NavigationTransitionDirection;
     }) => undefined,
     navigateBack: () => undefined,
+    getRouteUUIDByName: () => undefined,
 });
 
 export const RouteContext = createContext<RouteContextType>({

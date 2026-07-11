@@ -233,6 +233,13 @@ export default function Router({ children }: PropsWithChildren) {
         window.history.back();
     }, []);
 
+    const getRouteUUIDByName = useCallback(
+        (name: string) => {
+            return routes.find((r) => r.name === name)?.uuid;
+        },
+        [routes],
+    );
+
     const router: RouterProps = useMemo(() => {
         return {
             currentRoute: currentRoute,
@@ -251,6 +258,7 @@ export default function Router({ children }: PropsWithChildren) {
             navigateTo,
             navigateBack,
             routerCache,
+            getRouteUUIDByName,
         };
     }, [
         __addRoute,
@@ -260,6 +268,7 @@ export default function Router({ children }: PropsWithChildren) {
         routerCache,
         __addToRouterCache,
         clearRouterCache,
+        getRouteUUIDByName,
     ]);
 
     return (

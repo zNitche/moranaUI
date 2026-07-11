@@ -23,6 +23,7 @@ interface RouteProps {
     readonly component: ComponentType;
     readonly wrapper?: ComponentType<{ children: ReactNode }>;
     readonly cacheable?: boolean;
+    readonly name?: string;
 }
 
 export default function Route({
@@ -30,6 +31,7 @@ export default function Route({
     component,
     wrapper = Fragment,
     cacheable = true,
+    name,
 }: RouteProps) {
     const routeUUID = useMemo(() => generateUUID(), []);
     const wrapperRef = useRef<HTMLDivElement>(null);
@@ -51,7 +53,7 @@ export default function Route({
     const { handleTransitionAnimation } = useHandleTransitionAnimation();
 
     useEffect(() => {
-        __addRoute({ uuid: routeUUID, url, component });
+        __addRoute({ uuid: routeUUID, name: name, url, component });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
