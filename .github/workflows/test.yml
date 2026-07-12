@@ -1,0 +1,29 @@
+name: test
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-26.04
+
+    steps:
+    - name: checkout
+      uses: actions/checkout@v7
+    - name: setup node
+      uses: actions/setup-node@v6
+      with:
+        node-version-file: '.nvmrc'
+
+    - name: installing dependencies
+      run: npm ci
+
+    - name: run linter
+      run: npm run lint:lib
+    - name: run tests
+      run: npm run test:lib
