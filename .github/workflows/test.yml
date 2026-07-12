@@ -23,7 +23,14 @@ jobs:
     - name: installing dependencies
       run: npm ci
 
-    - name: run linter
+    - name: lib ts compile
+      run: npm run tsc:lib
+    - name: run lib linter
       run: npm run lint:lib
-    - name: run tests
+    - name: run lib tests
       run: npm run test:lib
+
+    - name: example app ts compile
+      run: npm run tsc:app
+    - name: run example app linter
+      run: npm run lint:app
