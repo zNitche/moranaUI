@@ -35,6 +35,7 @@
         }
     },
     "scripts": {
+        "tsc": "tsc",
         "build": "tsc -b && vite build",
         "build:watch": "vite build --watch",
         "lint": "eslint .",

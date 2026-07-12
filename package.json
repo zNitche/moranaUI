@@ -9,6 +9,10 @@
     "scripts": {
         "test:lib": "npm run test --workspace=moranaui",
         "lint:lib": "npm run lint --workspace=moranaui",
-        "build:lib": "npm run build --workspace=moranaui"
+        "build:lib": "npm run build --workspace=moranaui",
+        "tsc:lib": "npm run tsc --workspace=moranaui",
+
+        "tsc:app": "npm run tsc --workspace=example_app",
+        "lint:app": "npm run lint --workspace=example_app"
     }
 }
