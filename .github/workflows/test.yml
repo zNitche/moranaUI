@@ -20,7 +20,7 @@ jobs:
       with:
         node-version-file: '.nvmrc'
 
-    - name: installing dependencies
+    - name: install dependencies
       run: npm ci
 
     - name: lib ts compile
