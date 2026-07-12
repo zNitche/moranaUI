@@ -26,7 +26,7 @@ export default function Router({ children }: PropsWithChildren) {
         RouterNavigationStackItem[]
     >([]);
 
-    const [canNavigate, setCanNavigate] = useState(true);
+    const [navigationReady, setNavigationReady] = useState(true);
 
     const [currentPath, setCurrentPath] = useState<RouterPath>({
         path: window.location.pathname,
@@ -145,9 +145,9 @@ export default function Router({ children }: PropsWithChildren) {
             originDirection: event.state?.originDirection,
         });
 
-        setCanNavigate(false);
+        setNavigationReady(false);
 
-        queueMicrotask(() => setTimeout(() => setCanNavigate(true), 1000));
+        queueMicrotask(() => setTimeout(() => setNavigationReady(true), 1000));
     }, []);
 
     useLayoutEffect(() => {
@@ -203,7 +203,11 @@ export default function Router({ children }: PropsWithChildren) {
             popFromCache?: boolean;
             direction?: NavigationTransitionDirection;
         }) => {
-            if (!canNavigate) {
+            if (path === currentPath.path) {
+                return;
+            }
+
+            if (!navigationReady) {
                 return;
             }
 
@@ -226,7 +230,13 @@ export default function Router({ children }: PropsWithChildren) {
                 }),
             );
         },
-        [canNavigate, clearRouterCache, currentRoute, __popFromRouterCache],
+        [
+            currentPath.path,
+            navigationReady,
+            clearRouterCache,
+            currentRoute.uuid,
+            __popFromRouterCache,
+        ],
     );
 
     const navigateBack = useCallback(() => {
