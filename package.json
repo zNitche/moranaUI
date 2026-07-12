@@ -7,10 +7,10 @@
         "example_app"
     ],
     "scripts": {
-        "test:lib": "npm run test --workspace=moranaui",
-        "lint:lib": "npm run lint --workspace=moranaui",
-        "build:lib": "npm run build --workspace=moranaui",
-        "tsc:lib": "npm run tsc --workspace=moranaui",
+        "test:lib": "npm run test --workspace=lib",
+        "lint:lib": "npm run lint --workspace=lib",
+        "build:lib": "npm run build --workspace=lib",
+        "tsc:lib": "npm run tsc --workspace=lib",
 
         "tsc:app": "npm run tsc --workspace=example_app",
         "lint:app": "npm run lint --workspace=example_app"
