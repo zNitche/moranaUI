@@ -6,3 +6,7 @@
     height: 100%;
     box-sizing: border-box;
 }
+
+.moranaContent.blockScrollY {
+    overflow-y: hidden;
+}

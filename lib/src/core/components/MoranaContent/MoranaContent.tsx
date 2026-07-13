@@ -5,11 +5,13 @@ import useRegisterPageComponent from "@root/core/hooks/useRegisterPageComponent"
 
 interface MoranaContentProps {
     readonly className?: string;
+    readonly blockScrollY?: boolean;
 }
 
 export default function MoranaContent({
     children,
     className,
+    blockScrollY = false,
 }: PropsWithChildren<MoranaContentProps>) {
     const elemRef = useRef<HTMLDivElement>(null);
 
@@ -21,7 +23,11 @@ export default function MoranaContent({
     return (
         <div
             ref={elemRef}
-            className={clsx(classes.moranaContent, className)}
+            className={clsx(
+                classes.moranaContent,
+                blockScrollY && classes.blockScrollY,
+                className,
+            )}
         >
             {children}
         </div>
