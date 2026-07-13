@@ -6,3 +6,6 @@ export { useDrag };
 
 import useOnSwipe from "./useOnSwipe";
 export { useOnSwipe };
+
+import useTrackScrollProgress from "./useTrackScrollProgress";
+export { useTrackScrollProgress };
