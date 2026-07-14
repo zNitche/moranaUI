@@ -2,13 +2,13 @@ import {
     useCallback,
     useMemo,
     useState,
-    type PointerEvent,
-    type PointerEventHandler,
+    type TouchEvent,
+    type TouchEventHandler,
 } from "react";
 
 type EventPosition = { x: number; y: number } | undefined;
 
-export default function useDrag<T>() {
+export default function useDrag() {
     const [isActive, setIsActive] = useState<boolean>(false);
 
     const [dragInProgress, setDragInProgress] = useState<boolean>(false);
@@ -66,35 +66,43 @@ export default function useDrag<T>() {
         [isActive],
     );
 
-    const onDragStart = useCallback((e: PointerEvent<T>) => {
+    const onDragStart = useCallback((e: TouchEvent<HTMLElement>) => {
         setIsActive(true);
-
         setDragInProgress(true);
 
-        setStartPosition({ x: e.clientX, y: e.clientY });
+        const touch = e.touches.item(0);
+
+        setStartPosition({ x: touch.clientX, y: touch.clientY });
     }, []);
 
-    const onPointerDown: PointerEventHandler<T> = useCallback(
-        (event: PointerEvent<T>) => {
-            onDragStart(event);
+    const onTouchStart: TouchEventHandler<HTMLElement> = useCallback(
+        (e: TouchEvent<HTMLElement>) => {
+            onDragStart(e);
         },
         [onDragStart],
     );
 
-    const onPointerUp: PointerEventHandler<T> = useCallback(
-        (_event: PointerEvent<T>) => {
-            onDragEnd();
+    const onTouchEnd: TouchEventHandler<HTMLElement> = useCallback(
+        (_e: TouchEvent<HTMLElement>) => {
+            if (isActive) {
+                onDragEnd();
+            }
         },
-        [onDragEnd],
+        [isActive, onDragEnd],
     );
 
-    const onPointerMove: PointerEventHandler<T> = useCallback(
-        (event: PointerEvent<T>) => {
+    const onTouchMove: TouchEventHandler<HTMLElement> = useCallback(
+        (e: TouchEvent<HTMLElement>) => {
+            if (e.cancelable) {
+                e.preventDefault();
+            }
+
             if (!isActive || !dragInProgress) {
                 return;
             }
 
-            onMove({ x: event.clientX, y: event.clientY });
+            const touch = e.touches.item(0);
+            onMove({ x: touch.clientX, y: touch.clientY });
         },
         [dragInProgress, isActive, onMove],
     );
@@ -105,6 +113,11 @@ export default function useDrag<T>() {
         startPosition,
         currentPosition,
         dragDetails,
-        binds: { onPointerDown, onPointerUp, onPointerMove },
+        binds: {
+            onTouchEnd,
+            onTouchStart,
+            onTouchMove,
+            onTouchCancel: onTouchEnd,
+        },
     };
 }
