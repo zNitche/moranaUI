@@ -1,8 +1,22 @@
 import classes from "./Content.module.css";
-import type { PropsWithChildren } from "react";
+import type { HTMLAttributes, PropsWithChildren } from "react";
 
-export default function Content({ children }: PropsWithChildren) {
+interface ContentProps {
+    readonly ref?: (node: HTMLElement | null) => void;
+}
+
+export default function Content({
+    children,
+    ref,
+    ...props
+}: PropsWithChildren<HTMLAttributes<HTMLDivElement> & ContentProps>) {
     return (
-        <div className={classes.content}>{children}</div>
+        <div
+            {...props}
+            ref={ref}
+            className={classes.content}
+        >
+            {children}
+        </div>
     );
 }
