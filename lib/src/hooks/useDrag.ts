@@ -1,25 +1,29 @@
-import {
-    useCallback,
-    useMemo,
-    useState,
-    type TouchEvent,
-    type TouchEventHandler,
-} from "react";
+import type DragDetail from "@root/types/DragDetails";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 type EventPosition = { x: number; y: number } | undefined;
 
 export default function useDrag() {
-    const [isActive, setIsActive] = useState<boolean>(false);
+    const [refElement, setRefElement] = useState<HTMLElement | null>(null);
+
+    const setRef = useCallback((e: HTMLElement | null) => {
+        setRefElement(e);
+    }, []);
 
     const [dragInProgress, setDragInProgress] = useState<boolean>(false);
+    const dragInProgressRef = useRef<boolean>(dragInProgress);
 
     const [startPosition, setStartPosition] =
         useState<EventPosition>(undefined);
     const [currentPosition, setCurrentPosition] =
         useState<EventPosition>(undefined);
 
-    const dragDetails = useMemo(() => {
-        if (!isActive) {
+    useEffect(() => {
+        dragInProgressRef.current = dragInProgress;
+    }, [dragInProgress]);
+
+    const dragDetails: DragDetail | undefined = useMemo(() => {
+        if (!dragInProgress) {
             return;
         }
 
@@ -44,80 +48,83 @@ export default function useDrag() {
             distanceFromStart,
             angleDiff,
         };
-    }, [currentPosition, isActive, startPosition]);
+    }, [currentPosition, dragInProgress, startPosition]);
 
     const onDragEnd = useCallback(() => {
         setDragInProgress(false);
 
         setStartPosition(undefined);
         setCurrentPosition(undefined);
-
-        setIsActive(false);
     }, []);
 
-    const onMove = useCallback(
-        (pos: EventPosition) => {
-            if (!isActive || !pos) {
-                return;
-            }
-
-            setCurrentPosition({ x: pos.x, y: pos.y });
-        },
-        [isActive],
-    );
-
-    const onDragStart = useCallback((e: TouchEvent<HTMLElement>) => {
-        setIsActive(true);
+    const onDragStart = useCallback((e: TouchEvent) => {
         setDragInProgress(true);
 
         const touch = e.touches.item(0);
 
+        if (!touch) {
+            return;
+        }
+
         setStartPosition({ x: touch.clientX, y: touch.clientY });
     }, []);
 
-    const onTouchStart: TouchEventHandler<HTMLElement> = useCallback(
-        (e: TouchEvent<HTMLElement>) => {
+    const onTouchStart = useCallback(
+        (e: TouchEvent) => {
             onDragStart(e);
         },
         [onDragStart],
     );
 
-    const onTouchEnd: TouchEventHandler<HTMLElement> = useCallback(
-        (_e: TouchEvent<HTMLElement>) => {
-            if (isActive) {
+    const onTouchEnd = useCallback(
+        (_e: TouchEvent) => {
+            if (dragInProgressRef.current) {
                 onDragEnd();
             }
         },
-        [isActive, onDragEnd],
+        [onDragEnd],
     );
 
-    const onTouchMove: TouchEventHandler<HTMLElement> = useCallback(
-        (e: TouchEvent<HTMLElement>) => {
-            if (e.cancelable) {
-                e.preventDefault();
-            }
+    const onTouchMove = useCallback((e: TouchEvent) => {
+        if (!dragInProgressRef.current) {
+            return;
+        }
 
-            if (!isActive || !dragInProgress) {
-                return;
-            }
+        const touch = e.touches.item(0);
 
-            const touch = e.touches.item(0);
-            onMove({ x: touch.clientX, y: touch.clientY });
-        },
-        [dragInProgress, isActive, onMove],
-    );
+        if (!touch) {
+            return;
+        }
+
+        setCurrentPosition({ x: touch.clientX, y: touch.clientY });
+    }, []);
+
+    useEffect(() => {
+        if (!refElement) {
+            return;
+        }
+
+        refElement.addEventListener("touchend", onTouchEnd);
+        refElement.addEventListener("touchstart", onTouchStart);
+        refElement.addEventListener("touchmove", onTouchMove);
+        refElement.addEventListener("touchcancel", onTouchEnd);
+
+        return () => {
+            if (refElement) {
+                refElement.removeEventListener("touchend", onTouchEnd);
+                refElement.removeEventListener("touchstart", onTouchStart);
+                refElement.removeEventListener("touchmove", onTouchMove);
+                refElement.removeEventListener("touchcancel", onTouchEnd);
+            }
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [refElement]);
 
     return {
         dragInProgress,
-        isActive,
         startPosition,
         currentPosition,
         dragDetails,
-        binds: {
-            onTouchEnd,
-            onTouchStart,
-            onTouchMove,
-            onTouchCancel: onTouchEnd,
-        },
+        setRef,
     };
 }

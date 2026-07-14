@@ -7,12 +7,12 @@ interface HookUseOnSwipeProps {
     readonly minDragDistance: number;
 }
 
-export default function useOnSwipe<T>({
+export default function useOnSwipe({
     onSwipe,
     minMaxAngle,
     minDragDistance,
 }: HookUseOnSwipeProps) {
-    const { binds, dragDetails, dragInProgress } = useDrag<T>();
+    const { setRef, dragDetails, dragInProgress } = useDrag();
 
     useEffect(() => {
         if (!dragInProgress || !dragDetails) {
@@ -36,5 +36,5 @@ export default function useOnSwipe<T>({
         onSwipe,
     ]);
 
-    return { binds };
+    return { setRef };
 }
