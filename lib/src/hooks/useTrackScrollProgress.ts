@@ -1,11 +1,6 @@
 import clamp from "@root/utils/clamp";
-import {
-    useCallback,
-    useEffect,
-    useLayoutEffect,
-    useRef,
-    useState,
-} from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import useRegisterOnScrollListener from "./common/useRegisterOnScrollListener";
 
 export default function useTrackScrollProgress() {
     const [targetElement, setTargetElement] = useState<HTMLElement | null>(
@@ -37,19 +32,11 @@ export default function useTrackScrollProgress() {
         setProgress(p);
     }, []);
 
-    useLayoutEffect(() => {
-        if (!targetElement) {
-            return;
-        }
-
-        targetElement.addEventListener("scroll", onScroll, { passive: true });
-
-        return () => {
-            if (targetElement) {
-                targetElement.removeEventListener("scroll", onScroll);
-            }
-        };
-    }, [onScroll, targetElement]);
+    useRegisterOnScrollListener({
+        targetElement,
+        callback: onScroll,
+        passive: true,
+    });
 
     return { scrollProgress: progress, setRef };
 }
