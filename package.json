@@ -2,6 +2,7 @@
     "name": "moranaui_workspace",
     "private": true,
     "type": "module",
+    "author": "zNitche",
     "workspaces": [
         "lib",
         "example_app"
