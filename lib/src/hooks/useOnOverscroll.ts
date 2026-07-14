@@ -90,5 +90,5 @@ export default function useOnOverscroll({
         };
     }, [onScroll, onScrollEnd, targetElement]);
 
-    return { setRef, overscrollDetected, dragDetails };
+    return { setRef, overscrollDetected, dragDetails, dragInProgress };
 }
