@@ -14,8 +14,6 @@ export default function useOnSwipe<T>({
 }: HookUseOnSwipeProps) {
     const { binds, dragDetails, dragInProgress } = useDrag<T>();
 
-    console.log(dragDetails)
-
     useEffect(() => {
         if (!dragInProgress || !dragDetails) {
             return;
