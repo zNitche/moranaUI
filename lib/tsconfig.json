@@ -10,7 +10,6 @@
             "node"
         ],
         "skipLibCheck": true,
-        /* Bundler mode */
         "moduleResolution": "bundler",
         "verbatimModuleSyntax": true,
         "noEmit": true,
@@ -25,7 +24,6 @@
         },
         "resolveJsonModule": true,
         "isolatedModules": true,
-        /* Linting */
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "erasableSyntaxOnly": true,
@@ -34,7 +32,8 @@
     "include": [
         "src",
         "vite_plugins",
+        "scripts",
         "tests",
-        "./vite.config.ts",
+        "./vite.config.ts"
     ]
 }
