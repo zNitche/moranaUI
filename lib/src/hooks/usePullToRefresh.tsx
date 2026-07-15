@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import useOnOverscroll from "./useOnOverscroll";
 import { createPortal } from "react-dom";
 import { MoranaRefresher } from "@root/components";
@@ -17,32 +17,39 @@ export default function usePullToRefresh({
         useState<boolean>(false);
     const [refreshInProgress, setRefreshInProgress] = useState<boolean>(false);
 
-    const { setRef, dragDetails, dragInProgress, overscrollDetected } =
-        useOnOverscroll({});
+    const refreshInProgressRef = useRef<boolean>(false);
+
+    const onOverscrollStartCallback = useCallback(() => {
+        setIsIndicatorVisible(true);
+    }, []);
+
+    const onOverscrollEndCallback = useCallback(() => {
+        if (!refreshInProgress) {
+            setIsIndicatorVisible(false);
+        }
+    }, [refreshInProgress]);
+
+    const { setRef, dragDetails, overscrollDetected } = useOnOverscroll({
+        onOverscrollStartCallback,
+        onOverscrollEndCallback,
+    });
 
     useEffect(() => {
-        if (refreshInProgress) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            setIsIndicatorVisible(true);
+        if (refreshInProgressRef.current) {
             return;
         }
 
-        if (overscrollDetected) {
-            setIsIndicatorVisible(dragInProgress);
-        }
-    }, [dragInProgress, overscrollDetected, refreshInProgress]);
-
-    useEffect(() => {
         if (refreshInProgress) {
-            void callback?.().then(() => setRefreshInProgress(false));
+            refreshInProgressRef.current = true;
+
+            void callback?.().then(() => {
+                setRefreshInProgress(false);
+                refreshInProgressRef.current = false;
+            });
         }
     }, [callback, refreshInProgress]);
 
     const dragProgressTillTrigger = useMemo(() => {
-        if (refreshInProgress) {
-            return 100;
-        }
-
         if (!overscrollDetected) {
             return 0;
         }
@@ -56,12 +63,7 @@ export default function usePullToRefresh({
             0,
             100,
         );
-    }, [
-        dragDetails?.distanceFromStart,
-        minDrag,
-        overscrollDetected,
-        refreshInProgress,
-    ]);
+    }, [dragDetails?.distanceFromStart, minDrag, overscrollDetected]);
 
     useEffect(() => {
         if (!isIndicatorVisible) {

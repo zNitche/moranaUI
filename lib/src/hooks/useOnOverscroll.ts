@@ -9,13 +9,15 @@ import useDrag from "./useDrag";
 import type DragDetail from "@root/types/DragDetails";
 
 interface HookUseOnOverscrollProps {
-    readonly onOverscrollCallback?: (
+    readonly onOverscrollStartCallback?: (
         dragDetails: DragDetail | undefined,
     ) => void;
+    readonly onOverscrollEndCallback?: () => void;
 }
 
 export default function useOnOverscroll({
-    onOverscrollCallback,
+    onOverscrollStartCallback,
+    onOverscrollEndCallback,
 }: HookUseOnOverscrollProps) {
     const [targetElement, setTargetElement] = useState<HTMLElement | null>(
         null,
@@ -27,7 +29,11 @@ export default function useOnOverscroll({
     const [overscrollDetected, setOverscrollDetected] =
         useState<boolean>(false);
 
-    const { setRef: setDragRef, dragDetails, dragInProgress } = useDrag();
+    const {
+        setRef: setDragRef,
+        dragDetails,
+        dragInProgress,
+    } = useDrag({});
 
     useEffect(() => {
         elementRef.current = targetElement;
@@ -52,6 +58,15 @@ export default function useOnOverscroll({
     }, []);
 
     useEffect(() => {
+        if (overscrollDetected) {
+            onOverscrollStartCallback?.(dragDetails);
+        } else {
+            onOverscrollEndCallback?.();
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [overscrollDetected])
+
+    useEffect(() => {
         if (isScrolling) {
             return;
         }
@@ -65,7 +80,6 @@ export default function useOnOverscroll({
         }
 
         if (dragDetails.angleDiff >= 80 && dragDetails.angleDiff <= 100) {
-            onOverscrollCallback?.(dragDetails);
             // eslint-disable-next-line react-hooks/set-state-in-effect
             setOverscrollDetected(true);
         }
