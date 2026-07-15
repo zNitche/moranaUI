@@ -12,7 +12,7 @@ export default function useOnSwipe({
     minMaxAngle,
     minDragDistance,
 }: HookUseOnSwipeProps) {
-    const { setRef, dragDetails, dragInProgress } = useDrag();
+    const { setRef, dragDetails, dragInProgress } = useDrag({});
 
     useEffect(() => {
         if (!dragInProgress || !dragDetails) {

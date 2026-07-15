@@ -3,7 +3,15 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 type EventPosition = { x: number; y: number } | undefined;
 
-export default function useDrag() {
+interface HookUseDragProps {
+    readonly onDragStartCallback?: () => void;
+    readonly onDragEndCallback?: () => void;
+}
+
+export default function useDrag({
+    onDragStartCallback,
+    onDragEndCallback,
+}: HookUseDragProps) {
     const [refElement, setRefElement] = useState<HTMLElement | null>(null);
 
     const setRef = useCallback((e: HTMLElement | null) => {
@@ -55,19 +63,26 @@ export default function useDrag() {
 
         setStartPosition(undefined);
         setCurrentPosition(undefined);
-    }, []);
 
-    const onDragStart = useCallback((e: TouchEvent) => {
-        setDragInProgress(true);
+        onDragEndCallback?.();
+    }, [onDragEndCallback]);
 
-        const touch = e.touches.item(0);
+    const onDragStart = useCallback(
+        (e: TouchEvent) => {
+            setDragInProgress(true);
 
-        if (!touch) {
-            return;
-        }
+            const touch = e.touches.item(0);
 
-        setStartPosition({ x: touch.clientX, y: touch.clientY });
-    }, []);
+            if (!touch) {
+                return;
+            }
+
+            setStartPosition({ x: touch.clientX, y: touch.clientY });
+
+            onDragStartCallback?.();
+        },
+        [onDragStartCallback],
+    );
 
     const onTouchStart = useCallback(
         (e: TouchEvent) => {
