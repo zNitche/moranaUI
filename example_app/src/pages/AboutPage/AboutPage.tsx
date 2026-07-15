@@ -3,7 +3,7 @@ import {
     useMoranaPageEnter,
     useMoranaPageExit,
     MoranaPage,
-    useIsPageActive,
+    // useIsPageActive,
     MoranaHeader,
     MoranaContent,
     MoranaModal,
@@ -25,7 +25,7 @@ export default function AboutPage() {
     const [isOverlayOpen, setIsOverlayOpen] = useState(false);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-    const isPageActive = useIsPageActive();
+    // const isPageActive = useIsPageActive();
 
     const { setRef } = useTrackScrollProgress();
 
