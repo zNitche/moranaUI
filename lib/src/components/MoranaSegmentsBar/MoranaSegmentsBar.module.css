@@ -1,0 +1,39 @@
+.moranaSegmentsBar {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    position: relative;
+    padding: 4px 8px;
+}
+
+/* .moranaSegmentsBar.disabled {
+} */
+
+.segment {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+}
+
+/* .segment.disabled {
+} */
+
+.segment.active {
+    color: rgb(220, 189, 189);
+}
+
+.selector {
+    position: absolute;
+    transition:
+        left 0.3s linear,
+        min-width 0.3s linear;
+    background: rgb(93, 93, 93);
+
+    padding: 8px;
+    border-radius: 12px;
+
+    min-height: var(--height);
+    min-width: var(--width);
+    left: var(--offset-left);
+}

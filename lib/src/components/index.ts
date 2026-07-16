@@ -15,3 +15,6 @@ export { MoranaDrawer };
 
 import MoranaRefresher from "./MoranaRefresher/MoranaRefresher";
 export { MoranaRefresher };
+
+import MoranaSegmentsBar from "./MoranaSegmentsBar/MoranaSegmentsBar";
+export { MoranaSegmentsBar };
