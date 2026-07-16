@@ -1,3 +1,6 @@
+import MoranaToolbar from "./MoranaToolbar/MoranaToolbar";
+export { MoranaToolbar };
+
 import MoranaNavigationBar from "./MoranaNavigationBar/MoranaNavigationBar";
 export { MoranaNavigationBar };
 
