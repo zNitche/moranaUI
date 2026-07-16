@@ -240,8 +240,12 @@ export default function Router({ children }: PropsWithChildren) {
     );
 
     const navigateBack = useCallback(() => {
-        window.history.back();
-    }, []);
+        if (navigationStack.length > 1) {
+            window.history.back();
+        } else {
+            navigateTo({ path: "/", direction: "back" });
+        }
+    }, [navigationStack, navigateTo]);
 
     const getRouteUUIDByName = useCallback(
         (name: string) => {
