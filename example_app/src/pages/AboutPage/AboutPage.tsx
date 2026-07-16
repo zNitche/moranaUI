@@ -13,13 +13,14 @@ import {
     range,
     sleep,
     usePullToRefresh,
+    useResetContentScroll,
 } from "moranaui";
 import Header from "@root/components/Header/Header";
 import Content from "@root/components/Content/Content";
 import { useCallback, useState } from "react";
 
 export default function AboutPage() {
-    const { navigateTo } = useRouter();
+    const { navigateBack } = useRouter();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isOverlayOpen, setIsOverlayOpen] = useState(false);
@@ -34,17 +35,26 @@ export default function AboutPage() {
             callback: async () => await sleep(3000),
         });
 
+    const { resetScroll, setContentElementRef } = useResetContentScroll();
+
     const setContentRef = useCallback(
         (elem: HTMLElement | null) => {
             setRef(elem);
             setPullToRefreshElementRef(elem);
+            setContentElementRef(elem);
         },
-        [setPullToRefreshElementRef, setRef],
+        [setPullToRefreshElementRef, setRef, setContentElementRef],
     );
 
     // console.log(`is about active: ${isPageActive}`);
 
-    useMoranaPageEnter({ callback: () => console.log("about page enter") });
+    useMoranaPageEnter({
+        callback: () => {
+            console.log("about page enter");
+
+            setTimeout(() => resetScroll(), 1000)
+        },
+    });
     useMoranaPageExit({ callback: () => console.log("about page exit") });
 
     return (
@@ -59,13 +69,7 @@ export default function AboutPage() {
                     {range(100).map((i) => (
                         <div key={i}>{i}</div>
                     ))}
-                    <div
-                        onClick={() =>
-                            navigateTo({ path: "/", direction: "back" })
-                        }
-                    >
-                        nav to home
-                    </div>
+                    <div onClick={() => navigateBack()}>nav to home</div>
                     <div onClick={() => setIsModalOpen((current) => !current)}>
                         toggle modal
                     </div>

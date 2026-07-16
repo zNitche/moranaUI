@@ -1,3 +1,4 @@
+import { MoranaToolbar } from "moranaui";
 import classes from "./Header.module.css";
 
 interface HeaderProps {
@@ -5,5 +6,9 @@ interface HeaderProps {
 }
 
 export default function Header({ title }: HeaderProps) {
-    return <div className={classes.header}>{title}</div>;
+    return (
+        <MoranaToolbar className={classes.header}>
+            <div>{title}</div>
+        </MoranaToolbar>
+    );
 }

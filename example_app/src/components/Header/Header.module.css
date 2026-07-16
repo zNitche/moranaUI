@@ -1,5 +1,8 @@
 .header {
-    padding: 16px;
+    padding-left: 16px;
+    padding-bottom: 16px;
+    padding-right: 16px;
+    padding-top: calc(var(--morana-safe-area-top) + 16px);
     box-sizing: border-box;
     background: #455;
 }
