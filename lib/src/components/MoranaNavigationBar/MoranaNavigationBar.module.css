@@ -5,6 +5,7 @@
     justify-content: space-between;
     z-index: 3;
     transition: transform 0.3s linear;
+    padding-bottom: var(--morana-safe-area-bottom);
 }
 
 .hidden {
