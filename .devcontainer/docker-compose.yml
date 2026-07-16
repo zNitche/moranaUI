@@ -3,6 +3,7 @@ services:
     container_name: morana_worker_devcontainer
     build: .
     restart: "no"
+    user: "morana"
     volumes:
       - ..:/workspace
     ports:
