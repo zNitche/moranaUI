@@ -26,4 +26,11 @@ export default interface RouterContextType {
     }) => void;
     navigateBack: () => void;
     getRouteUUIDByName: (name: string) => string | undefined;
+    replaceSearchParams: ({
+        add,
+        remove,
+    }: {
+        add?: Record<string, string>;
+        remove?: string[];
+    }) => void;
 }

@@ -191,6 +191,18 @@ export default function Router({ children }: PropsWithChildren) {
         }
     }, [currentRoute]);
 
+    const __replaceRouterState = () => {
+        const currentUrl = new URL(window.location.href);
+
+        setCurrentPath((current) => {
+            return {
+                ...current,
+                path: currentUrl.pathname,
+                search: currentUrl.search,
+            };
+        });
+    };
+
     const navigateTo = useCallback(
         ({
             path,
@@ -247,6 +259,37 @@ export default function Router({ children }: PropsWithChildren) {
         }
     }, [navigationStack, navigateTo]);
 
+    const replaceSearchParams = useCallback(
+        ({
+            add,
+            remove,
+        }: {
+            add?: Record<string, string>;
+            remove?: string[];
+        }) => {
+            const currentUrl = new URL(window.location.href);
+            const currentSearchParams = new URLSearchParams(currentUrl.search);
+
+            if (remove) {
+                for (const key of remove) {
+                    currentSearchParams.delete(key);
+                }
+            }
+
+            if (add) {
+                for (const key of Object.keys(add)) {
+                    currentSearchParams.set(key, add[key]);
+                }
+            }
+
+            currentUrl.search = currentSearchParams.toString();
+            window.history.replaceState({}, "", currentUrl);
+
+            __replaceRouterState();
+        },
+        [],
+    );
+
     const getRouteUUIDByName = useCallback(
         (name: string) => {
             return routes.find((r) => r.name === name)?.uuid;
@@ -273,6 +316,7 @@ export default function Router({ children }: PropsWithChildren) {
             navigateBack,
             routerCache,
             getRouteUUIDByName,
+            replaceSearchParams,
         };
     }, [
         __addRoute,
@@ -283,6 +327,7 @@ export default function Router({ children }: PropsWithChildren) {
         __addToRouterCache,
         clearRouterCache,
         getRouteUUIDByName,
+        replaceSearchParams,
     ]);
 
     return (

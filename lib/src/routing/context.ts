@@ -25,6 +25,10 @@ export const RouterContext = createContext<RouterContextType>({
     }) => undefined,
     navigateBack: () => undefined,
     getRouteUUIDByName: () => undefined,
+    replaceSearchParams: (_params: {
+        add?: Record<string, string>;
+        remove?: string[];
+    }) => undefined,
 });
 
 export const RouteContext = createContext<RouteContextType>({
