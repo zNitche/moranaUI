@@ -1,35 +1,61 @@
+/* eslint-disable react-hooks/refs */
 import type MoranaSegmentItem from "@root/types/MoranaSegmentItem";
 import classes from "./MoranaSegmentsBar.module.css";
 import clsx from "@root/utils/clsx";
-import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import {
+    useMemo,
+    useRef,
+    useState,
+    type CSSProperties,
+    type Dispatch,
+    type SetStateAction,
+} from "react";
+import type SegmentsBarStylebook from "@root/types/SegmentsBarStylebook";
 
 interface MoranaSegmentsBarProps {
+    readonly activeSegment: MoranaSegmentItem | null;
+    readonly setActiveSegment: Dispatch<
+        SetStateAction<MoranaSegmentItem | null>
+    >;
     readonly segments: MoranaSegmentItem[];
-    readonly onSegmentChange?: (target: MoranaSegmentItem) => void;
     readonly disabled?: boolean;
-    readonly className?: string;
-    readonly segmentClassName?: string;
-    readonly selectorClassName?: string;
+    readonly stylebook?: SegmentsBarStylebook;
 }
 
 export default function MoranaSegmentsBar({
     segments,
-    onSegmentChange,
+    activeSegment,
+    setActiveSegment,
     disabled,
-    className,
-    segmentClassName,
-    selectorClassName,
+    stylebook,
 }: MoranaSegmentsBarProps) {
-    const [activeSegment, setActiveSegment] =
-        useState<MoranaSegmentItem | null>(segments.at(0) ?? null);
-
-    const [selectorElement, setSelectorElement] = useState<HTMLElement | null>(
-        null,
-    );
+    const barRef = useRef<HTMLDivElement | null>(null);
+    const selectorElementRef = useRef<HTMLDivElement | null>(null);
 
     const [segmentsElements, setSegmentsElements] = useState<
         { name: string; ref: HTMLElement | null }[]
     >([]);
+
+    const barSizeDetails = useMemo(() => {
+        if (!barRef.current) {
+            return;
+        }
+
+        const barStyles = window.getComputedStyle(barRef.current);
+
+        const paddingLeft = parseFloat(barStyles.paddingLeft);
+        const paddingRight = parseFloat(barStyles.paddingRight);
+
+        const barWidth = barRef.current.clientWidth;
+        const barRawWidth = barWidth - paddingLeft - paddingRight;
+
+        return {
+            width: barWidth,
+            rawWidth: barRawWidth,
+            height: barRef.current.clientHeight,
+            elementWidth: barRawWidth / segmentsElements.length,
+        };
+    }, [segmentsElements.length]);
 
     const activeSegmentElement = useMemo(() => {
         if (!activeSegment) {
@@ -42,13 +68,6 @@ export default function MoranaSegmentsBar({
 
         return activeElement?.ref;
     }, [activeSegment, segmentsElements]);
-
-    useEffect(() => {
-        if (activeSegment) {
-            onSegmentChange?.(activeSegment);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [activeSegment]);
 
     const elements = useMemo(() => {
         return segments.map((segment) => {
@@ -74,59 +93,72 @@ export default function MoranaSegmentsBar({
                     key={segment.name}
                     className={clsx(
                         classes.segment,
-                        segment.disabled && classes.disabled,
-                        segment.name === activeSegment?.name && classes.active,
-                        segmentClassName,
+                        segment.disabled &&
+                            (stylebook?.segment?.disabled ?? classes.disabled),
+                        segment.name === activeSegment?.name &&
+                            (stylebook?.segment?.active ?? classes.active),
+                        stylebook?.segment?.base,
                     )}
                 >
                     {segment.name}
                 </div>
             );
         });
-    }, [segments, activeSegment?.name, segmentClassName]);
+    }, [
+        segments,
+        stylebook?.segment?.disabled,
+        stylebook?.segment?.active,
+        stylebook?.segment?.base,
+        activeSegment?.name,
+        setActiveSegment,
+    ]);
 
-    const selector = useMemo(() => {
-        if (!activeSegmentElement) {
+    const selectorElementStyle = useMemo(() => {
+        if (!activeSegmentElement || !selectorElementRef.current) {
             return;
         }
 
-        const selectorElementComputedStyle = selectorElement
-            ? window.getComputedStyle(selectorElement)
+        const selectorElementComputedStyle = selectorElementRef.current
+            ? window.getComputedStyle(selectorElementRef.current)
             : null;
 
-        const selectorPaddingLeft = Number.parseInt(
+        const paddingLeft = Number.parseInt(
             selectorElementComputedStyle?.paddingLeft ?? "0",
         );
-        const offsetLeft =
-            activeSegmentElement.offsetLeft - selectorPaddingLeft;
+        const offsetLeft = activeSegmentElement.offsetLeft - paddingLeft;
 
-        return (
-            <div
-                ref={(e: HTMLElement | null) => setSelectorElement(e)}
-                className={clsx(classes.selector, selectorClassName)}
-                style={
-                    {
-                        display: !selectorElementComputedStyle
-                            ? "none"
-                            : "unset",
-                        "--height": `${activeSegmentElement.clientHeight}px`,
-                        "--width": `${activeSegmentElement.clientWidth}px`,
-                        "--offset-left": `${offsetLeft}px`,
-                    } as CSSProperties
-                }
-            />
-        );
-    }, [activeSegmentElement, selectorClassName, selectorElement]);
+        return {
+            paddingLeft,
+            offsetLeft,
+            height: selectorElementRef.current.clientHeight,
+            width: selectorElementRef.current.clientWidth,
+        };
+    }, [activeSegmentElement, selectorElementRef]);
 
     return (
         <div
             className={clsx(
                 classes.moranaSegmentsBar,
-                disabled && classes.disabled,
-                className,
+                disabled && (stylebook?.wrapper?.disabled ?? classes.disabled),
+                stylebook?.wrapper?.base,
             )}
+            ref={barRef}
         >
-            {selector}
+            <div
+                ref={selectorElementRef}
+                className={clsx(classes.selector, stylebook?.selector?.base)}
+                style={
+                    {
+                        display:
+                            !selectorElementStyle || !barSizeDetails
+                                ? "none"
+                                : "block",
+                        "--height": `${barSizeDetails?.height}px`,
+                        "--width": `${barSizeDetails?.elementWidth}px`,
+                        "--offset-left": `${selectorElementStyle?.offsetLeft}px`,
+                    } as CSSProperties
+                }
+            />
             {elements}
         </div>
     );

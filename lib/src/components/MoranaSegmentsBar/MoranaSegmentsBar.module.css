@@ -4,6 +4,8 @@
     align-items: center;
     position: relative;
     padding: 4px 8px;
+    overflow-x: scroll;
+    overflow-y: hidden;
 }
 
 /* .moranaSegmentsBar.disabled {
@@ -14,6 +16,7 @@
     align-items: center;
     justify-content: center;
     z-index: 1;
+    flex: 1;
 }
 
 /* .segment.disabled {
@@ -27,13 +30,12 @@
     position: absolute;
     transition:
         left 0.3s linear,
-        min-width 0.3s linear;
+        width 0.3s linear;
     background: rgb(93, 93, 93);
 
-    padding: 8px;
     border-radius: 12px;
 
-    min-height: var(--height);
-    min-width: var(--width);
+    height: var(--height);
+    width: var(--width);
     left: var(--offset-left);
 }
