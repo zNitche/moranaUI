@@ -224,8 +224,10 @@ export default function Router({ children }: PropsWithChildren) {
             }
 
             if (replace) {
-                clearRouterCache();
                 window.history.replaceState({}, "", path);
+
+                clearRouterCache();
+                __replaceRouterState();
             } else {
                 window.history.pushState({}, "", path);
             }
