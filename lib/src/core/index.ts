@@ -1,14 +1,17 @@
+import MoranaApp from "./components/MoranaApp/MoranaApp";
+export { MoranaApp };
+
 import MoranaPage from "./components/MoranaPage/MoranaPage";
 export { MoranaPage };
-
-import MoranaContent from "./components/MoranaContent/MoranaContent";
-export { MoranaContent };
 
 import MoranaHeader from "./components/MoranaHeader/MoranaHeader";
 export { MoranaHeader };
 
-import MoranaApp from "./components/MoranaApp/MoranaApp";
-export { MoranaApp };
+import MoranaFooter from "./components/MoranaFooter/MoranaFooter";
+export { MoranaFooter };
+
+import MoranaContent from "./components/MoranaContent/MoranaContent";
+export { MoranaContent };
 
 import useMoranaPageEnter from "./hooks/lifecycle/useMoranaPageEnter";
 export { useMoranaPageEnter };
