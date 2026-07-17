@@ -1,5 +1,10 @@
 .tabComponentWrapper {
     display: block;
+    position: absolute;
+}
+
+.tabComponentWrapper.leaving {
+    z-index: 1;
 }
 
 .animateOut {

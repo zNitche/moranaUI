@@ -4,8 +4,9 @@ import useSearchParams from "@root/routing/hooks/useSearchParams";
 import type MoranaSegment from "@root/types/MoranaSegment";
 import type MoranaSegmentItem from "@root/types/MoranaSegmentItem";
 import type SegmentsBarStylebook from "@root/types/SegmentsBarStylebook";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import TabComponentWrapper from "./TabComponentWrapper/TabComponentWrapper";
+import classes from "./useMoranaSegments.module.css";
 
 interface HookUseMoranaSegmentsProps {
     readonly segments: MoranaSegment[];
@@ -30,8 +31,14 @@ export default function useMoranaSegments({
 }: HookUseMoranaSegmentsProps) {
     const { replaceSearchParams } = useRouterContext();
 
-    const [activeSegment, setActiveSegment] =
-        useState<MoranaSegmentItem | null>(null);
+    const [activeSegment, setActiveSegment] = useState<MoranaSegment | null>(
+        null,
+    );
+
+    const [segmentsStack, setSegmentsStack] = useState<null | {
+        current: MoranaSegment | null;
+        previous: MoranaSegment | null;
+    }>(null);
 
     const urlParamNameSafe = urlParamName ?? "tab";
     const searchParams = useSearchParams<{ [urlParamNameSafe]: string }>();
@@ -42,11 +49,7 @@ export default function useMoranaSegments({
     );
 
     const getInitialActiveSegment = useCallback(() => {
-        if (segmentsItems.length === 0) {
-            return null;
-        }
-
-        if (!searchParams) {
+        if (segments.length === 0 || !searchParams) {
             return null;
         }
 
@@ -55,11 +58,11 @@ export default function useMoranaSegments({
         }
 
         return (
-            segmentsItems.find(
-                (s) => s.name === searchParams[urlParamNameSafe],
+            segments.find(
+                (s) => s.details.name === searchParams[urlParamNameSafe],
             ) ?? null
         );
-    }, [searchParams, segmentsItems, urlParamName, urlParamNameSafe]);
+    }, [searchParams, segments, urlParamName, urlParamNameSafe]);
 
     useEffect(() => {
         if (activeSegment !== null) {
@@ -70,6 +73,7 @@ export default function useMoranaSegments({
             const initialSegment = getInitialActiveSegment();
 
             // eslint-disable-next-line react-hooks/set-state-in-effect
+            setSegmentsStack({ current: initialSegment, previous: null });
             setActiveSegment(initialSegment);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -88,45 +92,82 @@ export default function useMoranaSegments({
 
     useEffect(() => {
         if (activeSegment) {
-            onChangeHandler?.(activeSegment);
+            onChangeHandler?.(activeSegment.details);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeSegment]);
+
+    const onSegmentChange = useCallback(
+        (newSegmentDetails: MoranaSegmentItem) => {
+            const newSegment =
+                segments.find(
+                    (s) => s.details.name === newSegmentDetails.name,
+                ) ?? null;
+
+            setSegmentsStack({ current: newSegment, previous: activeSegment });
+            setActiveSegment(newSegment);
+        },
+        [activeSegment, segments],
+    );
 
     const segmentsBar = useMemo(() => {
         return (
             <MoranaSegmentsBar
                 segments={segmentsItems}
-                activeSegment={activeSegment}
-                setActiveSegment={setActiveSegment}
+                activeSegment={activeSegment?.details ?? null}
+                setActiveSegment={onSegmentChange}
                 disabled={disabled}
                 stylebook={segmentsBarStylebook}
             />
         );
-    }, [activeSegment, disabled, segmentsBarStylebook, segmentsItems]);
-
-    const segmentComponent = useMemo(() => {
-        const Component = segments.find(
-            (s) => s.details.name === activeSegment?.name,
-        )?.component;
-
-        if (animatedTabChange) {
-            return (
-                <TabComponentWrapper
-                    className={segmentComponentWrapperClassName}
-                >
-                    {Component ? <Component /> : <></>}
-                </TabComponentWrapper>
-            );
-        } else {
-            return Component ? <Component /> : <></>;
-        }
     }, [
-        activeSegment?.name,
-        animatedTabChange,
-        segmentComponentWrapperClassName,
-        segments,
+        activeSegment?.details,
+        disabled,
+        onSegmentChange,
+        segmentsBarStylebook,
+        segmentsItems,
     ]);
 
-    return { segmentsBar, segmentComponent };
+    const segmentsContent = useMemo(() => {
+        const ActiveSegmentComponent =
+            segmentsStack?.current?.component ?? React.Fragment;
+
+        if (animatedTabChange) {
+            if (segmentsStack?.current) {
+                const PreviousSegmentComponent =
+                    segmentsStack.previous?.component;
+
+                return (
+                    <div className={classes.segmentsWrapper}>
+                        {PreviousSegmentComponent && (
+                            <TabComponentWrapper
+                                className={segmentComponentWrapperClassName}
+                                isLeaving={true}
+                                onAnimationEndCallback={() =>
+                                    setSegmentsStack((current) => {
+                                        return current
+                                            ? { ...current, previous: null }
+                                            : null;
+                                    })
+                                }
+                            >
+                                <PreviousSegmentComponent />
+                            </TabComponentWrapper>
+                        )}
+                        {!segmentsStack.previous && (
+                            <TabComponentWrapper
+                                className={segmentComponentWrapperClassName}
+                            >
+                                <ActiveSegmentComponent />
+                            </TabComponentWrapper>
+                        )}
+                    </div>
+                );
+            }
+        }
+
+        return <ActiveSegmentComponent />;
+    }, [animatedTabChange, segmentComponentWrapperClassName, segmentsStack]);
+
+    return { segmentsBar, segmentsContent };
 }

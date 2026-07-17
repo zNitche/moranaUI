@@ -1,4 +1,4 @@
 export default interface MoranaSegmentItem {
     name: string;
-    disabled: boolean | undefined;
+    disabled?: boolean;
 }

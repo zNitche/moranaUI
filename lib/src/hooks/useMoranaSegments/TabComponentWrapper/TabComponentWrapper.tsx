@@ -1,58 +1,34 @@
-import {
-    useEffect,
-    useState,
-    type AnimationEvent,
-    type PropsWithChildren,
-    type ReactNode,
-} from "react";
+import { type AnimationEvent, type PropsWithChildren } from "react";
 import classes from "./TabComponentWrapper.module.css";
 import { clsx } from "@root/utils";
 
 interface TabComponentWrapperProps {
     readonly className?: string;
+    readonly isLeaving?: boolean;
+    readonly onAnimationEndCallback?: () => void;
 }
 
 export default function TabComponentWrapper({
     children,
     className,
+    isLeaving,
+    onAnimationEndCallback,
 }: PropsWithChildren<TabComponentWrapperProps>) {
-    const [isLeaving, setIsLeaving] = useState(false);
-    const [currentChildren, setCurrentChildren] = useState<ReactNode | null>(
-        children,
-    );
-
-    useEffect(() => {
-        if (!currentChildren) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            setCurrentChildren(children);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [children]);
-
-    useEffect(() => {
-        if (!currentChildren) {
-            return;
-        }
-
-        if (children !== currentChildren) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            setIsLeaving(true);
-        }
-    }, [children, currentChildren])
-
     return (
         <div
             className={clsx(
                 classes.tabComponentWrapper,
                 isLeaving && classes.animateOut,
+                isLeaving && classes.leaving,
                 className,
             )}
             onAnimationEnd={(_event: AnimationEvent<HTMLDivElement>) => {
-                setCurrentChildren(children);
-                setIsLeaving(false);
+                if (isLeaving) {
+                    onAnimationEndCallback?.();
+                }
             }}
         >
-            {currentChildren}
+            {children}
         </div>
     );
 }

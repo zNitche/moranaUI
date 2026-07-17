@@ -2,21 +2,12 @@
 import type MoranaSegmentItem from "@root/types/MoranaSegmentItem";
 import classes from "./MoranaSegmentsBar.module.css";
 import clsx from "@root/utils/clsx";
-import {
-    useMemo,
-    useRef,
-    useState,
-    type CSSProperties,
-    type Dispatch,
-    type SetStateAction,
-} from "react";
+import { useMemo, useRef, useState, type CSSProperties } from "react";
 import type SegmentsBarStylebook from "@root/types/SegmentsBarStylebook";
 
 interface MoranaSegmentsBarProps {
     readonly activeSegment: MoranaSegmentItem | null;
-    readonly setActiveSegment: Dispatch<
-        SetStateAction<MoranaSegmentItem | null>
-    >;
+    readonly setActiveSegment: (segment: MoranaSegmentItem) => void;
     readonly segments: MoranaSegmentItem[];
     readonly disabled?: boolean;
     readonly stylebook?: SegmentsBarStylebook;
