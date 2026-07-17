@@ -53,7 +53,7 @@ export default function useMoranaSegments({
             return null;
         }
 
-        if (!urlParamName || !searchParams[urlParamNameSafe]) {
+        if (!urlParamName || !urlParamNameSafe) {
             return null;
         }
 
@@ -69,15 +69,21 @@ export default function useMoranaSegments({
             return;
         }
 
-        if (searchParams?.[urlParamNameSafe]) {
-            const initialSegment = getInitialActiveSegment();
-
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            setSegmentsStack({ current: initialSegment, previous: null });
-            setActiveSegment(initialSegment);
+        if (!trackPersitance) {
+            return;
         }
+
+        let initialSegment = getInitialActiveSegment();
+
+        if (!searchParams?.[urlParamNameSafe]) {
+            initialSegment = segments.at(0) ?? null;
+        }
+
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setSegmentsStack({ current: initialSegment, previous: null });
+        setActiveSegment(initialSegment);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [getInitialActiveSegment, searchParams, urlParamNameSafe]);
+    }, [searchParams]);
 
     const onChangeHandler = useCallback(
         (s: MoranaSegmentItem) => {
