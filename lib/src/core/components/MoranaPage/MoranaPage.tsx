@@ -39,20 +39,9 @@ export default function MoranaPage({ children }: PropsWithChildren) {
             type: PageStructuralComponentType,
             ref: RefObject<HTMLDivElement | null>,
         ) => {
-            switch (type) {
-                case "content":
-                    setPageStructuralComponentsRegistry((current) => {
-                        return { ...current, content: ref };
-                    });
-                    return;
-                case "header":
-                    setPageStructuralComponentsRegistry((current) => {
-                        return { ...current, header: ref };
-                    });
-                    return;
-                default:
-                    return;
-            }
+            setPageStructuralComponentsRegistry((current) => {
+                return { ...current, [type]: ref };
+            });
         },
         [],
     );

@@ -1,1 +1,1 @@
-export type PageStructuralComponentType = "header" | "content";
+export type PageStructuralComponentType = "header" | "content" | "footer";
