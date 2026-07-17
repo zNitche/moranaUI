@@ -1,0 +1,18 @@
+.tabComponentWrapper {
+    display: block;
+}
+
+.animateOut {
+    animation: fadeOutKeyframes 0.3s ease-out forwards;
+}
+
+@keyframes fadeOutKeyframes {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+}

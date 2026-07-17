@@ -21,3 +21,6 @@ export { usePullToRefresh };
 
 import useResetContentScroll from "./useResetContentScroll";
 export { useResetContentScroll };
+
+import useMoranaSegments from "./useMoranaSegments/useMoranaSegments";
+export { useMoranaSegments };
