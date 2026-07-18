@@ -10,7 +10,8 @@
     "scripts": {
         "test:lib": "npm run test --workspace=lib",
         "lint:lib": "npm run lint --workspace=lib",
-        "build:lib": "npm run build --workspace=lib",
+        "build:lib:dev": "npm run build:dev --workspace=lib",
+        "build:lib:prod": "npm run build:prod --workspace=lib",
         "tsc:lib": "npm run tsc --workspace=lib",
 
         "tsc:app": "npm run tsc --workspace=example_app",

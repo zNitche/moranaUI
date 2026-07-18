@@ -37,8 +37,9 @@
     },
     "scripts": {
         "tsc": "tsc",
-        "build": "tsc -b && vite build",
         "build:watch": "vite build --watch",
+        "build:dev": "tsc -b && vite build",
+        "build:prod": "tsc -b && vite build && node scripts/resolve-imports-aliases.ts -- dist/types",
         "lint": "eslint .",
         "test": "vitest run",
         "test:watch": "vitest watch"

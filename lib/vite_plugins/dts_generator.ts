@@ -9,12 +9,6 @@ export default function dts_generator(): Plugin {
                 execSync("tsc --project tsconfig.types.json", {
                     stdio: "inherit",
                 });
-                execSync(
-                    "node scripts/resolve-imports-aliases.ts -- dist/types",
-                    {
-                        stdio: "inherit",
-                    },
-                );
             } catch (error) {
                 console.error(error);
             }
