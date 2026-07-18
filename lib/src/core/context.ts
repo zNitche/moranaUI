@@ -17,5 +17,6 @@ export const MoranaPageContext = createContext<MoranaPageContextType>({
     pageStructuralComponentsRegistry: {
         header: null,
         content: null,
+        footer: null,
     },
 });

@@ -32,7 +32,8 @@ export default function MoranaPage({ children }: PropsWithChildren) {
     ] = useState<{
         header: RefObject<HTMLDivElement | null> | null;
         content: RefObject<HTMLDivElement | null> | null;
-    }>({ header: null, content: null });
+        footer: RefObject<HTMLDivElement | null> | null;
+    }>({ header: null, content: null, footer: null });
 
     const updatePageStructuralComponentsRegistry = useCallback(
         (
