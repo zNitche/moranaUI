@@ -1,40 +1,42 @@
-import useSearchParams from "@root/routing/hooks/useSearchParams";
 import { describe, it, beforeEach, vi, expect } from "vitest";
 import AppRoot from "../mocks/AppRoot.mock";
 import { renderHook } from "@testing-library/react";
+import { useRouter } from "@root/routing";
 
-describe("useSearchParams() hook", () => {
+describe("useRouter() hook", () => {
     beforeEach(() => {
         vi.stubGlobal("location", {
             ...window.location,
-            href: "https://127.0.0.1",
-            search: "?qparam=testv",
+            href: `https://127.0.0.1`,
+            pathname: `/home`,
         });
     });
 
-    it("get search params", () => {
+    it("test router context", () => {
         const { result } = renderHook(
-            () => useSearchParams<{ qparam: string }>(),
+            () => useRouter(),
             {
                 wrapper: ({ children }) => {
                     const ChildrenComponent = () => <>{children}</>;
 
                     return AppRoot({
                         Children: ChildrenComponent,
-                        targetRoute: "/",
+                        targetRoute: "/home",
                     });
                 },
             },
         );
 
-        expect(result.current?.qparam).toEqual("testv");
+        const router = result.current.router;
+
+        expect(router.path).toEqual("/home");
     });
 
-    it("get search params (outside RouterContext)", () => {
+    it("test router context (outside RouterContext)", () => {
         const { result } = renderHook(() =>
-            useSearchParams<{ qparam: string }>(),
+            useRouter(),
         );
 
-        expect(result.current?.qparam).toEqual(undefined);
+        expect(result.current?.router.path).toEqual("");
     });
 });

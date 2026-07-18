@@ -1,31 +1,47 @@
 import { MoranaApp } from "@root/core";
 import { Router, MoranaRoutesWrapper, Route } from "@root/routing";
-import type { ReactNode } from "react";
+import type React from "react";
 import { Fragment } from "react/jsx-runtime";
 
-export default function AppRoot(children?: ReactNode) {
+interface AppRootMockProps {
+    readonly targetRoute?: string;
+    readonly Children?: React.ComponentType;
+}
+
+export default function AppRootMock({
+    targetRoute,
+    Children,
+}: AppRootMockProps) {
+    function insertChildren(route:string) {
+        if (route === targetRoute) {{
+            return Children ?? Fragment;
+        }}
+
+        return Fragment;
+    }
+
     return (
         <MoranaApp>
             <Router>
                 <MoranaRoutesWrapper>
                     <Route
                         url="/"
-                        component={Fragment}
+                        component={insertChildren("/")}
                     />
                     <Route
                         url="/home"
-                        component={Fragment}
+                        component={insertChildren("/home")}
                     />
                     <Route
                         url="/params/:id/path/:id2"
-                        component={Fragment}
+                        component={insertChildren("/params")}
                     />
                     <Route
                         url="*"
                         cacheable={false}
                         component={Fragment}
                     />
-                    {children}
+                    {!targetRoute && Children && <Children />}
                 </MoranaRoutesWrapper>
             </Router>
         </MoranaApp>
