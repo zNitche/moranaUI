@@ -8,6 +8,7 @@ import {
     buildUrl,
     matchTokenizedUrl,
 } from "../src/utils/url";
+import clamp from "@root/utils/clamp";
 
 test("generate UUID", () => {
     const r = () => {
@@ -86,4 +87,10 @@ test("test url utils - matchTokenizedUrl()", () => {
         isMatching: false,
         pathParams: undefined,
     });
+});
+
+test("test clamp()", () => {
+    expect(clamp(101, 0, 100)).toEqual(100);
+    expect(clamp(50, 0, 100)).toEqual(50);
+    expect(clamp(-2, 0, 100)).toEqual(0);
 });
