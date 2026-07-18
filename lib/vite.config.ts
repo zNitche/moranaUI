@@ -49,9 +49,11 @@ export default defineConfig({
     },
     test: {
         environment: "jsdom",
+        globals: true,
         coverage: {
             provider: "v8",
         },
+        setupFiles: "./tests/setup.ts",
     },
     resolve: {
         alias: {
