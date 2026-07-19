@@ -4,5 +4,13 @@
     padding-right: 16px;
     padding-top: calc(var(--morana-safe-area-top) + 16px);
     box-sizing: border-box;
-    background: #455;
+    background: var(--color-surface);
+    position: relative;
+    min-height: 48px;
+}
+
+.title.centered {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
 }

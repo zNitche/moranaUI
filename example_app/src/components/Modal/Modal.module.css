@@ -1,0 +1,27 @@
+.modalWrapper {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+}
+
+.modal {
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    background: var(--color-overlay);
+    width: 100%;
+    gap: 12px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    justify-content: space-between;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}

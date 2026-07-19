@@ -3,14 +3,10 @@ import {
     useMoranaPageEnter,
     useMoranaPageExit,
     MoranaPage,
-    // useIsPageActive,
+    useIsPageActive,
     MoranaHeader,
     MoranaContent,
-    MoranaModal,
-    MoranaFullScreenOverlay,
-    MoranaDrawer,
     useTrackScrollProgress,
-    range,
     sleep,
     usePullToRefresh,
     useResetContentScroll,
@@ -18,15 +14,19 @@ import {
 import Header from "@root/components/Header/Header";
 import Content from "@root/components/Content/Content";
 import { useCallback, useState } from "react";
+import classes from "./CollectionPage.module.css";
+import Modal from "@root/components/Modal/Modal";
+import Drawer from "@root/components/Drawer/Drawer";
+import FullScreenOverlay from "@root/components/FullScreenOverlay/FullScreenOverlay";
 
-export default function AboutPage() {
+export default function CollectionPage() {
     const { navigateBack } = useRouter();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isOverlayOpen, setIsOverlayOpen] = useState(false);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-    // const isPageActive = useIsPageActive();
+    const isPageActive = useIsPageActive();
 
     const { setRef } = useTrackScrollProgress();
 
@@ -46,13 +46,13 @@ export default function AboutPage() {
         [setPullToRefreshElementRef, setRef, setContentElementRef],
     );
 
-    // console.log(`is about active: ${isPageActive}`);
+    console.log(`is about active: ${isPageActive}`);
 
     useMoranaPageEnter({
         callback: () => {
             console.log("about page enter");
 
-            setTimeout(() => resetScroll(), 1000)
+            setTimeout(() => resetScroll(), 1000);
         },
     });
     useMoranaPageExit({ callback: () => console.log("about page exit") });
@@ -60,50 +60,48 @@ export default function AboutPage() {
     return (
         <MoranaPage>
             <MoranaHeader>
-                <Header title="About" />
+                <Header
+                    title="Collection"
+                    onClickBack={navigateBack}
+                />
             </MoranaHeader>
             <MoranaContent>
-                <Content ref={setContentRef}>
+                <Content
+                    ref={setContentRef}
+                    className={classes.collectionPage}
+                >
                     {refresherAnchor}
 
-                    {range(100).map((i) => (
-                        <div key={i}>{i}</div>
-                    ))}
-                    <div onClick={() => navigateBack()}>nav to home</div>
+                    <div>Pull to refresh</div>
+
                     <div onClick={() => setIsModalOpen((current) => !current)}>
-                        toggle modal
+                        Show Modal
                     </div>
                     <div
                         onClick={() => setIsOverlayOpen((current) => !current)}
                     >
-                        toggle overlay
+                        Show FullScreenOverlay
                     </div>
                     <div onClick={() => setIsDrawerOpen((current) => !current)}>
-                        toggle drawer
+                        Show Drawer
                     </div>
                 </Content>
             </MoranaContent>
 
-            <MoranaFullScreenOverlay
+            <FullScreenOverlay
                 isOpen={isOverlayOpen}
                 setIsOpen={setIsOverlayOpen}
-            >
-                test overlay
-            </MoranaFullScreenOverlay>
+            />
 
-            <MoranaModal
+            <Modal
                 isOpen={isModalOpen}
                 setIsOpen={setIsModalOpen}
-            >
-                test modal
-            </MoranaModal>
+            />
 
-            <MoranaDrawer
+            <Drawer
                 isOpen={isDrawerOpen}
                 setIsOpen={setIsDrawerOpen}
-            >
-                test drawer
-            </MoranaDrawer>
+            />
         </MoranaPage>
     );
 }

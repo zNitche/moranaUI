@@ -1,0 +1,17 @@
+.aboutTab {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.list {
+    margin: 0;
+    padding: 0 16px;
+    gap: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.linkAnchor {
+    color: var(--color-iris);
+}

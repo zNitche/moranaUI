@@ -1,5 +1,22 @@
 .homePage {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+}
+
+.segmentsBar {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--color-base);
+    padding: 16px;
+}
+
+.segmentsBarBase.active {
+    color: var(--color-rose);
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
 }

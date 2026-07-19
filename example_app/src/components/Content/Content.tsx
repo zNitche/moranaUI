@@ -1,3 +1,4 @@
+import { clsx } from "moranaui";
 import classes from "./Content.module.css";
 import type { HTMLAttributes, PropsWithChildren } from "react";
 
@@ -14,7 +15,7 @@ export default function Content({
         <div
             {...props}
             ref={ref}
-            className={classes.content}
+            className={clsx(classes.content, props.className)}
         >
             {children}
         </div>

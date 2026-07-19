@@ -7,10 +7,9 @@ import {
     MoranaRoutesWrapper,
 } from "moranaui";
 import HomePage from "./pages/HomePage/HomePage";
-import AboutPage from "./pages/AboutPage/AboutPage";
+import CollectionPage from "./pages/CollectionPage/CollectionPage";
 import CatchAllPage from "./pages/CatchAllPage/CatchAllPage";
 import CatchAllWrapper from "./wrappers/CatchAllWrapper";
-import ParamsPage from "./pages/ParamsPage/ParamsPage";
 import NavigationBar from "./components/NavigationBar/NavigationBar";
 
 export default function App() {
@@ -24,12 +23,9 @@ export default function App() {
                         name={"home"}
                     />
                     <Route
-                        url={"/about"}
-                        component={AboutPage}
-                    />
-                    <Route
-                        url={"/test/:id/param/:w/:q/pass"}
-                        component={ParamsPage}
+                        url={"/collection"}
+                        component={CollectionPage}
+                        name={"collection"}
                     />
                     <Route
                         url="*"
