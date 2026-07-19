@@ -24,7 +24,7 @@
 }
 
 .defaultRouteEnterAnimation {
-    animation: slideInKeyframes 0.5s ease-out forwards;
+    animation: slideInKeyframes 0.25s ease-out forwards;
 }
 
 .defaultRouteEnterAnimation.back {
@@ -36,7 +36,7 @@
 }
 
 .defaultRouteExitAnimation.back {
-    animation: slideInKeyframesBackward 0.5s ease-out forwards;
+    animation: slideInKeyframesBackward 0.25s ease-out forwards;
 }
 
 @keyframes slideInKeyframes {

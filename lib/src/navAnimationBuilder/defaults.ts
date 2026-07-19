@@ -55,7 +55,7 @@ export const defaultSlideNavAnimationBuilder: NavAnimationBuilder = {
                 return;
             }
 
-            await sleep(600);
+            await sleep(400);
 
             if (ref.classList.contains(classes.defaultAwayRoute)) {
                 ref.classList.add(classes.parked);
