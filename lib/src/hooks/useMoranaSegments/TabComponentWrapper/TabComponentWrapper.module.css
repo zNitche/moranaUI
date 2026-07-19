@@ -1,6 +1,6 @@
 .tabComponentWrapper {
     display: block;
-    position: absolute;
+    position: relative;
 }
 
 .tabComponentWrapper.leaving {
