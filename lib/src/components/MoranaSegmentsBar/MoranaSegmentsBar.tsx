@@ -46,7 +46,8 @@ export default function MoranaSegmentsBar({
             height: barRef.current.clientHeight,
             elementWidth: barRawWidth / segmentsElements.length,
         };
-    }, [segmentsElements.length]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [segmentsElements.length, window.screen.width]);
 
     const activeSegmentElement = useMemo(() => {
         if (!activeSegment) {
@@ -77,7 +78,10 @@ export default function MoranaSegmentsBar({
                         });
                     }}
                     onClick={() => {
-                        if (!segment.disabled) {
+                        if (
+                            !segment.disabled &&
+                            (activeSegment?.name !== segment.name)
+                        ) {
                             setActiveSegment(segment);
                         }
                     }}
