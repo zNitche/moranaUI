@@ -64,6 +64,14 @@ export default function useMoranaSegments({
         );
     }, [searchParams, segments, urlParamName, urlParamNameSafe]);
 
+    const updateSegmentStack = (
+        current: MoranaSegment | null,
+        previous: MoranaSegment | null,
+    ) => {
+        setSegmentsStack({ current: current, previous: previous });
+        setActiveSegment(current);
+    };
+
     useEffect(() => {
         if (activeSegment !== null) {
             return;
@@ -80,8 +88,7 @@ export default function useMoranaSegments({
         }
 
         // eslint-disable-next-line react-hooks/set-state-in-effect
-        setSegmentsStack({ current: initialSegment, previous: null });
-        setActiveSegment(initialSegment);
+        updateSegmentStack(initialSegment, null);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchParams]);
 
@@ -110,8 +117,7 @@ export default function useMoranaSegments({
                     (s) => s.details.name === newSegmentDetails.name,
                 ) ?? null;
 
-            setSegmentsStack({ current: newSegment, previous: activeSegment });
-            setActiveSegment(newSegment);
+            updateSegmentStack(newSegment, activeSegment);
         },
         [activeSegment, segments],
     );
@@ -175,5 +181,17 @@ export default function useMoranaSegments({
         return <ActiveSegmentComponent />;
     }, [animatedTabChange, segmentComponentWrapperClassName, segmentsStack]);
 
-    return { segmentsBar, segmentsContent };
+    const setCurrentSegment = useCallback(
+        (name: string) => {
+            const segment = segments.find((s) => s.details.name === name);
+
+            if (segment) {
+                setActiveSegment(segment);
+                updateSegmentStack(segment, activeSegment)
+            }
+        },
+        [activeSegment, segments],
+    );
+
+    return { segmentsBar, segmentsContent, setCurrentSegment };
 }
