@@ -3,13 +3,30 @@
     --morana-safe-area-bottom: 0px !important;
     --morana-safe-area-left: 0px !important;
     --morana-safe-area-right: 0px !important;
+
+    /* https://rosepinetheme.com/palette/ */
+    --color-base: #191724;
+    --color-surface: #1f1d2e;
+    --color-overlay: #26233a;
+    --color-muted: #6e6a86;
+    --color-subtle: #908caa;
+    --color-text: #e0def4;
+    --color-love: #eb6f92;
+    --color-gold: #f6c177;
+    --color-rose: #ebbcba;
+    --color-pine: #31748f;
+    --color-foam: #9ccfd8;
+    --color-iris: #c4a7e7;
+    --color-highlight-low: #21202e;
+    --color-highlight-med: #403d52;
+    --color-highlight-high: #524f67;
 }
 
 #root {
     height: 100dvh;
     overflow: hidden;
     position: relative;
-    background: #444;
+    background: var(--color-base);
 }
 
 *::-webkit-scrollbar {
@@ -20,8 +37,8 @@ html,
 body {
     margin: 0;
     padding: 0;
-    background: #000;
-    color: #fff;
+    background: var(--color-base);
+    color: var(--color-text);
     height: 100dvh;
     overscroll-behavior: none;
 }
