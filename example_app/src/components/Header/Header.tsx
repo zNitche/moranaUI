@@ -11,7 +11,7 @@ interface HeaderProps {
 export default function Header({
     title,
     onClickBack,
-    centeredTitle = true,
+    centeredTitle = false,
 }: HeaderProps) {
     return (
         <MoranaToolbar className={classes.header}>

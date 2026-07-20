@@ -6,7 +6,9 @@
     box-sizing: border-box;
     background: var(--color-surface);
     position: relative;
-    min-height: 48px;
+    min-height: 56px;
+    justify-content: flex-start;
+    gap: 12px;
 }
 
 .title.centered {
