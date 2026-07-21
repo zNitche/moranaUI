@@ -24,7 +24,7 @@ fulfill my needs.
 - Pull to refresh.
 - Customization via CSS modules.
 - Built with minimalism in mind.
-- 46kB bunlde size (13 kB gzipped).
+- 46kB bundle size (13 kB gzipped).
 
 ### Setup
 
