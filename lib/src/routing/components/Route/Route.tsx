@@ -43,9 +43,9 @@ export default function Route({
 
     const [lifecycleHooks, setLifecycleHooks] = useState<
         | {
-              onEnter?: () => void;
-              onExit?: () => void;
-          }
+            onEnter?: () => void;
+            onExit?: () => void;
+        }
         | undefined
     >(undefined);
 
@@ -88,6 +88,19 @@ export default function Route({
         [],
     );
 
+    const __callLifecycleHooks = useCallback(() => {
+        if (transitionDetails.isCurrentlyEntering) {
+            lifecycleHooks?.onEnter?.();
+        } else {
+            lifecycleHooks?.onExit?.();
+        }
+    }, [lifecycleHooks, transitionDetails.isCurrentlyEntering])
+
+    useEffect(() => {
+        __callLifecycleHooks()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
     useLayoutEffect(() => {
         if (!transitionDetails.detected) {
             return;
@@ -101,19 +114,9 @@ export default function Route({
             wrapperRef: wrapperRef,
         });
 
-        if (transitionDetails.isCurrentlyEntering) {
-            lifecycleHooks?.onEnter?.();
-        } else {
-            lifecycleHooks?.onExit?.();
-        }
-    }, [
-        handleTransitionAnimation,
-        lifecycleHooks,
-        navAnimationBuilder?.route,
-        routeUUID,
-        router,
-        transitionDetails,
-    ]);
+        __callLifecycleHooks()
+    }, [__callLifecycleHooks, handleTransitionAnimation, lifecycleHooks,
+        navAnimationBuilder?.route, routeUUID, router, transitionDetails]);
 
     const routeComponent = useMemo(() => {
         if (!inCache && !isCurrentRoute) {
