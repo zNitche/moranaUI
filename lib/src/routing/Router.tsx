@@ -191,16 +191,18 @@ export default function Router({ children }: PropsWithChildren) {
         }
     }, [currentRoute]);
 
-    const __replaceRouterState = () => {
+    const __replaceRouterState = ({ inPlace = false }: { inPlace: boolean }) => {
         const currentUrl = new URL(window.location.href);
 
-        setCurrentPath((current) => {
-            return {
-                ...current,
-                path: currentUrl.pathname,
-                search: currentUrl.search,
-            };
-        });
+        if (!inPlace) {
+            setCurrentPath((current) => {
+                return {
+                    ...current,
+                    path: currentUrl.pathname,
+                    search: currentUrl.search,
+                };
+            });
+        }
     };
 
     const navigateTo = useCallback(
@@ -227,7 +229,7 @@ export default function Router({ children }: PropsWithChildren) {
                 window.history.replaceState({}, "", path);
 
                 clearRouterCache();
-                __replaceRouterState();
+                __replaceRouterState({inPlace: false});
             } else {
                 window.history.pushState({}, "", path);
             }
@@ -287,7 +289,7 @@ export default function Router({ children }: PropsWithChildren) {
             currentUrl.search = currentSearchParams.toString();
             window.history.replaceState({}, "", currentUrl);
 
-            __replaceRouterState();
+            __replaceRouterState({inPlace: true});
         },
         [],
     );
