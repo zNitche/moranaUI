@@ -17,6 +17,8 @@ import { RouteContext } from "@root/routing/context";
 import useDetectTransition from "@root/core/hooks/useDetectTransition";
 import useHandleTransitionAnimation from "@root/core/hooks/useHandleTransitionAnimation";
 import useMoranaAppContext from "@root/core/hooks/context/useMoranaAppContext";
+import type { RouteLifecycleHookType } from "@root/types/RouteLifecycleHookType";
+import type RouteLifecycleCallbacks from "@root/types/RouteLifecycleCallbacks";
 
 interface RouteProps {
     readonly url: string;
@@ -42,11 +44,7 @@ export default function Route({
     const { navAnimationBuilder } = useMoranaAppContext();
 
     const [lifecycleHooks, setLifecycleHooks] = useState<
-        | {
-            onEnter?: () => void;
-            onExit?: () => void;
-        }
-        | undefined
+        RouteLifecycleCallbacks | undefined
     >(undefined);
 
     const { transitionDetails } = useDetectTransition(routeUUID);
@@ -54,6 +52,7 @@ export default function Route({
 
     useEffect(() => {
         __addRoute({ uuid: routeUUID, name: name, url, component });
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -67,39 +66,20 @@ export default function Route({
     );
 
     const registerLifecycleHook = useCallback(
-        (type: "enter" | "exit", callback: () => void) => {
-            switch (type) {
-                case "enter":
-                    setLifecycleHooks((current) => {
-                        return { ...current, onEnter: callback };
-                    });
-                    return;
+        (type: RouteLifecycleHookType, callback: () => void) => {
+            const hooksMap: Record<RouteLifecycleHookType, string> = {
+                "enter": "onEnter",
+                "exit": "onExit",
+                "mount": "onMount",
+                "unmount": "onUnmount",
+            } as const
 
-                case "exit":
-                    setLifecycleHooks((current) => {
-                        return { ...current, onExit: callback };
-                    });
-                    return;
-
-                default:
-                    return;
-            }
+            setLifecycleHooks((current) => {
+                return { ...current, [hooksMap[type]]: callback };
+            });
         },
         [],
     );
-
-    const __callLifecycleHooks = useCallback(() => {
-        if (transitionDetails.isCurrentlyEntering) {
-            lifecycleHooks?.onEnter?.();
-        } else {
-            lifecycleHooks?.onExit?.();
-        }
-    }, [lifecycleHooks, transitionDetails.isCurrentlyEntering])
-
-    useEffect(() => {
-        __callLifecycleHooks()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
 
     useLayoutEffect(() => {
         if (!transitionDetails.detected) {
@@ -114,9 +94,13 @@ export default function Route({
             wrapperRef: wrapperRef,
         });
 
-        __callLifecycleHooks()
-    }, [__callLifecycleHooks, handleTransitionAnimation, lifecycleHooks,
-        navAnimationBuilder?.route, routeUUID, router, transitionDetails]);
+        if (transitionDetails.isCurrentlyEntering) {
+            lifecycleHooks?.onEnter?.();
+        } else {
+            lifecycleHooks?.onExit?.();
+        }
+    }, [handleTransitionAnimation, lifecycleHooks, navAnimationBuilder?.route,
+        routeUUID, router, transitionDetails]);
 
     const routeComponent = useMemo(() => {
         if (!inCache && !isCurrentRoute) {

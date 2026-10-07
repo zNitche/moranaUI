@@ -1,6 +1,7 @@
 import type { NavigationTransitionDirection } from "@root/types/NavigationTransitionDirection";
 import type RouteContextType from "@root/types/RouteContextType";
 import type RouteData from "@root/types/RouteData";
+import type { RouteLifecycleHookType } from "@root/types/RouteLifecycleHookType";
 import type RouterContextType from "@root/types/RouterContextType";
 import { createContext, type RefObject } from "react";
 
@@ -33,7 +34,7 @@ export const RouterContext = createContext<RouterContextType>({
 
 export const RouteContext = createContext<RouteContextType>({
     routeUUID: "",
-    registerLifecycleHook: (_type: "enter" | "exit", _callback: () => void) =>
+    registerLifecycleHook: (_type: RouteLifecycleHookType, _callback: () => void) =>
         undefined,
     isCurrentRoute: false,
 });

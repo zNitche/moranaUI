@@ -1,7 +1,9 @@
+import type { RouteLifecycleHookType } from "./RouteLifecycleHookType";
+
 export default interface RouteContextType {
     routeUUID: string;
     registerLifecycleHook: (
-        type: "enter" | "exit",
+        type: RouteLifecycleHookType,
         callback: () => void,
     ) => void;
     isCurrentRoute: boolean;
