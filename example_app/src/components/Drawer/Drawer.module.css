@@ -6,7 +6,7 @@
 .drawer {
     display: flex;
     flex-direction: column;
-    padding: 12px;
+    padding: 12px 12px calc(12px + var(--morana-safe-area-bottom)) 12px;
     background: var(--color-overlay);
     width: 100%;
     gap: 12px;

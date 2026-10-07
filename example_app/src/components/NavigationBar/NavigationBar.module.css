@@ -1,8 +1,7 @@
 .navigationBar {
-    max-height: 48px;
     min-height: 48px;
     box-sizing: border-box;
-    padding: 0 32px;
+    padding: 8px 32px calc(4px + var(--morana-safe-area-bottom)) 32px;
     align-items: center;
     justify-content: space-between;
     background: var(--color-surface);
