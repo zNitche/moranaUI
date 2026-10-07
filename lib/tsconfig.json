@@ -27,13 +27,15 @@
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "erasableSyntaxOnly": true,
-        "noFallthroughCasesInSwitch": true
+        "noFallthroughCasesInSwitch": true,
+        "allowImportingTsExtensions": true
     },
     "include": [
         "src",
         "vite_plugins",
         "scripts",
         "tests",
-        "./vite.config.ts"
+        "./vite.config.ts",
+        "./vitest.config.js"
     ]
 }

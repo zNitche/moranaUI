@@ -1,10 +1,8 @@
-/// <reference types="vitest/config" />
-
 import { defineConfig, esmExternalRequirePlugin } from "vite";
 import react from "@vitejs/plugin-react";
 import { resolve } from "node:path";
-import { dts_generator } from "./vite_plugins";
-import libPkg from "./package.json";
+import { dts_generator } from "./vite_plugins/index.ts";
+import libPkg from "./package.json" with { type: "json" };
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -47,17 +45,9 @@ export default defineConfig({
             },
         },
     },
-    test: {
-        environment: "jsdom",
-        globals: true,
-        coverage: {
-            provider: "v8",
-        },
-        setupFiles: "./tests/setup.ts",
-    },
     resolve: {
         alias: {
-            "@root": resolve(__dirname, "./src"),
+            "@root": resolve(import.meta.dirname, "./src"),
         },
     },
 });
