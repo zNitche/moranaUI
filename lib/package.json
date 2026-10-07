@@ -22,8 +22,8 @@
     "main": "./dist/moranaui.index.es.js",
     "types": "./dist/types/index.d.ts",
     "engines": {
-        "node": ">=24.0.0 <25.0.0",
-        "npm": ">=11.0.0 <12.0.0"
+        "node": "^26.0.0",
+        "npm": ">11.19.0 <12.0.0"
     },
     "devEngines": {
         "runtime": {
