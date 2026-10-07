@@ -38,6 +38,9 @@ export default function Route({
     const routeUUID = useMemo(() => generateUUID(), []);
     const wrapperRef = useRef<HTMLDivElement>(null);
 
+    const onMountLifecycleCallbackCalled = useRef<boolean>(false);
+    const onUnmountLifecycleCallbackCalled = useRef<boolean>(false);
+
     const { __addRoute, router, routerCache, __addToRouterCache } =
         useRouterContext();
 
@@ -55,6 +58,23 @@ export default function Route({
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(() => {
+        if (!onMountLifecycleCallbackCalled.current &&
+            lifecycleHooks?.onMount !== undefined) {
+            lifecycleHooks.onMount()
+
+            onMountLifecycleCallbackCalled.current = true
+        }
+
+        return () => {
+            if (!onUnmountLifecycleCallbackCalled.current) {
+                lifecycleHooks?.onUnmount?.()
+
+                onUnmountLifecycleCallbackCalled.current = true
+            }
+        }
+    }, [lifecycleHooks])
 
     const isCurrentRoute = useMemo(
         () => Boolean(routeUUID === router.currentRoute?.uuid),
