@@ -10,6 +10,7 @@ import {
     sleep,
     usePullToRefresh,
     useResetContentScroll,
+    useMoranaPageRender,
 } from "moranaui";
 import Header from "@root/components/Header/Header";
 import Content from "@root/components/Content/Content";
@@ -56,6 +57,12 @@ export default function CollectionPage() {
         },
     });
     useMoranaPageExit({ callback: () => console.log("about page exit") });
+
+    useMoranaPageRender(
+        {
+            onMountCallback: () => console.log("about page mount"),
+            onUnmountCallback: () => console.log("about page unmount")
+        })
 
     return (
         <MoranaPage>
