@@ -1,6 +1,6 @@
 # moranaUI
 
-minimalist, batteries included microframework for React.
+minimalist, batteries included microframework for Capacitor.js (React).
 
 ### Motivation
 
