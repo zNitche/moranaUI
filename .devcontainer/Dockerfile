@@ -1,4 +1,4 @@
-FROM node:24.16.0-slim
+FROM node:26.10.0-slim
 
 ARG USERNAME=morana
 ARG USER_UID=1111
