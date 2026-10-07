@@ -1,8 +1,8 @@
 :root {
-    --morana-safe-area-top: 0px !important;
-    --morana-safe-area-bottom: 0px !important;
-    --morana-safe-area-left: 0px !important;
-    --morana-safe-area-right: 0px !important;
+    --morana-safe-area-top: env(safe-area-inset-top, 0px) !important;
+    --morana-safe-area-bottom: env(safe-area-inset-bottom, 0px) !important;
+    --morana-safe-area-left: env(safe-area-inset-left, 0px) !important;
+    --morana-safe-area-right: env(safe-area-inset-right, 0px) !important;
 
     /* https://rosepinetheme.com/palette/ */
     --color-base: #191724;
