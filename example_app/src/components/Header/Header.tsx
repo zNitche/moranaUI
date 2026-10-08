@@ -14,16 +14,11 @@ export default function Header({
     centeredTitle = false,
 }: HeaderProps) {
     return (
-        <MoranaToolbar className={classes.header}>
+        <MoranaToolbar
+            className={clsx(classes.header, centeredTitle && classes.centered)}
+        >
             {onClickBack && <ArrowBackIcon onClick={onClickBack} />}
-            <div
-                className={clsx(
-                    classes.title,
-                    centeredTitle && classes.centered,
-                )}
-            >
-                {title}
-            </div>
+            <div className={classes.title}>{title}</div>
         </MoranaToolbar>
     );
 }

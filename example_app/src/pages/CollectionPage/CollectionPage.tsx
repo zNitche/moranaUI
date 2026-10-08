@@ -3,7 +3,6 @@ import {
     useMoranaPageEnter,
     useMoranaPageExit,
     MoranaPage,
-    useIsPageActive,
     MoranaHeader,
     MoranaContent,
     useTrackScrollProgress,
@@ -27,7 +26,7 @@ export default function CollectionPage() {
     const [isOverlayOpen, setIsOverlayOpen] = useState(false);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-    const isPageActive = useIsPageActive();
+    // const isPageActive = useIsPageActive();
 
     const { setRef } = useTrackScrollProgress();
 
@@ -47,22 +46,23 @@ export default function CollectionPage() {
         [setPullToRefreshElementRef, setRef, setContentElementRef],
     );
 
-    console.log(`is about active: ${isPageActive}`);
-
     useMoranaPageEnter({
         callback: () => {
-            console.log("about page enter");
+            console.log("collection page enter");
 
             setTimeout(() => resetScroll(), 1000);
         },
     });
-    useMoranaPageExit({ callback: () => console.log("about page exit") });
+    useMoranaPageExit({
+        callback: () => {
+            console.log("collection page exit");
+        },
+    });
 
-    useMoranaPageRender(
-        {
-            onMountCallback: () => console.log("about page mount"),
-            onUnmountCallback: () => console.log("about page unmount")
-        })
+    useMoranaPageRender({
+        onMountCallback: () => console.log("collection page mount"),
+        onUnmountCallback: () => console.log("collection page unmount"),
+    });
 
     return (
         <MoranaPage>

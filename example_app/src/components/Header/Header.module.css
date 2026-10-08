@@ -11,8 +11,8 @@
     gap: 12px;
 }
 
-.title.centered {
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%, 0);
+.header.centered {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
