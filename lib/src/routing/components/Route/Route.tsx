@@ -43,8 +43,13 @@ export default function Route({
     const onMountLifecycleCallbackCalled = useRef<boolean>(false);
     const onUnmountLifecycleCallbackCalled = useRef<boolean>(false);
 
-    const { __addRoute, router, routerCache, __addToRouterCache } =
-        useRouterContext();
+    const {
+        __addRoute,
+        router,
+        routerCache,
+        __addToRouterCache,
+        __removeFromRouterCache,
+    } = useRouterContext();
 
     const { navAnimationBuilder } = useMoranaAppContext();
 
@@ -141,25 +146,36 @@ export default function Route({
             onEnterAnimation: navAnimationBuilder?.route?.onEnterAnimation,
             onExitAnimation: navAnimationBuilder?.route?.onExitAnimation,
             wrapperRef: wrapperRef,
+        }).finally(() => {
+            if (transitionDetails.isCurrentlyEntering) {
+                return;
+            }
+
+            if (!cacheable) {
+                __removeFromRouterCache(routeUUID);
+            }
         });
 
-        if (transitionDetails.isCurrentlyEntering) {
-            lifecycleHooks?.onEnter?.();
-        } else {
-            lifecycleHooks?.onExit?.();
-        }
-    }, [handleTransitionAnimation, lifecycleHooks, navAnimationBuilder?.route,
-        routeUUID, router, transitionDetails]);
+        __callLifecycleHooks();
+    }, [
+        __callLifecycleHooks,
+        __removeFromRouterCache,
+        cacheable,
+        handleTransitionAnimation,
+        lifecycleHooks,
+        navAnimationBuilder?.route,
+        routeUUID,
+        router,
+        transitionDetails,
+    ]);
 
     const routeComponent = useMemo(() => {
         if (!inCache && !isCurrentRoute) {
             return;
         }
 
-        if (cacheable) {
-            // eslint-disable-next-line react-hooks/refs
-            __addToRouterCache(routeUUID, wrapperRef);
-        }
+        // eslint-disable-next-line react-hooks/refs
+        __addToRouterCache(routeUUID, wrapperRef);
 
         const builtInCssClasses: (string | undefined)[] = [];
 
@@ -187,14 +203,13 @@ export default function Route({
             </div>
         );
     }, [
-        __addToRouterCache,
-        component,
         inCache,
         isCurrentRoute,
+        __addToRouterCache,
         routeUUID,
+        navAnimationBuilder?.route,
+        component,
         wrapper,
-        cacheable,
-        navAnimationBuilder,
     ]);
 
     const contextValues: RouteContextType = useMemo(() => {
