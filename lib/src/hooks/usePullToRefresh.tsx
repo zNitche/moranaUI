@@ -76,7 +76,7 @@ export default function usePullToRefresh({
         }
     }, [dragProgressTillTrigger, isIndicatorVisible]);
 
-    const refresherAnchor = useMemo(() => {
+    const RefresherComponent = useMemo(() => {
         if (!isIndicatorVisible) {
             return;
         }
@@ -90,5 +90,9 @@ export default function usePullToRefresh({
         );
     }, [dragProgressTillTrigger, isIndicatorVisible, refreshInProgress]);
 
-    return { setRef, refreshInProgress, createPortal, refresherAnchor };
+    return {
+        setScrollableContainerRef: setRef,
+        refreshInProgress,
+        RefresherComponent,
+    };
 }
