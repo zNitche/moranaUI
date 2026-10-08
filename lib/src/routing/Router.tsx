@@ -275,7 +275,7 @@ export default function Router({ children }: PropsWithChildren) {
     const navigateBack = useCallback(
         ({ popFromCache }: { popFromCache?: boolean }) => {
             if (navigationStack.length > 1) {
-                if (currentRoute.uuid) {
+                if (popFromCache && currentRoute.uuid) {
                     __markRouteAsRemovableFromCache(currentRoute.uuid);
                 }
 
