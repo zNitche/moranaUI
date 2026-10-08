@@ -103,6 +103,17 @@ export default function Router({ children }: PropsWithChildren) {
             }
 
             queueMicrotask(() => {
+                setNavigationStack((current) => {
+                    const currentCopy = [...current];
+                    const it = currentCopy.shift();
+
+                    if (it?.routeUUID == uuid) {
+                        return [...currentCopy];
+                    }
+
+                    return [...current];
+                });
+
                 setRouterCache((current) => {
                     delete current[uuid];
                     return { ...current };
