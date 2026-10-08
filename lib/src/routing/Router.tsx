@@ -64,23 +64,6 @@ export default function Router({ children }: PropsWithChildren) {
         [setNavigationStack],
     );
 
-    const __popFromRouterCache = useCallback(
-        (routeUUID: string) => {
-            setRouterCache((current) => {
-                const output: RouterCache = {};
-
-                for (const [key, val] of Object.entries(current)) {
-                    if (key !== routeUUID) {
-                        output[key] = val;
-                    }
-                }
-
-                return output;
-            });
-        },
-        [setRouterCache],
-    );
-
     const __addToRouterCache = useCallback(
         (uuid: string, ref: RefObject<HTMLDivElement | null> | null) => {
             if (Object.keys(routerCache).includes(uuid)) {
@@ -92,6 +75,22 @@ export default function Router({ children }: PropsWithChildren) {
                     return { ...current, [uuid]: ref };
                 }),
             );
+        },
+        [routerCache],
+    );
+
+    const __removeFromRouterCache = useCallback(
+        (uuid: string) => {
+            if (!Object.keys(routerCache).includes(uuid)) {
+                return;
+            }
+
+            queueMicrotask(() => {
+                setRouterCache((current) => {
+                    delete current[uuid];
+                    return { ...current };
+                });
+            });
         },
         [routerCache],
     );
@@ -191,7 +190,11 @@ export default function Router({ children }: PropsWithChildren) {
         }
     }, [currentRoute]);
 
-    const __replaceRouterState = ({ inPlace = false }: { inPlace: boolean }) => {
+    const __replaceRouterState = ({
+        inPlace = false,
+    }: {
+        inPlace: boolean;
+    }) => {
         const currentUrl = new URL(window.location.href);
 
         if (!inPlace) {
@@ -229,14 +232,14 @@ export default function Router({ children }: PropsWithChildren) {
                 window.history.replaceState({}, "", path);
 
                 clearRouterCache();
-                __replaceRouterState({inPlace: false});
+                __replaceRouterState({ inPlace: false });
             } else {
                 window.history.pushState({}, "", path);
             }
 
             if (popFromCache) {
                 if (currentRoute.uuid) {
-                    __popFromRouterCache(currentRoute.uuid);
+                    __removeFromRouterCache(currentRoute.uuid);
                 }
             }
 
@@ -251,7 +254,7 @@ export default function Router({ children }: PropsWithChildren) {
             navigationReady,
             clearRouterCache,
             currentRoute.uuid,
-            __popFromRouterCache,
+            __removeFromRouterCache,
         ],
     );
 
@@ -289,7 +292,7 @@ export default function Router({ children }: PropsWithChildren) {
             currentUrl.search = currentSearchParams.toString();
             window.history.replaceState({}, "", currentUrl);
 
-            __replaceRouterState({inPlace: true});
+            __replaceRouterState({ inPlace: true });
         },
         [],
     );
@@ -315,6 +318,7 @@ export default function Router({ children }: PropsWithChildren) {
             __addRoute,
             clearRouterCache,
             __addToRouterCache,
+            __removeFromRouterCache,
             router,
             navigateTo,
             navigateBack,
@@ -324,12 +328,13 @@ export default function Router({ children }: PropsWithChildren) {
         };
     }, [
         __addRoute,
+        clearRouterCache,
+        __addToRouterCache,
+        __removeFromRouterCache,
+        router,
         navigateTo,
         navigateBack,
-        router,
         routerCache,
-        __addToRouterCache,
-        clearRouterCache,
         getRouteUUIDByName,
         replaceSearchParams,
     ]);

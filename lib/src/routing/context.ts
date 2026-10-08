@@ -12,6 +12,7 @@ export const RouterContext = createContext<RouterContextType>({
         _uuid: string,
         _ref: RefObject<HTMLDivElement | null> | null,
     ) => undefined,
+    __removeFromRouterCache: (_uuid: string) => undefined,
     clearRouterCache: () => undefined,
     router: {
         currentRoute: undefined,
@@ -34,7 +35,9 @@ export const RouterContext = createContext<RouterContextType>({
 
 export const RouteContext = createContext<RouteContextType>({
     routeUUID: "",
-    registerLifecycleHook: (_type: RouteLifecycleHookType, _callback: () => void) =>
-        undefined,
+    registerLifecycleHook: (
+        _type: RouteLifecycleHookType,
+        _callback: () => void,
+    ) => undefined,
     isCurrentRoute: false,
 });

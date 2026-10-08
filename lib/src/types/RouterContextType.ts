@@ -12,6 +12,7 @@ export default interface RouterContextType {
         uuid: string,
         ref: RefObject<HTMLDivElement | null> | null,
     ) => void;
+    __removeFromRouterCache: (uuid: string) => void;
     clearRouterCache: () => void;
     navigateTo: ({
         path,
