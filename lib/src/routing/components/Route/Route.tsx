@@ -84,14 +84,17 @@ export default function Route({
         };
     }, [lifecycleHooks]);
 
-    const isCurrentRoute = useMemo(
-        () => Boolean(routeUUID === router.currentRoute?.uuid),
-        [routeUUID, router.currentRoute?.uuid],
-    );
-    const inCache = useMemo(
-        () => Object.keys(routerCache).includes(routeUUID),
-        [routeUUID, routerCache],
-    );
+    const currentRouteStats = useMemo(() => {
+        const currentRouteInCache = Object.keys(routerCache).includes(routeUUID)
+            ? routerCache[routeUUID]
+            : undefined;
+
+        return {
+            isCurrentRoute: Boolean(routeUUID === router.currentRoute?.uuid),
+            inCache: !!currentRouteInCache,
+            markedForRemoval: currentRouteInCache?.markedForRemoval ?? false,
+        };
+    }, [routeUUID, routerCache, router.currentRoute]);
 
     const registerLifecycleHook = useCallback(
         (type: RouteLifecycleHookType, callback: () => void) => {
@@ -113,7 +116,7 @@ export default function Route({
         if (transitionDetails.isCurrentlyEntering) {
             if (!onEnterLifecycleCallbackCalled.current) {
                 if (!lifecycleHooks?.onEnter) {
-                    return
+                    return;
                 }
 
                 lifecycleHooks?.onEnter?.();
@@ -124,7 +127,7 @@ export default function Route({
         } else {
             if (!onExitLifecycleCallbackCalled.current) {
                 if (!lifecycleHooks?.onExit) {
-                    return
+                    return;
                 }
 
                 lifecycleHooks?.onExit?.();
@@ -151,7 +154,7 @@ export default function Route({
                 return;
             }
 
-            if (!cacheable) {
+            if (!cacheable || currentRouteStats?.markedForRemoval) {
                 __removeFromRouterCache(routeUUID);
             }
         });
@@ -161,6 +164,7 @@ export default function Route({
         __callLifecycleHooks,
         __removeFromRouterCache,
         cacheable,
+        currentRouteStats?.markedForRemoval,
         handleTransitionAnimation,
         lifecycleHooks,
         navAnimationBuilder?.route,
@@ -170,7 +174,7 @@ export default function Route({
     ]);
 
     const routeComponent = useMemo(() => {
-        if (!inCache && !isCurrentRoute) {
+        if (!currentRouteStats.inCache && !currentRouteStats.isCurrentRoute) {
             return;
         }
 
@@ -203,8 +207,7 @@ export default function Route({
             </div>
         );
     }, [
-        inCache,
-        isCurrentRoute,
+        currentRouteStats,
         __addToRouterCache,
         routeUUID,
         navAnimationBuilder?.route,
@@ -216,9 +219,9 @@ export default function Route({
         return {
             routeUUID,
             registerLifecycleHook,
-            isCurrentRoute,
+            isCurrentRoute: currentRouteStats.isCurrentRoute,
         };
-    }, [routeUUID, registerLifecycleHook, isCurrentRoute]);
+    }, [routeUUID, registerLifecycleHook, currentRouteStats]);
 
     return (
         <RouteContext.Provider value={contextValues}>

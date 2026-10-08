@@ -79,6 +79,23 @@ export default function Router({ children }: PropsWithChildren) {
         [routerCache],
     );
 
+    const __markRouteAsRemovableFromCache = useCallback(
+        (uuid: string) => {
+            if (!Object.keys(routerCache).includes(uuid)) {
+                return;
+            }
+
+            setRouterCache((current) => {
+                const currentRoute = current[uuid];
+                return {
+                    ...current,
+                    [uuid]: { ...currentRoute, markedForRemoval: true },
+                };
+            });
+        },
+        [routerCache],
+    );
+
     const __removeFromRouterCache = useCallback(
         (uuid: string) => {
             if (!Object.keys(routerCache).includes(uuid)) {
@@ -120,7 +137,6 @@ export default function Router({ children }: PropsWithChildren) {
             }
 
             responseData.uuid ??= routes.find((r) => r.url === "*")?.uuid;
-
             return responseData;
         },
         [routes],
@@ -237,10 +253,8 @@ export default function Router({ children }: PropsWithChildren) {
                 window.history.pushState({}, "", path);
             }
 
-            if (popFromCache) {
-                if (currentRoute.uuid) {
-                    __removeFromRouterCache(currentRoute.uuid);
-                }
+            if (popFromCache && currentRoute.uuid) {
+                __markRouteAsRemovableFromCache(currentRoute.uuid);
             }
 
             window.dispatchEvent(
@@ -254,13 +268,17 @@ export default function Router({ children }: PropsWithChildren) {
             navigationReady,
             clearRouterCache,
             currentRoute.uuid,
-            __removeFromRouterCache,
+            __markRouteAsRemovableFromCache,
         ],
     );
 
     const navigateBack = useCallback(
         ({ popFromCache }: { popFromCache?: boolean }) => {
             if (navigationStack.length > 1) {
+                if (currentRoute.uuid) {
+                    __markRouteAsRemovableFromCache(currentRoute.uuid);
+                }
+
                 window.history.back();
             } else {
                 navigateTo({
@@ -270,7 +288,12 @@ export default function Router({ children }: PropsWithChildren) {
                 });
             }
         },
-        [navigationStack, navigateTo],
+        [
+            navigationStack.length,
+            currentRoute.uuid,
+            __markRouteAsRemovableFromCache,
+            navigateTo,
+        ],
     );
 
     const replaceSearchParams = useCallback(
