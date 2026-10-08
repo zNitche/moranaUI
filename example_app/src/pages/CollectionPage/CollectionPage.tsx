@@ -30,10 +30,12 @@ export default function CollectionPage() {
 
     const { setRef } = useTrackScrollProgress();
 
-    const { setRef: setPullToRefreshElementRef, refresherAnchor } =
-        usePullToRefresh({
-            callback: async () => await sleep(3000),
-        });
+    const {
+        setScrollableContainerRef: setPullToRefreshElementRef,
+        RefresherComponent,
+    } = usePullToRefresh({
+        callback: async () => await sleep(3000),
+    });
 
     const { resetScroll, setContentElementRef } = useResetContentScroll();
 
@@ -69,7 +71,7 @@ export default function CollectionPage() {
             <MoranaHeader>
                 <Header
                     title="Collection"
-                    onClickBack={navigateBack}
+                    onClickBack={() => navigateBack({ popFromCache: false })}
                 />
             </MoranaHeader>
             <MoranaContent>
@@ -77,7 +79,7 @@ export default function CollectionPage() {
                     ref={setContentRef}
                     className={classes.collectionPage}
                 >
-                    {refresherAnchor}
+                    {RefresherComponent}
 
                     <div>Pull to refresh</div>
 
