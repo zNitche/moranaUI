@@ -25,7 +25,7 @@ export const RouterContext = createContext<RouterContextType>({
         popFromCache?: boolean;
         direction?: NavigationTransitionDirection;
     }) => undefined,
-    navigateBack: () => undefined,
+    navigateBack: (_params: { popFromCache?: boolean }) => undefined,
     getRouteUUIDByName: () => undefined,
     replaceSearchParams: (_params: {
         add?: Record<string, string>;

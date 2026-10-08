@@ -72,7 +72,7 @@ export default function Router({ children }: PropsWithChildren) {
 
             queueMicrotask(() =>
                 setRouterCache((current) => {
-                    return { ...current, [uuid]: ref };
+                    return { ...current, [uuid]: { ref } };
                 }),
             );
         },
@@ -182,14 +182,6 @@ export default function Router({ children }: PropsWithChildren) {
         });
     }, []);
 
-    const clearRouterCache = useCallback(() => {
-        setRouterCache({});
-
-        if (currentRoute.uuid) {
-            setNavigationStack([{ routeUUID: currentRoute.uuid }]);
-        }
-    }, [currentRoute]);
-
     const __replaceRouterState = ({
         inPlace = false,
     }: {
@@ -207,6 +199,16 @@ export default function Router({ children }: PropsWithChildren) {
             });
         }
     };
+
+    const clearRouterCache = useCallback(() => {
+        setRouterCache({});
+
+        if (currentRoute.uuid) {
+            setNavigationStack([{ routeUUID: currentRoute.uuid }]);
+        }
+
+        __replaceRouterState({ inPlace: false });
+    }, [currentRoute]);
 
     const navigateTo = useCallback(
         ({
@@ -230,9 +232,7 @@ export default function Router({ children }: PropsWithChildren) {
 
             if (replace) {
                 window.history.replaceState({}, "", path);
-
                 clearRouterCache();
-                __replaceRouterState({ inPlace: false });
             } else {
                 window.history.pushState({}, "", path);
             }
@@ -258,13 +258,20 @@ export default function Router({ children }: PropsWithChildren) {
         ],
     );
 
-    const navigateBack = useCallback(() => {
-        if (navigationStack.length > 1) {
-            window.history.back();
-        } else {
-            navigateTo({ path: "/", direction: "back" });
-        }
-    }, [navigationStack, navigateTo]);
+    const navigateBack = useCallback(
+        ({ popFromCache }: { popFromCache?: boolean }) => {
+            if (navigationStack.length > 1) {
+                window.history.back();
+            } else {
+                navigateTo({
+                    path: "/",
+                    direction: "back",
+                    popFromCache,
+                });
+            }
+        },
+        [navigationStack, navigateTo],
+    );
 
     const replaceSearchParams = useCallback(
         ({

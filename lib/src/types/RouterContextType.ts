@@ -25,7 +25,7 @@ export default interface RouterContextType {
         popFromCache?: boolean;
         direction?: NavigationTransitionDirection;
     }) => void;
-    navigateBack: () => void;
+    navigateBack: ({ popFromCache }: { popFromCache?: boolean }) => void;
     getRouteUUIDByName: (name: string) => string | undefined;
     replaceSearchParams: ({
         add,
