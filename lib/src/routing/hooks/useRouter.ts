@@ -5,9 +5,7 @@ export default function useRouter() {
     const context = useContext(RouterContext);
 
     if (!context) {
-        throw new Error(
-            "useRouter can't be called outside Router's context",
-        );
+        throw new Error("useRouter can't be called outside Router's context");
     }
 
     return {
@@ -17,5 +15,6 @@ export default function useRouter() {
         clearRouterCache: context.clearRouterCache,
         getRouteUUIDByName: context.getRouteUUIDByName,
         replaceSearchParams: context.replaceSearchParams,
+        // removeFromRouterCache: context.__removeFromRouterCache,
     };
 }

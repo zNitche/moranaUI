@@ -38,6 +38,8 @@ export default function Route({
     const routeUUID = useMemo(() => generateUUID(), []);
     const wrapperRef = useRef<HTMLDivElement>(null);
 
+    const onEnterLifecycleCallbackCalled = useRef<boolean>(false);
+    const onExitLifecycleCallbackCalled = useRef<boolean>(false);
     const onMountLifecycleCallbackCalled = useRef<boolean>(false);
     const onUnmountLifecycleCallbackCalled = useRef<boolean>(false);
 
@@ -55,26 +57,27 @@ export default function Route({
 
     useEffect(() => {
         __addRoute({ uuid: routeUUID, name: name, url, component });
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
-        if (!onMountLifecycleCallbackCalled.current &&
-            lifecycleHooks?.onMount !== undefined) {
-            lifecycleHooks.onMount()
+        if (
+            !onMountLifecycleCallbackCalled.current &&
+            lifecycleHooks?.onMount !== undefined
+        ) {
+            lifecycleHooks.onMount();
 
-            onMountLifecycleCallbackCalled.current = true
+            onMountLifecycleCallbackCalled.current = true;
         }
 
         return () => {
             if (!onUnmountLifecycleCallbackCalled.current) {
-                lifecycleHooks?.onUnmount?.()
+                lifecycleHooks?.onUnmount?.();
 
-                onUnmountLifecycleCallbackCalled.current = true
+                onUnmountLifecycleCallbackCalled.current = true;
             }
-        }
-    }, [lifecycleHooks])
+        };
+    }, [lifecycleHooks]);
 
     const isCurrentRoute = useMemo(
         () => Boolean(routeUUID === router.currentRoute?.uuid),
@@ -88,11 +91,11 @@ export default function Route({
     const registerLifecycleHook = useCallback(
         (type: RouteLifecycleHookType, callback: () => void) => {
             const hooksMap: Record<RouteLifecycleHookType, string> = {
-                "enter": "onEnter",
-                "exit": "onExit",
-                "mount": "onMount",
-                "unmount": "onUnmount",
-            } as const
+                enter: "onEnter",
+                exit: "onExit",
+                mount: "onMount",
+                unmount: "onUnmount",
+            } as const;
 
             setLifecycleHooks((current) => {
                 return { ...current, [hooksMap[type]]: callback };
@@ -100,6 +103,32 @@ export default function Route({
         },
         [],
     );
+
+    const __callLifecycleHooks = useCallback(() => {
+        if (transitionDetails.isCurrentlyEntering) {
+            if (!onEnterLifecycleCallbackCalled.current) {
+                if (!lifecycleHooks?.onEnter) {
+                    return
+                }
+
+                lifecycleHooks?.onEnter?.();
+                onEnterLifecycleCallbackCalled.current = true;
+            }
+
+            onExitLifecycleCallbackCalled.current = false;
+        } else {
+            if (!onExitLifecycleCallbackCalled.current) {
+                if (!lifecycleHooks?.onExit) {
+                    return
+                }
+
+                lifecycleHooks?.onExit?.();
+                onExitLifecycleCallbackCalled.current = true;
+            }
+
+            onEnterLifecycleCallbackCalled.current = false;
+        }
+    }, [lifecycleHooks, transitionDetails.isCurrentlyEntering]);
 
     useLayoutEffect(() => {
         if (!transitionDetails.detected) {
