@@ -14,6 +14,10 @@ archieve the target app requirements
 So yeah, as every JS dev should, I rolled my own framework to
 fulfill my needs.
 
+<p align="center">
+<img src=".media/demo_1.gif" width="180" />
+</p>
+
 ### Features
 
 - Custom built Router with pages caching and transitions.
@@ -29,23 +33,27 @@ fulfill my needs.
 ### Setup
 
 this monorepo is split into `lib` and `example_app` npm workspaces, to setup dependencies:
+
 ```
 npm i
 ```
 
 then to run `example_app`:
+
 ```
 cd example_app
 npm run dev
 ```
 
 run lib build watcher
+
 ```
 cd lib
 npm run build:watch
 ```
 
 build lib with proper imports aliases (from root dir)
+
 ```
 npm run build:lib
 npm run build:resolve-imports-aliases
@@ -56,6 +64,7 @@ npm run build:resolve-imports-aliases
 library has some sort of test coverage, but at this stage of its development and due to time it hasn't been pushed further.
 
 to run lib's tests suite:
+
 ```
 npm run test:lib
 ```
