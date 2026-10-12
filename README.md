@@ -15,7 +15,7 @@ So yeah, as every JS dev should, I rolled my own framework to
 fulfill my needs.
 
 <p align="center">
-<img src=".media/demo_1.gif" width="180" />
+<img src=".repo_assets/demo_1.gif" width="180" />
 </p>
 
 ### Features
