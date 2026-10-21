@@ -8,11 +8,7 @@
     top: 0;
     z-index: 1;
     background: var(--color-base);
-    padding: 16px;
-}
-
-.segmentsBarBase.active {
-    color: var(--color-rose);
+    padding: 8px 16px;
 }
 
 .content {

@@ -15,16 +15,13 @@ export default function HomePage() {
     const { segmentsBar, segmentsContent } = useMoranaSegments({
         trackPersitance: true,
         urlParamName: "tab",
-        segmentsBarStylebook: {
-            segment: {
-                base: classes.segmentsBarBase,
-                active: classes.active,
-            },
-        },
+        className: classes.segmentsBar,
         segments: [
             { details: { name: "Motivation" }, component: MotivationTab },
             { details: { name: "Features" }, component: FeaturesTab },
             { details: { name: "About" }, component: AboutTab },
+            { details: { name: "Extra Tab1" }, component: AboutTab },
+            { details: { name: "Extra Tab2" }, component: AboutTab },
         ],
     });
 
