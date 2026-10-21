@@ -3,7 +3,6 @@ import useRouterContext from "@root/routing/hooks/useRouterContext";
 import useSearchParams from "@root/routing/hooks/useSearchParams";
 import type MoranaSegment from "@root/types/MoranaSegment";
 import type MoranaSegmentItem from "@root/types/MoranaSegmentItem";
-import type SegmentsBarStylebook from "@root/types/SegmentsBarStylebook";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import TabComponentWrapper from "./TabComponentWrapper/TabComponentWrapper";
 import classes from "./useMoranaSegments.module.css";
@@ -14,7 +13,7 @@ interface HookUseMoranaSegmentsProps {
     readonly urlParamName?: string;
     readonly onChange?: (target: MoranaSegmentItem) => void;
     readonly disabled?: boolean;
-    readonly segmentsBarStylebook?: SegmentsBarStylebook;
+    readonly className?: string;
     readonly segmentComponentWrapperClassName?: string;
     readonly animatedTabChange?: boolean;
 }
@@ -25,7 +24,7 @@ export default function useMoranaSegments({
     urlParamName,
     disabled = false,
     onChange,
-    segmentsBarStylebook,
+    className,
     segmentComponentWrapperClassName,
     animatedTabChange = true,
 }: HookUseMoranaSegmentsProps) {
@@ -129,15 +128,15 @@ export default function useMoranaSegments({
                 activeSegment={activeSegment?.details ?? null}
                 setActiveSegment={onSegmentChange}
                 disabled={disabled}
-                stylebook={segmentsBarStylebook}
+                className={className}
             />
         );
     }, [
         activeSegment?.details,
         disabled,
         onSegmentChange,
-        segmentsBarStylebook,
         segmentsItems,
+        className,
     ]);
 
     const segmentsContent = useMemo(() => {

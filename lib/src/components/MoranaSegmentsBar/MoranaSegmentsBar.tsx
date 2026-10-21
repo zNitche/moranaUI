@@ -3,14 +3,13 @@ import type MoranaSegmentItem from "@root/types/MoranaSegmentItem";
 import classes from "./MoranaSegmentsBar.module.css";
 import clsx from "@root/utils/clsx";
 import { useMemo, useRef, useState, type CSSProperties } from "react";
-import type SegmentsBarStylebook from "@root/types/SegmentsBarStylebook";
 
 interface MoranaSegmentsBarProps {
     readonly activeSegment: MoranaSegmentItem | null;
     readonly setActiveSegment: (segment: MoranaSegmentItem) => void;
     readonly segments: MoranaSegmentItem[];
     readonly disabled?: boolean;
-    readonly stylebook?: SegmentsBarStylebook;
+    readonly className?: string;
 }
 
 export default function MoranaSegmentsBar({
@@ -18,7 +17,7 @@ export default function MoranaSegmentsBar({
     activeSegment,
     setActiveSegment,
     disabled,
-    stylebook,
+    className,
 }: MoranaSegmentsBarProps) {
     const barRef = useRef<HTMLDivElement | null>(null);
     const selectorElementRef = useRef<HTMLDivElement | null>(null);
@@ -88,25 +87,16 @@ export default function MoranaSegmentsBar({
                     key={segment.name}
                     className={clsx(
                         classes.segment,
-                        segment.disabled &&
-                            (stylebook?.segment?.disabled ?? classes.disabled),
-                        segment.name === activeSegment?.name &&
-                            (stylebook?.segment?.active ?? classes.active),
-                        stylebook?.segment?.base,
+                        segment.disabled && classes.disabled,
+                        Boolean(segment.name === activeSegment?.name) &&
+                            classes.active,
                     )}
                 >
                     {segment.name}
                 </div>
             );
         });
-    }, [
-        segments,
-        stylebook?.segment?.disabled,
-        stylebook?.segment?.active,
-        stylebook?.segment?.base,
-        activeSegment?.name,
-        setActiveSegment,
-    ]);
+    }, [segments, activeSegment?.name, setActiveSegment]);
 
     const selectorElementStyle = useMemo(() => {
         if (!activeSegmentElement || !selectorElementRef.current) {
@@ -134,14 +124,14 @@ export default function MoranaSegmentsBar({
         <div
             className={clsx(
                 classes.moranaSegmentsBar,
-                disabled && (stylebook?.wrapper?.disabled ?? classes.disabled),
-                stylebook?.wrapper?.base,
+                disabled && classes.disabled,
+                className,
             )}
             ref={barRef}
         >
             <div
                 ref={selectorElementRef}
-                className={clsx(classes.selector, stylebook?.selector?.base)}
+                className={classes.selector}
                 style={
                     {
                         display:
