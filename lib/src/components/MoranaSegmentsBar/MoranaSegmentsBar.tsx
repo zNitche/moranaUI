@@ -2,7 +2,13 @@
 import type MoranaSegmentItem from "@root/types/MoranaSegmentItem";
 import classes from "./MoranaSegmentsBar.module.css";
 import clsx from "@root/utils/clsx";
-import { useMemo, useRef, useState, type CSSProperties } from "react";
+import {
+    useCallback,
+    useMemo,
+    useRef,
+    useState,
+    type CSSProperties,
+} from "react";
 
 interface MoranaSegmentsBarProps {
     readonly activeSegment: MoranaSegmentItem | null;
@@ -43,7 +49,10 @@ export default function MoranaSegmentsBar({
             width: barWidth,
             rawWidth: barRawWidth,
             height: barRef.current.clientHeight,
-            elementWidth: barRawWidth / segmentsElements.length,
+            padding: {
+                left: paddingLeft,
+                right: paddingRight,
+            },
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [segmentsElements.length, window.screen.width]);
@@ -57,8 +66,56 @@ export default function MoranaSegmentsBar({
             (s) => s.name === activeSegment.name,
         );
 
-        return activeElement?.ref;
+        if (!activeElement?.ref) {
+            return;
+        }
+
+        return {
+            ref: activeElement.ref,
+            boundingClientRect: activeElement.ref.getBoundingClientRect(),
+        };
     }, [activeSegment, segmentsElements]);
+
+    const __onSegmentClick = useCallback(
+        (
+            event: React.MouseEvent<HTMLDivElement>,
+            segment: MoranaSegmentItem,
+        ) => {
+            if (segment.disabled || activeSegment?.name === segment.name) {
+                return;
+            }
+
+            setActiveSegment(segment);
+
+            const segmentBoundingClientRect =
+                event.currentTarget.getBoundingClientRect();
+            const barBoundingClientRect =
+                barRef.current?.getBoundingClientRect();
+
+            if (!barBoundingClientRect) {
+                return;
+            }
+
+            let scrollLeftVal = barBoundingClientRect.x - segmentBoundingClientRect.x;
+
+            if (segmentBoundingClientRect.left < barBoundingClientRect.left) {
+                scrollLeftVal =
+                    segmentBoundingClientRect.left - barBoundingClientRect.left;
+            } else if (
+                segmentBoundingClientRect.right > barBoundingClientRect.right
+            ) {
+                scrollLeftVal =
+                    segmentBoundingClientRect.right -
+                    barBoundingClientRect.right;
+            }
+
+            barRef.current?.scrollTo({
+                left: scrollLeftVal,
+                behavior: "smooth",
+            });
+        },
+        [activeSegment?.name, setActiveSegment],
+    );
 
     const elements = useMemo(() => {
         return segments.map((segment) => {
@@ -76,13 +133,8 @@ export default function MoranaSegmentsBar({
                             ];
                         });
                     }}
-                    onClick={() => {
-                        if (
-                            !segment.disabled &&
-                            (activeSegment?.name !== segment.name)
-                        ) {
-                            setActiveSegment(segment);
-                        }
+                    onClick={(event: React.MouseEvent<HTMLDivElement>) => {
+                        __onSegmentClick(event, segment);
                     }}
                     key={segment.name}
                     className={clsx(
@@ -96,7 +148,7 @@ export default function MoranaSegmentsBar({
                 </div>
             );
         });
-    }, [segments, activeSegment?.name, setActiveSegment]);
+    }, [segments, activeSegment?.name, __onSegmentClick]);
 
     const selectorElementStyle = useMemo(() => {
         if (!activeSegmentElement || !selectorElementRef.current) {
@@ -110,7 +162,7 @@ export default function MoranaSegmentsBar({
         const paddingLeft = Number.parseInt(
             selectorElementComputedStyle?.paddingLeft ?? "0",
         );
-        const offsetLeft = activeSegmentElement.offsetLeft - paddingLeft;
+        const offsetLeft = activeSegmentElement.ref.offsetLeft - paddingLeft;
 
         return {
             paddingLeft,
@@ -139,7 +191,7 @@ export default function MoranaSegmentsBar({
                                 ? "none"
                                 : "block",
                         "--height": `${barSizeDetails?.height}px`,
-                        "--width": `${barSizeDetails?.elementWidth}px`,
+                        "--width": `${activeSegmentElement?.boundingClientRect.width ?? 0}px`,
                         "--offset-left": `${selectorElementStyle?.offsetLeft}px`,
                     } as CSSProperties
                 }
