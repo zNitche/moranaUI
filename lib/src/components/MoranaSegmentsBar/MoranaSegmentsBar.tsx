@@ -4,6 +4,7 @@ import classes from "./MoranaSegmentsBar.module.css";
 import clsx from "#root/utils/clsx";
 import {
     useCallback,
+    useEffect,
     useMemo,
     useRef,
     useState,
@@ -76,9 +77,45 @@ export default function MoranaSegmentsBar({
         };
     }, [activeSegment, segmentsElements]);
 
+    const __scrollToSegment = useCallback(
+        (segment: MoranaSegmentItem) => {
+            const segmentRef = segmentsElements.find(
+                (s) => s.name === segment.name,
+            );
+
+            if (!segmentRef?.ref) {
+                return;
+            }
+
+            const segmentBoundingRect = segmentRef.ref.getBoundingClientRect();
+            const barBoundingRect = barRef.current?.getBoundingClientRect();
+
+            if (!barBoundingRect || !barRef.current) {
+                return;
+            }
+
+            const segmentHalfWidth = segmentBoundingRect.width / 2;
+            const segmentBarHalfWidth = barRef.current.clientWidth / 2;
+
+            const segmentCenter =
+                segmentBoundingRect.left -
+                barBoundingRect.left +
+                segmentHalfWidth;
+
+            const scrollLeftVal =
+                barRef.current.scrollLeft + segmentCenter - segmentBarHalfWidth;
+
+            barRef.current.scrollTo({
+                left: scrollLeftVal,
+                behavior: "smooth",
+            });
+        },
+        [segmentsElements],
+    );
+
     const __onSegmentClick = useCallback(
         (
-            event: React.MouseEvent<HTMLDivElement>,
+            _event: React.MouseEvent<HTMLDivElement>,
             segment: MoranaSegmentItem,
         ) => {
             if (segment.disabled || activeSegment?.name === segment.name) {
@@ -86,33 +123,6 @@ export default function MoranaSegmentsBar({
             }
 
             setActiveSegment(segment);
-
-            const segmentBoundingClientRect =
-                event.currentTarget.getBoundingClientRect();
-            const barBoundingClientRect =
-                barRef.current?.getBoundingClientRect();
-
-            if (!barBoundingClientRect) {
-                return;
-            }
-
-            let scrollLeftVal = barBoundingClientRect.x - segmentBoundingClientRect.x;
-
-            if (segmentBoundingClientRect.left < barBoundingClientRect.left) {
-                scrollLeftVal =
-                    segmentBoundingClientRect.left - barBoundingClientRect.left;
-            } else if (
-                segmentBoundingClientRect.right > barBoundingClientRect.right
-            ) {
-                scrollLeftVal =
-                    segmentBoundingClientRect.right -
-                    barBoundingClientRect.right;
-            }
-
-            barRef.current?.scrollTo({
-                left: scrollLeftVal,
-                behavior: "smooth",
-            });
         },
         [activeSegment?.name, setActiveSegment],
     );
@@ -171,6 +181,14 @@ export default function MoranaSegmentsBar({
             width: selectorElementRef.current.clientWidth,
         };
     }, [activeSegmentElement, selectorElementRef]);
+
+    useEffect(() => {
+        if (!activeSegment) {
+            return;
+        }
+
+        __scrollToSegment(activeSegment);
+    }, [__scrollToSegment, activeSegment]);
 
     return (
         <div
