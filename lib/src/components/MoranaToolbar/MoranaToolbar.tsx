@@ -1,6 +1,6 @@
 import { useRef, type CSSProperties, type PropsWithChildren } from "react";
 import classes from "./MoranaToolbar.module.css";
-import { clsx } from "@root/utils";
+import { clsx } from "#root/utils";
 
 interface MoranaToolbarProps {
     readonly className?: string;

@@ -1,4 +1,4 @@
-import { MoranaPageContext } from "@root/core/context";
+import { MoranaPageContext } from "#root/core/context";
 import { useContext } from "react";
 
 export default function useMoranaPageContext() {

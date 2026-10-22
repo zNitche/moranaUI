@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/refs */
-import type MoranaSegmentItem from "@root/types/MoranaSegmentItem";
+import type MoranaSegmentItem from "#root/types/MoranaSegmentItem";
 import classes from "./MoranaSegmentsBar.module.css";
-import clsx from "@root/utils/clsx";
+import clsx from "#root/utils/clsx";
 import {
     useCallback,
     useMemo,

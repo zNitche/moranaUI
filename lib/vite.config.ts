@@ -47,7 +47,7 @@ export default defineConfig({
     },
     resolve: {
         alias: {
-            "@root": resolve(import.meta.dirname, "./src"),
+            "#root": resolve(import.meta.dirname, "./src"),
         },
     },
 });

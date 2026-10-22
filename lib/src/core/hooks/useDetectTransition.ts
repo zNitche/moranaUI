@@ -1,5 +1,5 @@
-import useRouterContext from "@root/routing/hooks/useRouterContext";
-import type NavigationTransitionDetails from "@root/types/NavigationTransitionDetails";
+import useRouterContext from "#root/routing/hooks/useRouterContext";
+import type NavigationTransitionDetails from "#root/types/NavigationTransitionDetails";
 import { useMemo } from "react";
 
 export default function useDetectTransition(routeUUID: string) {

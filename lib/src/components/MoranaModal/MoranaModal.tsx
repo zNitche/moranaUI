@@ -8,7 +8,7 @@ import {
     type SetStateAction,
 } from "react";
 import classes from "./MoranaModal.module.css";
-import { clsx } from "@root/utils";
+import { clsx } from "#root/utils";
 import { createPortal } from "react-dom";
 
 interface MoranaModalProps {

@@ -1,6 +1,6 @@
 import { type AnimationEvent, type PropsWithChildren } from "react";
 import classes from "./TabComponentWrapper.module.css";
-import { clsx } from "@root/utils";
+import { clsx } from "#root/utils";
 
 interface TabComponentWrapperProps {
     readonly className?: string;

@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import useOnOverscroll from "./useOnOverscroll";
 import { createPortal } from "react-dom";
-import { MoranaRefresher } from "@root/components";
-import clamp from "@root/utils/clamp";
+import { MoranaRefresher } from "#root/components";
+import clamp from "#root/utils/clamp";
 
 interface HookUsePullToRefreshProps {
     readonly minDrag?: number;

@@ -1,5 +1,5 @@
-import type { AnimationStageCallback } from "@root/types/NavAnimationBuilder";
-import type NavigationTransitionDetails from "@root/types/NavigationTransitionDetails";
+import type { AnimationStageCallback } from "#root/types/NavAnimationBuilder";
+import type NavigationTransitionDetails from "#root/types/NavigationTransitionDetails";
 import { useCallback, type RefObject } from "react";
 
 export default function useHandleTransitionAnimation() {

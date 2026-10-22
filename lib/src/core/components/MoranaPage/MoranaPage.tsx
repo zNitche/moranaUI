@@ -7,10 +7,10 @@ import {
     type RefObject,
 } from "react";
 import classes from "./MoranaPage.module.css";
-import { clsx } from "@root/utils";
-import type MoranaPageContextType from "@root/types/MoranaPageContextType";
-import { MoranaPageContext } from "@root/core/context";
-import type { PageStructuralComponentType } from "@root/types/PageStructuralComponentType";
+import { clsx } from "#root/utils";
+import type MoranaPageContextType from "#root/types/MoranaPageContextType";
+import { MoranaPageContext } from "#root/core/context";
+import type { PageStructuralComponentType } from "#root/types/PageStructuralComponentType";
 
 export default function MoranaPage({ children }: PropsWithChildren) {
     const wrapperRef = useRef<HTMLDivElement>(null);

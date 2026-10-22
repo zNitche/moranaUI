@@ -1,8 +1,8 @@
-import MoranaSegmentsBar from "@root/components/MoranaSegmentsBar/MoranaSegmentsBar";
-import useRouterContext from "@root/routing/hooks/useRouterContext";
-import useSearchParams from "@root/routing/hooks/useSearchParams";
-import type MoranaSegment from "@root/types/MoranaSegment";
-import type MoranaSegmentItem from "@root/types/MoranaSegmentItem";
+import MoranaSegmentsBar from "#root/components/MoranaSegmentsBar/MoranaSegmentsBar";
+import useRouterContext from "#root/routing/hooks/useRouterContext";
+import useSearchParams from "#root/routing/hooks/useSearchParams";
+import type MoranaSegment from "#root/types/MoranaSegment";
+import type MoranaSegmentItem from "#root/types/MoranaSegmentItem";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import TabComponentWrapper from "./TabComponentWrapper/TabComponentWrapper";
 import classes from "./useMoranaSegments.module.css";

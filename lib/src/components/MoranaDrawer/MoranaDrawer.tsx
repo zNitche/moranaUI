@@ -7,7 +7,7 @@ import {
     type SetStateAction,
 } from "react";
 import classes from "./MoranaDrawer.module.css";
-import { clsx } from "@root/utils";
+import { clsx } from "#root/utils";
 import { createPortal } from "react-dom";
 
 interface MoranaDrawerProps {

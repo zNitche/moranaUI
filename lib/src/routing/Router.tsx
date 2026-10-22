@@ -12,11 +12,11 @@ import { matchTokenizedUrl, tokenizeUrl } from "../utils/url";
 import type RouterCurrentRoute from "../types/RouterCurrentRoute";
 import type RouterProps from "../types/RouterProps";
 import { RouterContext } from "./context";
-import type { RouterCache } from "@root/types/RouterCache";
-import type RouterNavigationStackItem from "@root/types/RouterNavigationStackItem";
+import type { RouterCache } from "#root/types/RouterCache";
+import type RouterNavigationStackItem from "#root/types/RouterNavigationStackItem";
 import RouterContent from "./components/RouterContent/RouterContent";
-import type { RouterPath } from "@root/types/RouterPath";
-import type { NavigationTransitionDirection } from "@root/types/NavigationTransitionDirection";
+import type { RouterPath } from "#root/types/RouterPath";
+import type { NavigationTransitionDirection } from "#root/types/NavigationTransitionDirection";
 
 export default function Router({ children }: PropsWithChildren) {
     const [routes, setRoutes] = useState<RouteData[]>([]);

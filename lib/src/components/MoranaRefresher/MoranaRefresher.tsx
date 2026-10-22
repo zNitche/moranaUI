@@ -1,4 +1,4 @@
-import clsx from "@root/utils/clsx";
+import clsx from "#root/utils/clsx";
 import classes from "./MoranaRefresher.module.css";
 import type { CSSProperties } from "react";
 

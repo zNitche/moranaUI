@@ -1,4 +1,4 @@
-import "@root/styles.css";
+import "#root/styles.css";
 
 export * from "./core";
 export * from "./components";

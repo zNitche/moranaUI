@@ -1,7 +1,7 @@
 import { useRef, type PropsWithChildren } from "react";
 import classes from "./MoranaHeader.module.css";
-import { clsx } from "@root/utils";
-import useRegisterPageComponent from "@root/core/hooks/useRegisterPageComponent";
+import { clsx } from "#root/utils";
+import useRegisterPageComponent from "#root/core/hooks/useRegisterPageComponent";
 
 interface MoranaHeaderProps {
     readonly className?: string;

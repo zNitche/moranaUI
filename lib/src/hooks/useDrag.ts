@@ -1,4 +1,4 @@
-import type DragDetail from "@root/types/DragDetails";
+import type DragDetail from "#root/types/DragDetails";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 type EventPosition = { x: number; y: number } | undefined;

@@ -6,7 +6,7 @@ import {
     useLayoutEffect,
 } from "react";
 import useDrag from "./useDrag";
-import type DragDetail from "@root/types/DragDetails";
+import type DragDetail from "#root/types/DragDetails";
 
 interface HookUseOnOverscrollProps {
     readonly onOverscrollStartCallback?: (

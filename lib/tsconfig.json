@@ -18,7 +18,7 @@
         "declaration": false,
         "jsx": "react-jsx",
         "paths": {
-            "@root/*": [
+            "#root/*": [
                 "./src/*"
             ]
         },

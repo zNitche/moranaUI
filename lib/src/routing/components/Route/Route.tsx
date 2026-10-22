@@ -10,15 +10,15 @@ import {
     type ReactNode,
 } from "react";
 import classes from "./Route.module.css";
-import useRouterContext from "@root/routing/hooks/useRouterContext";
-import { clsx, generateUUID } from "@root/utils";
-import type RouteContextType from "@root/types/RouteContextType";
-import { RouteContext } from "@root/routing/context";
-import useDetectTransition from "@root/core/hooks/useDetectTransition";
-import useHandleTransitionAnimation from "@root/core/hooks/useHandleTransitionAnimation";
-import useMoranaAppContext from "@root/core/hooks/context/useMoranaAppContext";
-import type { RouteLifecycleHookType } from "@root/types/RouteLifecycleHookType";
-import type RouteLifecycleCallbacks from "@root/types/RouteLifecycleCallbacks";
+import useRouterContext from "#root/routing/hooks/useRouterContext";
+import { clsx, generateUUID } from "#root/utils";
+import type RouteContextType from "#root/types/RouteContextType";
+import { RouteContext } from "#root/routing/context";
+import useDetectTransition from "#root/core/hooks/useDetectTransition";
+import useHandleTransitionAnimation from "#root/core/hooks/useHandleTransitionAnimation";
+import useMoranaAppContext from "#root/core/hooks/context/useMoranaAppContext";
+import type { RouteLifecycleHookType } from "#root/types/RouteLifecycleHookType";
+import type RouteLifecycleCallbacks from "#root/types/RouteLifecycleCallbacks";
 
 interface RouteProps {
     readonly url: string;

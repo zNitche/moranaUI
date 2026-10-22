@@ -8,7 +8,7 @@ import {
     buildUrl,
     matchTokenizedUrl,
 } from "../src/utils/url";
-import clamp from "@root/utils/clamp";
+import clamp from "#root/utils/clamp";
 
 test("generate UUID", () => {
     const r = () => {

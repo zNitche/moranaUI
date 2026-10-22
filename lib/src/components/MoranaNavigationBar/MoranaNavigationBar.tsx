@@ -1,7 +1,7 @@
 import { useRef, type CSSProperties, type PropsWithChildren } from "react";
 import classes from "./MoranaNavigationBar.module.css";
-import { clsx } from "@root/utils";
-import useMoranaAppContext from "@root/core/hooks/context/useMoranaAppContext";
+import { clsx } from "#root/utils";
+import useMoranaAppContext from "#root/core/hooks/context/useMoranaAppContext";
 
 interface MoranaNavigationBarProps {
     readonly className?: string;

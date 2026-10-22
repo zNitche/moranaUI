@@ -1,4 +1,4 @@
-import clamp from "@root/utils/clamp";
+import clamp from "#root/utils/clamp";
 import { useCallback, useEffect, useRef, useState } from "react";
 import useRegisterOnScrollListener from "./common/useRegisterOnScrollListener";
 

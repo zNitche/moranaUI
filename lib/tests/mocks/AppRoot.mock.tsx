@@ -1,5 +1,5 @@
-import { MoranaApp } from "@root/core";
-import { Router, MoranaRoutesWrapper, Route } from "@root/routing";
+import { MoranaApp } from "#root/core";
+import { Router, MoranaRoutesWrapper, Route } from "#root/routing";
 import type React from "react";
 import { Fragment } from "react/jsx-runtime";
 

@@ -1,5 +1,5 @@
 import { useLayoutEffect, type RefObject } from "react";
-import type { PageStructuralComponentType } from "@root/types/PageStructuralComponentType";
+import type { PageStructuralComponentType } from "#root/types/PageStructuralComponentType";
 import useMoranaPageContext from "./context/useMoranaPageContext";
 
 interface RegisterPageComponentProps {

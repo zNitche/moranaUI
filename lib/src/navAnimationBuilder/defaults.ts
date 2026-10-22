@@ -1,8 +1,8 @@
- import type NavAnimationBuilder from "@root/types/NavAnimationBuilder";
+ import type NavAnimationBuilder from "#root/types/NavAnimationBuilder";
 import classes from "./defaults.module.css";
-import type { AnimationWrapperRef } from "@root/types/NavAnimationBuilder";
-import { sleep } from "@root/utils";
-import type { NavigationTransitionDirection } from "@root/types/NavigationTransitionDirection";
+import type { AnimationWrapperRef } from "#root/types/NavAnimationBuilder";
+import { sleep } from "#root/utils";
+import type { NavigationTransitionDirection } from "#root/types/NavigationTransitionDirection";
 
 export const defaultSlideNavAnimationBuilder: NavAnimationBuilder = {
     route: {

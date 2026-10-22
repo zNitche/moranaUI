@@ -1,5 +1,5 @@
 import { useLayoutEffect } from "react";
-import useRouteContext from "@root/routing/hooks/useRouteContext";
+import useRouteContext from "#root/routing/hooks/useRouteContext";
 
 interface MoranaPageExitProps {
     readonly callback: () => void;
