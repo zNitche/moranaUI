@@ -1,6 +1,5 @@
 import {
     useCallback,
-    useLayoutEffect,
     useMemo,
     useRef,
     useState,
@@ -12,19 +11,9 @@ import { clsx } from "@root/utils";
 import type MoranaPageContextType from "@root/types/MoranaPageContextType";
 import { MoranaPageContext } from "@root/core/context";
 import type { PageStructuralComponentType } from "@root/types/PageStructuralComponentType";
-import useDetectTransition from "@root/core/hooks/useDetectTransition";
-import useRouteContext from "@root/routing/hooks/useRouteContext";
-import useHandleTransitionAnimation from "@root/core/hooks/useHandleTransitionAnimation";
-import useMoranaAppContext from "@root/core/hooks/context/useMoranaAppContext";
 
 export default function MoranaPage({ children }: PropsWithChildren) {
     const wrapperRef = useRef<HTMLDivElement>(null);
-
-    const { routeUUID } = useRouteContext();
-    const { navAnimationBuilder } = useMoranaAppContext();
-
-    const { transitionDetails } = useDetectTransition(routeUUID);
-    const { handleTransitionAnimation } = useHandleTransitionAnimation();
 
     const [
         pageStructuralComponentsRegistry,
@@ -46,26 +35,6 @@ export default function MoranaPage({ children }: PropsWithChildren) {
         },
         [],
     );
-
-    useLayoutEffect(() => {
-        if (!transitionDetails.detected) {
-            return;
-        }
-
-        void handleTransitionAnimation({
-            transitionDetails: transitionDetails,
-            onAnimationCleanup: navAnimationBuilder?.page?.onAnimationCleanup,
-            onEnterAnimation: navAnimationBuilder?.page?.onEnterAnimation,
-            onExitAnimation: navAnimationBuilder?.page?.onExitAnimation,
-            wrapperRef: wrapperRef,
-        });
-    }, [
-        handleTransitionAnimation,
-        navAnimationBuilder?.page,
-        transitionDetails,
-        transitionDetails.detected,
-        transitionDetails.isCurrentlyEntering,
-    ]);
 
     const values: MoranaPageContextType = useMemo(() => {
         return {

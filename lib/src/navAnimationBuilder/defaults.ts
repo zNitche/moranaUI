@@ -1,4 +1,4 @@
-import type NavAnimationBuilder from "@root/types/NavAnimationBuilder";
+ import type NavAnimationBuilder from "@root/types/NavAnimationBuilder";
 import classes from "./defaults.module.css";
 import type { AnimationWrapperRef } from "@root/types/NavAnimationBuilder";
 import { sleep } from "@root/utils";
@@ -108,40 +108,6 @@ export const defaultFadeNavAnimationBuilder: NavAnimationBuilder = {
             if (ref.classList.contains(classes.defaultAwayRouteFade)) {
                 ref.classList.add(classes.hidden);
             }
-        },
-    },
-    page: {
-        // eslint-disable-next-line @typescript-eslint/require-await
-        onEnterAnimation: async (pageRef: AnimationWrapperRef) => {
-            const ref = pageRef.current;
-
-            if (!ref) {
-                return;
-            }
-
-            ref.classList.add(classes.defaultFadeInAnimation);
-        },
-        // eslint-disable-next-line @typescript-eslint/require-await
-        onExitAnimation: async (pageRef: AnimationWrapperRef) => {
-            const ref = pageRef.current;
-
-            if (!ref) {
-                return;
-            }
-
-            ref.classList.add(classes.defaultFadeOutAnimation);
-        },
-        onAnimationCleanup: async (pageRef: AnimationWrapperRef) => {
-            const ref = pageRef.current;
-
-            if (!ref) {
-                return;
-            }
-
-            await sleep(300);
-
-            ref.classList.remove(classes.defaultFadeInAnimation);
-            ref.classList.remove(classes.defaultFadeOutAnimation);
         },
     },
 };

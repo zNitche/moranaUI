@@ -10,12 +10,6 @@ export type AnimationStageCallback =
     | undefined;
 
 export default interface NavAnimationBuilder {
-    page?: {
-        wrapperClassName?: string;
-        onEnterAnimation: AnimationStageCallback;
-        onExitAnimation: AnimationStageCallback;
-        onAnimationCleanup: AnimationStageCallback;
-    };
     route?: {
         wrapperClassName?: string;
         includeDefaultCssClasses: boolean;
