@@ -10,8 +10,18 @@ import Header from "#root/components/Header/Header";
 import MotivationTab from "./Tabs/MotivationTab/MotivationTab";
 import FeaturesTab from "./Tabs/FeaturesTab/FeaturesTab";
 import AboutTab from "./Tabs/AboutTab/AboutTab";
+import ExtraTab from "./Tabs/ExtraTab/ExtraTab";
+import { usePullToRefresh } from "moranaui";
+import { sleep } from "moranaui";
 
 export default function HomePage() {
+    const {
+        setScrollableContainerRef: setPullToRefreshElementRef,
+        RefresherComponent,
+    } = usePullToRefresh({
+        callback: async () => await sleep(2000),
+    });
+
     const { segmentsBar, segmentsContent } = useMoranaSegments({
         trackPersitance: true,
         urlParamName: "tab",
@@ -20,8 +30,8 @@ export default function HomePage() {
             { details: { name: "Motivation" }, component: MotivationTab },
             { details: { name: "Features" }, component: FeaturesTab },
             { details: { name: "About" }, component: AboutTab },
-            { details: { name: "Extra Tab1" }, component: AboutTab },
-            { details: { name: "Extra Tab2" }, component: AboutTab },
+            { details: { name: "Extra Tab1" }, component: ExtraTab },
+            { details: { name: "Extra Tab2" }, component: ExtraTab },
         ],
     });
 
@@ -34,7 +44,11 @@ export default function HomePage() {
                 />
             </MoranaHeader>
             <MoranaContent>
-                <Content className={classes.homePage}>
+                {RefresherComponent}
+                <Content
+                    className={classes.homePage}
+                    ref={setPullToRefreshElementRef}
+                >
                     <div className={classes.segmentsBar}>{segmentsBar}</div>
                     <div className={classes.content}>{segmentsContent}</div>
                 </Content>
