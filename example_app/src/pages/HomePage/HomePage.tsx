@@ -5,8 +5,8 @@ import {
     useMoranaSegments,
 } from "moranaui";
 import classes from "./HomePage.module.css";
-import Content from "@root/components/Content/Content";
-import Header from "@root/components/Header/Header";
+import Content from "#root/components/Content/Content";
+import Header from "#root/components/Header/Header";
 import MotivationTab from "./Tabs/MotivationTab/MotivationTab";
 import FeaturesTab from "./Tabs/FeaturesTab/FeaturesTab";
 import AboutTab from "./Tabs/AboutTab/AboutTab";

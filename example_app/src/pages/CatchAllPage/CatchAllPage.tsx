@@ -1,4 +1,4 @@
-import Content from "@root/components/Content/Content";
+import Content from "#root/components/Content/Content";
 import { MoranaContent, MoranaPage, useRouter } from "moranaui";
 import classes from "./CatchAllPage.module.css";
 

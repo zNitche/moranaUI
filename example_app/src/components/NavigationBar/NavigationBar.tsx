@@ -1,9 +1,9 @@
 import { MoranaNavigationBar, useRouter, clsx } from "moranaui";
 import classes from "./NavigationBar.module.css";
 import { useMemo, type JSX } from "react";
-import CollectionIcon from "@root/icons/CollectionIcon";
-import HomeIcon from "@root/icons/HomeIcon";
-import MenuIcon from "@root/icons/MenuIcon";
+import CollectionIcon from "#root/icons/CollectionIcon";
+import HomeIcon from "#root/icons/HomeIcon";
+import MenuIcon from "#root/icons/MenuIcon";
 
 export default function NavigationBar() {
     const { navigateTo, router, getRouteUUIDByName } = useRouter();

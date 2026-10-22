@@ -1,7 +1,7 @@
 import { MoranaFullScreenOverlay } from "moranaui";
 import type { Dispatch, SetStateAction } from "react";
 import classes from "./FullScreenOverlay.module.css";
-import CloseIcon from "@root/icons/CloseIcon";
+import CloseIcon from "#root/icons/CloseIcon";
 
 interface FullScreenOverlayProps {
     readonly isOpen: boolean;

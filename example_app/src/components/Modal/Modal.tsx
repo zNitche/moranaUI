@@ -1,7 +1,7 @@
 import { MoranaModal } from "moranaui";
 import type { Dispatch, SetStateAction } from "react";
 import classes from "./Modal.module.css";
-import CloseIcon from "@root/icons/CloseIcon";
+import CloseIcon from "#root/icons/CloseIcon";
 
 interface ModalProps {
     readonly isOpen: boolean;

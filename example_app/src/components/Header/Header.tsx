@@ -1,6 +1,6 @@
 import { MoranaToolbar, clsx } from "moranaui";
 import classes from "./Header.module.css";
-import ArrowBackIcon from "@root/icons/ArrowBackIcon";
+import ArrowBackIcon from "#root/icons/ArrowBackIcon";
 
 interface HeaderProps {
     readonly title?: string;

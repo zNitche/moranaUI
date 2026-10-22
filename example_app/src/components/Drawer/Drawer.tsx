@@ -1,7 +1,7 @@
 import { MoranaDrawer } from "moranaui";
 import type { Dispatch, SetStateAction } from "react";
 import classes from "./Drawer.module.css";
-import CloseIcon from "@root/icons/CloseIcon";
+import CloseIcon from "#root/icons/CloseIcon";
 
 interface DrawerProps {
     readonly isOpen: boolean;

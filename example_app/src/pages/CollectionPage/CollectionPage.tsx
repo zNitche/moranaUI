@@ -11,13 +11,13 @@ import {
     useResetContentScroll,
     useMoranaPageRender,
 } from "moranaui";
-import Header from "@root/components/Header/Header";
-import Content from "@root/components/Content/Content";
+import Header from "#root/components/Header/Header";
+import Content from "#root/components/Content/Content";
 import { useCallback, useState } from "react";
 import classes from "./CollectionPage.module.css";
-import Modal from "@root/components/Modal/Modal";
-import Drawer from "@root/components/Drawer/Drawer";
-import FullScreenOverlay from "@root/components/FullScreenOverlay/FullScreenOverlay";
+import Modal from "#root/components/Modal/Modal";
+import Drawer from "#root/components/Drawer/Drawer";
+import FullScreenOverlay from "#root/components/FullScreenOverlay/FullScreenOverlay";
 
 export default function CollectionPage() {
     const { navigateBack } = useRouter();
