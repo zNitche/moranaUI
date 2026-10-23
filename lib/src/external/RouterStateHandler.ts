@@ -28,11 +28,15 @@ export default class RouterStateHandler {
     };
 
     public updateNavigationStack = (
-        routeUUID: string,
+        routeUUID?: string,
         originDirection?: NavigationTransitionDirection,
     ) => {
         // Tmp
         const MAX_STACK_ITEMS = 3;
+
+        if (!routeUUID) {
+            return;
+        }
 
         if (this.routerState.navigationStack.at(-1)?.routeUUID === routeUUID) {
             return;

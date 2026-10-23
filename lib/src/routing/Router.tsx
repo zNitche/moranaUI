@@ -5,7 +5,6 @@ import {
     useState,
     useSyncExternalStore,
     type PropsWithChildren,
-    type RefObject,
 } from "react";
 import type RouteData from "../types/RouteData";
 import type RouterContextType from "../types/RouterContextType";
@@ -19,10 +18,10 @@ import type { NavigationTransitionDirection } from "#root/types/NavigationTransi
 import type { RouterState } from "#root/external/types";
 import RouterStateHandler from "#root/external/RouterStateHandler";
 
-// well could be implemented using useReducer, but go with it
-const routerStateHandler = new RouterStateHandler();
-
 export default function Router({ children }: PropsWithChildren) {
+    // well could be implemented using useReducer, but let's go with it
+    const routerStateHandler = useMemo(() => new RouterStateHandler(), []);
+
     const routerState: RouterState = useSyncExternalStore(
         routerStateHandler.subscribeTo,
         () => routerStateHandler.routerState,
@@ -35,38 +34,6 @@ export default function Router({ children }: PropsWithChildren) {
         path: window.location.pathname,
         search: window.location.search,
     });
-
-    const __updateNavigationStack = useCallback(
-        (
-            routeUUID: string | undefined,
-            originDirection?: NavigationTransitionDirection,
-        ) => {
-            if (!routeUUID) {
-                return;
-            }
-
-            routerStateHandler.updateNavigationStack(
-                routeUUID,
-                originDirection,
-            );
-        },
-        [],
-    );
-
-    const __addToRouterCache = useCallback(
-        (uuid: string, ref: RefObject<HTMLDivElement | null> | null) => {
-            routerStateHandler.addToRouterCache(uuid, ref);
-        },
-        [],
-    );
-
-    const __markRouteAsRemovableFromCache = useCallback((uuid: string) => {
-        routerStateHandler.markRouteAsRemovableFromCache(uuid);
-    }, []);
-
-    const __removeFromRouterCache = useCallback((uuid: string) => {
-        routerStateHandler.removeFromRouterCache(uuid);
-    }, []);
 
     const __getCurrentRoute = useCallback(
         (path?: RouterPath) => {
@@ -101,13 +68,13 @@ export default function Router({ children }: PropsWithChildren) {
     const currentRoute: RouterCurrentRoute = useMemo(() => {
         const responseData: RouterCurrentRoute = __getCurrentRoute(currentPath);
 
-        __updateNavigationStack(
+        routerStateHandler.updateNavigationStack(
             responseData.uuid,
-            currentPath?.originDirection,
+            currentPath.originDirection,
         );
 
         return responseData;
-    }, [__getCurrentRoute, __updateNavigationStack, currentPath]);
+    }, [__getCurrentRoute, currentPath, routerStateHandler]);
 
     const __handleNavEvent = useCallback((event: PopStateEvent) => {
         setCurrentPath({
@@ -182,7 +149,7 @@ export default function Router({ children }: PropsWithChildren) {
         }
 
         __replaceNavigationPath({ inPlace: false });
-    }, [currentRoute]);
+    }, [currentRoute.uuid, routerStateHandler]);
 
     const navigateTo = useCallback(
         ({
@@ -212,7 +179,9 @@ export default function Router({ children }: PropsWithChildren) {
             }
 
             if (popFromCache && currentRoute.uuid) {
-                __markRouteAsRemovableFromCache(currentRoute.uuid);
+                routerStateHandler.markRouteAsRemovableFromCache(
+                    currentRoute.uuid,
+                );
             }
 
             window.dispatchEvent(
@@ -224,9 +193,9 @@ export default function Router({ children }: PropsWithChildren) {
         [
             currentPath.path,
             navigationReady,
-            clearRouterCache,
             currentRoute.uuid,
-            __markRouteAsRemovableFromCache,
+            clearRouterCache,
+            routerStateHandler,
         ],
     );
 
@@ -234,7 +203,9 @@ export default function Router({ children }: PropsWithChildren) {
         ({ popFromCache }: { popFromCache?: boolean }) => {
             if (routerState.navigationStack.length > 1) {
                 if (popFromCache && currentRoute.uuid) {
-                    __markRouteAsRemovableFromCache(currentRoute.uuid);
+                    routerStateHandler.markRouteAsRemovableFromCache(
+                        currentRoute.uuid,
+                    );
                 }
 
                 window.history.back();
@@ -249,7 +220,7 @@ export default function Router({ children }: PropsWithChildren) {
         [
             routerState.navigationStack.length,
             currentRoute.uuid,
-            __markRouteAsRemovableFromCache,
+            routerStateHandler,
             navigateTo,
         ],
     );
@@ -310,8 +281,8 @@ export default function Router({ children }: PropsWithChildren) {
         return {
             __addRoute,
             clearRouterCache,
-            __addToRouterCache,
-            __removeFromRouterCache,
+            __addToRouterCache: routerStateHandler.addToRouterCache,
+            __removeFromRouterCache: routerStateHandler.removeFromRouterCache,
             router,
             navigateTo,
             navigateBack,
@@ -322,8 +293,8 @@ export default function Router({ children }: PropsWithChildren) {
     }, [
         __addRoute,
         clearRouterCache,
-        __addToRouterCache,
-        __removeFromRouterCache,
+        routerStateHandler.addToRouterCache,
+        routerStateHandler.removeFromRouterCache,
         router,
         navigateTo,
         navigateBack,
