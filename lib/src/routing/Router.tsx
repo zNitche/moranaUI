@@ -2,6 +2,7 @@ import {
     useCallback,
     useLayoutEffect,
     useMemo,
+    useRef,
     useState,
     useSyncExternalStore,
     type PropsWithChildren,
@@ -31,7 +32,7 @@ export default function Router({ children }: PropsWithChildren) {
     );
 
     const [routes, setRoutes] = useState<RouteData[]>([]);
-    const [navigationReady, setNavigationReady] = useState(true);
+    const navigationReady = useRef<boolean>(true);
 
     const [currentPath, setCurrentPath] = useState<RouterPath>({
         path: window.location.pathname,
@@ -86,9 +87,11 @@ export default function Router({ children }: PropsWithChildren) {
             originDirection: event.state?.originDirection,
         });
 
-        setNavigationReady(false);
+        navigationReady.current = false;
 
-        queueMicrotask(() => setTimeout(() => setNavigationReady(true), 1000));
+        queueMicrotask(() =>
+            setTimeout(() => (navigationReady.current = true), 1000),
+        );
     }, []);
 
     useLayoutEffect(() => {
@@ -170,7 +173,7 @@ export default function Router({ children }: PropsWithChildren) {
                 return;
             }
 
-            if (!navigationReady) {
+            if (!navigationReady.current) {
                 return;
             }
 
@@ -195,7 +198,6 @@ export default function Router({ children }: PropsWithChildren) {
         },
         [
             currentPath.path,
-            navigationReady,
             currentRoute.uuid,
             clearRouterCache,
             routerStateHandler,
