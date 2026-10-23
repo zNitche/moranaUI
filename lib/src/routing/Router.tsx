@@ -20,7 +20,10 @@ import RouterStateHandler from "#root/external/RouterStateHandler";
 
 export default function Router({ children }: PropsWithChildren) {
     // well could be implemented using useReducer, but let's go with it
-    const routerStateHandler = useMemo(() => new RouterStateHandler(), []);
+    const routerStateHandler = useMemo(
+        () => new RouterStateHandler({ maxStackItems: 3 }),
+        [],
+    );
 
     const routerState: RouterState = useSyncExternalStore(
         routerStateHandler.subscribeTo,

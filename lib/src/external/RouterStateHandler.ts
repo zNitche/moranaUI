@@ -3,12 +3,19 @@ import type RouterNavigationStackItem from "#root/types/RouterNavigationStackIte
 import type { RefObject } from "react";
 import type { RouterState, RouterEventListener } from "./types";
 
+interface RouterStateHandlerArgs {
+    maxStackItems: number;
+}
+
 export default class RouterStateHandler {
+    private maxStackItems: number;
     public routerState: RouterState;
 
     private listeners: Set<RouterEventListener>;
 
-    constructor() {
+    constructor({maxStackItems}: RouterStateHandlerArgs) {
+        this.maxStackItems = maxStackItems;
+
         this.routerState = {
             routerCache: {},
             navigationStack: [],
@@ -31,9 +38,6 @@ export default class RouterStateHandler {
         routeUUID?: string,
         originDirection?: NavigationTransitionDirection,
     ) => {
-        // Tmp
-        const MAX_STACK_ITEMS = 3;
-
         if (!routeUUID) {
             return;
         }
@@ -47,7 +51,7 @@ export default class RouterStateHandler {
             originDirection: originDirection,
         });
 
-        if (len + 1 > MAX_STACK_ITEMS) {
+        if (len + 1 > this.maxStackItems) {
             this.routerState.navigationStack.shift();
         }
 
