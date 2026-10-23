@@ -3,6 +3,7 @@ import {
     useLayoutEffect,
     useMemo,
     useState,
+    useSyncExternalStore,
     type PropsWithChildren,
     type RefObject,
 } from "react";
@@ -12,20 +13,22 @@ import { matchTokenizedUrl, tokenizeUrl } from "../utils/url";
 import type RouterCurrentRoute from "../types/RouterCurrentRoute";
 import type RouterProps from "../types/RouterProps";
 import { RouterContext } from "./context";
-import type { RouterCache } from "#root/types/RouterCache";
-import type RouterNavigationStackItem from "#root/types/RouterNavigationStackItem";
 import RouterContent from "./components/RouterContent/RouterContent";
 import type { RouterPath } from "#root/types/RouterPath";
 import type { NavigationTransitionDirection } from "#root/types/NavigationTransitionDirection";
+import type { RouterState } from "#root/external/types";
+import RouterStateHandler from "#root/external/RouterStateHandler";
+
+// well could be implemented using useReducer, but go with it
+const routerStateHandler = new RouterStateHandler();
 
 export default function Router({ children }: PropsWithChildren) {
+    const routerState: RouterState = useSyncExternalStore(
+        routerStateHandler.subscribeTo,
+        () => routerStateHandler.routerState,
+    );
+
     const [routes, setRoutes] = useState<RouteData[]>([]);
-
-    const [routerCache, setRouterCache] = useState<RouterCache>({});
-    const [navigationStack, setNavigationStack] = useState<
-        RouterNavigationStackItem[]
-    >([]);
-
     const [navigationReady, setNavigationReady] = useState(true);
 
     const [currentPath, setCurrentPath] = useState<RouterPath>({
@@ -38,90 +41,32 @@ export default function Router({ children }: PropsWithChildren) {
             routeUUID: string | undefined,
             originDirection?: NavigationTransitionDirection,
         ) => {
-            const MAX_STACK_ITEMS = 4;
-
             if (!routeUUID) {
                 return;
             }
 
-            setNavigationStack((current) => {
-                if (current.at(-1)?.routeUUID === routeUUID) {
-                    return current;
-                }
-
-                const len = current.push({
-                    routeUUID: routeUUID,
-                    originDirection: originDirection,
-                });
-
-                if (len + 1 > MAX_STACK_ITEMS) {
-                    current.shift();
-                }
-
-                return current;
-            });
+            routerStateHandler.updateNavigationStack(
+                routeUUID,
+                originDirection,
+            );
         },
-        [setNavigationStack],
+        [],
     );
 
     const __addToRouterCache = useCallback(
         (uuid: string, ref: RefObject<HTMLDivElement | null> | null) => {
-            if (Object.keys(routerCache).includes(uuid)) {
-                return;
-            }
-
-            queueMicrotask(() =>
-                setRouterCache((current) => {
-                    return { ...current, [uuid]: { ref } };
-                }),
-            );
+            routerStateHandler.addToRouterCache(uuid, ref);
         },
-        [routerCache],
+        [],
     );
 
-    const __markRouteAsRemovableFromCache = useCallback(
-        (uuid: string) => {
-            if (!Object.keys(routerCache).includes(uuid)) {
-                return;
-            }
+    const __markRouteAsRemovableFromCache = useCallback((uuid: string) => {
+        routerStateHandler.markRouteAsRemovableFromCache(uuid);
+    }, []);
 
-            setRouterCache((current) => {
-                const currentRoute = current[uuid];
-                return {
-                    ...current,
-                    [uuid]: { ...currentRoute, markedForRemoval: true },
-                };
-            });
-        },
-        [routerCache],
-    );
-
-    const __removeFromRouterCache = useCallback(
-        (uuid: string) => {
-            if (!Object.keys(routerCache).includes(uuid)) {
-                return;
-            }
-
-            queueMicrotask(() => {
-                setNavigationStack((current) => {
-                    const currentCopy = [...current];
-                    const it = currentCopy.shift();
-
-                    if (it?.routeUUID == uuid) {
-                        return [...currentCopy];
-                    }
-
-                    return [...current];
-                });
-
-                setRouterCache((current) => {
-                    delete current[uuid];
-                    return { ...current };
-                });
-            });
-        },
-        [routerCache],
-    );
+    const __removeFromRouterCache = useCallback((uuid: string) => {
+        routerStateHandler.removeFromRouterCache(uuid);
+    }, []);
 
     const __getCurrentRoute = useCallback(
         (path?: RouterPath) => {
@@ -209,7 +154,7 @@ export default function Router({ children }: PropsWithChildren) {
         });
     }, []);
 
-    const __replaceRouterState = ({
+    const __replaceNavigationPath = ({
         inPlace = false,
     }: {
         inPlace: boolean;
@@ -228,13 +173,15 @@ export default function Router({ children }: PropsWithChildren) {
     };
 
     const clearRouterCache = useCallback(() => {
-        setRouterCache({});
+        routerStateHandler.clearRouterCache();
 
         if (currentRoute.uuid) {
-            setNavigationStack([{ routeUUID: currentRoute.uuid }]);
+            routerStateHandler.setNavigationStack([
+                { routeUUID: currentRoute.uuid },
+            ]);
         }
 
-        __replaceRouterState({ inPlace: false });
+        __replaceNavigationPath({ inPlace: false });
     }, [currentRoute]);
 
     const navigateTo = useCallback(
@@ -285,7 +232,7 @@ export default function Router({ children }: PropsWithChildren) {
 
     const navigateBack = useCallback(
         ({ popFromCache }: { popFromCache?: boolean }) => {
-            if (navigationStack.length > 1) {
+            if (routerState.navigationStack.length > 1) {
                 if (popFromCache && currentRoute.uuid) {
                     __markRouteAsRemovableFromCache(currentRoute.uuid);
                 }
@@ -300,7 +247,7 @@ export default function Router({ children }: PropsWithChildren) {
             }
         },
         [
-            navigationStack.length,
+            routerState.navigationStack.length,
             currentRoute.uuid,
             __markRouteAsRemovableFromCache,
             navigateTo,
@@ -333,7 +280,7 @@ export default function Router({ children }: PropsWithChildren) {
             currentUrl.search = currentSearchParams.toString();
             window.history.replaceState({}, "", currentUrl);
 
-            __replaceRouterState({ inPlace: true });
+            __replaceNavigationPath({ inPlace: true });
         },
         [],
     );
@@ -350,9 +297,14 @@ export default function Router({ children }: PropsWithChildren) {
             currentRoute: currentRoute,
             path: currentPath.path,
             search: currentPath.search,
-            navigationStack: navigationStack,
+            navigationStack: routerState.navigationStack,
         };
-    }, [currentRoute, currentPath, navigationStack]);
+    }, [
+        currentRoute,
+        currentPath.path,
+        currentPath.search,
+        routerState.navigationStack,
+    ]);
 
     const values: RouterContextType = useMemo(() => {
         return {
@@ -363,7 +315,7 @@ export default function Router({ children }: PropsWithChildren) {
             router,
             navigateTo,
             navigateBack,
-            routerCache,
+            routerCache: routerState.routerCache,
             getRouteUUIDByName,
             replaceSearchParams,
         };
@@ -375,7 +327,7 @@ export default function Router({ children }: PropsWithChildren) {
         router,
         navigateTo,
         navigateBack,
-        routerCache,
+        routerState.routerCache,
         getRouteUUIDByName,
         replaceSearchParams,
     ]);
