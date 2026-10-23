@@ -28,11 +28,12 @@
 }
 
 .defaultRouteEnterAnimation.back {
-   animation: none;
+    animation: none;
 }
 
 .defaultRouteExitAnimation {
     transform: none;
+    filter: blur(2px);
 }
 
 .defaultRouteExitAnimation.back {
