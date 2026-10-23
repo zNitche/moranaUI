@@ -1,9 +1,28 @@
 import Content from "#root/components/Content/Content";
-import { MoranaContent, MoranaPage, useRouter } from "moranaui";
+import {
+    MoranaContent,
+    MoranaPage,
+    useMoranaApp,
+    useMoranaPageEnter,
+    useMoranaPageExit,
+    useRouter,
+} from "moranaui";
 import classes from "./CatchAllPage.module.css";
 
 export default function CatchAppPage() {
+    const { setIsNavbarVisible } = useMoranaApp();
     const { navigateTo } = useRouter();
+
+    useMoranaPageEnter({
+        callback: () => {
+            setIsNavbarVisible?.(false);
+        },
+    });
+    useMoranaPageExit({
+        callback: () => {
+            setIsNavbarVisible?.(true);
+        },
+    });
 
     return (
         <MoranaPage>
