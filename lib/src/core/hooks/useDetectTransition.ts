@@ -19,7 +19,6 @@ export default function useDetectTransition(routeUUID: string) {
 
         const nextStackItem = router.navigationStack.at(-1);
         const currentStackItem = router.navigationStack.at(-2);
-        const backTargetStackItem = router.navigationStack.at(-3);
 
         const isCurrentlyEntering = nextStackItem?.routeUUID === routeUUID;
         const isCurrentlyExiting = currentStackItem?.routeUUID === routeUUID;
@@ -30,16 +29,6 @@ export default function useDetectTransition(routeUUID: string) {
 
         if (nextStackItem?.originDirection) {
             ret.direction = nextStackItem.originDirection;
-        } else {
-            if (backTargetStackItem) {
-                if (
-                    backTargetStackItem.routeUUID === nextStackItem?.routeUUID
-                ) {
-                    ret.direction = "back";
-                } else {
-                    ret.direction = "forward";
-                }
-            }
         }
 
         ret.detected = true;
@@ -47,6 +36,7 @@ export default function useDetectTransition(routeUUID: string) {
         ret.isCurrentlyExiting = isCurrentlyExiting;
 
         return ret;
+
     }, [routeUUID, router]);
 
     return { transitionDetails };
