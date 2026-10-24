@@ -9,7 +9,7 @@ import classes from "./useMoranaSegments.module.css";
 
 interface HookUseMoranaSegmentsProps {
     readonly segments: MoranaSegment[];
-    readonly trackPersitance?: boolean;
+    readonly trackPersistence?: boolean;
     readonly urlParamName?: string;
     readonly onChange?: (target: MoranaSegmentItem) => void;
     readonly disabled?: boolean;
@@ -20,7 +20,7 @@ interface HookUseMoranaSegmentsProps {
 
 export default function useMoranaSegments({
     segments,
-    trackPersitance = true,
+    trackPersistence = true,
     urlParamName,
     disabled = false,
     onChange,
@@ -76,7 +76,7 @@ export default function useMoranaSegments({
             return;
         }
 
-        if (!trackPersitance) {
+        if (!trackPersistence) {
             return;
         }
 
@@ -93,13 +93,13 @@ export default function useMoranaSegments({
 
     const onChangeHandler = useCallback(
         (s: MoranaSegmentItem) => {
-            if (trackPersitance && urlParamName) {
+            if (trackPersistence && urlParamName) {
                 replaceSearchParams({ add: { [urlParamName]: s.name } });
             }
 
             onChange?.(s);
         },
-        [onChange, replaceSearchParams, trackPersitance, urlParamName],
+        [onChange, replaceSearchParams, trackPersistence, urlParamName],
     );
 
     useEffect(() => {

@@ -23,7 +23,7 @@ export default function HomePage() {
     });
 
     const { segmentsBar, segmentsContent } = useMoranaSegments({
-        trackPersitance: true,
+        trackPersistence: true,
         urlParamName: "tab",
         className: classes.segmentsBar,
         segments: [
