@@ -38,6 +38,8 @@ export default function Route({
     const routeUUID = useMemo(() => generateUUID(), []);
     const wrapperRef = useRef<HTMLDivElement>(null);
 
+    const markedForCacheRemovalRef = useRef<boolean>(false);
+
     const onEnterLifecycleCallbackCalled = useRef<boolean>(false);
     const onExitLifecycleCallbackCalled = useRef<boolean>(false);
     const onMountLifecycleCallbackCalled = useRef<boolean>(false);
@@ -96,6 +98,10 @@ export default function Route({
         };
     }, [routeUUID, routerCache, router.currentRoute]);
 
+    useLayoutEffect(() => {
+        markedForCacheRemovalRef.current = currentRouteStats.markedForRemoval
+    }, [currentRouteStats.markedForRemoval])
+
     const registerLifecycleHook = useCallback(
         (type: RouteLifecycleHookType, callback: () => void) => {
             const hooksMap: Record<RouteLifecycleHookType, string> = {
@@ -138,6 +144,7 @@ export default function Route({
         }
     }, [lifecycleHooks, transitionDetails.isCurrentlyEntering]);
 
+    // transitions handling
     useLayoutEffect(() => {
         if (!transitionDetails.detected) {
             return;
@@ -154,7 +161,7 @@ export default function Route({
                 return;
             }
 
-            if (!cacheable || currentRouteStats?.markedForRemoval) {
+            if (!cacheable || markedForCacheRemovalRef.current) {
                 __removeFromRouterCache(routeUUID);
             }
         });
@@ -164,12 +171,10 @@ export default function Route({
         __callLifecycleHooks,
         __removeFromRouterCache,
         cacheable,
-        currentRouteStats?.markedForRemoval,
         handleTransitionAnimation,
         lifecycleHooks,
         navAnimationBuilder?.route,
         routeUUID,
-        router,
         transitionDetails,
     ]);
 
