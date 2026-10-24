@@ -19,16 +19,13 @@ import type { NavigationTransitionDirection } from "#root/types/NavigationTransi
 import type { RouterState } from "#root/external/types";
 import RouterStateHandler from "#root/external/RouterStateHandler";
 
-export default function Router({ children }: PropsWithChildren) {
-    // well could be implemented using useReducer, but let's go with it
-    const routerStateHandler = useMemo(
-        () => new RouterStateHandler({ maxStackItems: 3 }),
-        [],
-    );
+// well could be implemented using useReducer, but let's go with it
+const routerStateHandler = new RouterStateHandler({ maxStackItems: 3 });
 
+export default function Router({ children }: PropsWithChildren) {
     const routerState: RouterState = useSyncExternalStore(
         routerStateHandler.subscribeTo,
-        () => routerStateHandler.routerState,
+        routerStateHandler.getState,
     );
 
     const [routes, setRoutes] = useState<RouteData[]>([]);
@@ -155,7 +152,7 @@ export default function Router({ children }: PropsWithChildren) {
         }
 
         __replaceNavigationPath({ inPlace: false });
-    }, [currentRoute.uuid, routerStateHandler]);
+    }, [currentRoute.uuid]);
 
     const navigateTo = useCallback(
         ({
@@ -196,12 +193,7 @@ export default function Router({ children }: PropsWithChildren) {
                 }),
             );
         },
-        [
-            currentPath.path,
-            currentRoute.uuid,
-            clearRouterCache,
-            routerStateHandler,
-        ],
+        [currentPath.path, currentRoute.uuid, clearRouterCache],
     );
 
     const navigateBack = useCallback(
@@ -222,12 +214,7 @@ export default function Router({ children }: PropsWithChildren) {
                 });
             }
         },
-        [
-            routerState.navigationStack.length,
-            currentRoute.uuid,
-            routerStateHandler,
-            navigateTo,
-        ],
+        [routerState.navigationStack.length, currentRoute.uuid, navigateTo],
     );
 
     const replaceSearchParams = useCallback(
@@ -298,8 +285,6 @@ export default function Router({ children }: PropsWithChildren) {
     }, [
         __addRoute,
         clearRouterCache,
-        routerStateHandler.addToRouterCache,
-        routerStateHandler.removeFromRouterCache,
         router,
         navigateTo,
         navigateBack,
