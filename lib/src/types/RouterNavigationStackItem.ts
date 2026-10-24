@@ -2,5 +2,6 @@ import type { NavigationTransitionDirection } from "./NavigationTransitionDirect
 
 export default interface RouterNavigationStackItem {
     routeUUID: string;
+    previousRouteUUID?: string;
     originDirection?: NavigationTransitionDirection;
 }

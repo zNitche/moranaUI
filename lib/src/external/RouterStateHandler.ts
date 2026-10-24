@@ -62,23 +62,27 @@ export default class RouterStateHandler {
             return;
         }
 
-        if (this.routerState.navigationStack.at(-1)?.routeUUID === routeUUID) {
+        const prevRouteUUID =
+            this.routerState.navigationStack.at(-1)?.routeUUID;
+
+        if (prevRouteUUID === routeUUID) {
             return;
         }
 
-        const currentStack = [
+        const currentNavigationStack = [
             ...this.routerState.navigationStack,
             {
                 routeUUID: routeUUID,
                 originDirection: originDirection,
+                previousRouteUUID: prevRouteUUID,
             },
         ];
 
-        if (currentStack.length > this.maxStackItems) {
-            this.routerState.navigationStack.shift();
+        if (currentNavigationStack.length > this.maxStackItems) {
+            currentNavigationStack.shift();
         }
 
-        this.setState({ partial: { navigationStack: currentStack } });
+        this.setState({ partial: { navigationStack: currentNavigationStack } });
     };
 
     public addToRouterCache = (
