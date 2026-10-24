@@ -5,5 +5,3 @@ export interface RouterState {
     routerCache: RouterCache;
     navigationStack: RouterNavigationStackItem[];
 }
-
-export type RouterEventListener = (state: RouterState) => void;

@@ -1,7 +1,7 @@
 import type { NavigationTransitionDirection } from "#root/types/NavigationTransitionDirection";
 import type RouterNavigationStackItem from "#root/types/RouterNavigationStackItem";
 import type { RefObject } from "react";
-import type { RouterState, RouterEventListener } from "./types";
+import type { RouterState } from "./types";
 
 interface RouterStateHandlerArgs {
     maxStackItems: number;
@@ -11,7 +11,7 @@ export default class RouterStateHandler {
     private maxStackItems: number;
     public routerState: RouterState;
 
-    private listeners: Set<RouterEventListener>;
+    private listeners: Set<() => void>;
 
     constructor({maxStackItems}: RouterStateHandlerArgs) {
         this.maxStackItems = maxStackItems;
@@ -24,7 +24,7 @@ export default class RouterStateHandler {
         this.listeners = new Set();
     }
 
-    public subscribeTo = (listener: RouterEventListener) => {
+    public subscribeTo = (listener: () => void) => {
         this.listeners.add(listener);
 
         return () => this.listeners.delete(listener);
