@@ -13,7 +13,7 @@ export default class RouterStateHandler {
 
     private listeners: Set<() => void>;
 
-    constructor({maxStackItems}: RouterStateHandlerArgs) {
+    constructor({ maxStackItems }: RouterStateHandlerArgs) {
         this.maxStackItems = maxStackItems;
 
         this.routerState = {
@@ -30,8 +30,28 @@ export default class RouterStateHandler {
         return () => this.listeners.delete(listener);
     };
 
-    private emitChange = () => {
-        this.listeners.forEach((l) => l(this.routerState));
+    public getState = () => {
+        return this.routerState;
+    };
+
+    private setState = ({
+        partial,
+        notify = true,
+    }: {
+        partial: Partial<RouterState>;
+        notify?: boolean;
+    }) => {
+        // simple shallow copy via {...} won't trigger rerender
+        // and structuredClone() doesn't work for refs, so we are left with it
+        this.routerState = { ...this.routerState, ...partial };
+
+        if (notify) {
+            this.propagateChanges();
+        }
+    };
+
+    private propagateChanges = () => {
+        this.listeners.forEach((l) => l());
     };
 
     public updateNavigationStack = (
@@ -46,16 +66,19 @@ export default class RouterStateHandler {
             return;
         }
 
-        const len = this.routerState.navigationStack.push({
-            routeUUID: routeUUID,
-            originDirection: originDirection,
-        });
+        const currentStack = [
+            ...this.routerState.navigationStack,
+            {
+                routeUUID: routeUUID,
+                originDirection: originDirection,
+            },
+        ];
 
-        if (len + 1 > this.maxStackItems) {
+        if (currentStack.length > this.maxStackItems) {
             this.routerState.navigationStack.shift();
         }
 
-        this.emitChange();
+        this.setState({ partial: { navigationStack: currentStack } });
     };
 
     public addToRouterCache = (
@@ -66,12 +89,9 @@ export default class RouterStateHandler {
             return;
         }
 
-        this.routerState.routerCache = {
-            ...this.routerState.routerCache,
-            [uuid]: { ref },
-        };
+        const cache = { ...this.routerState.routerCache, [uuid]: { ref } };
 
-        this.emitChange();
+        this.setState({ partial: { routerCache: cache } });
     };
 
     public markRouteAsRemovableFromCache = (uuid: string) => {
@@ -80,13 +100,12 @@ export default class RouterStateHandler {
         }
 
         const currentRoute = this.routerState.routerCache[uuid];
-
-        this.routerState.routerCache = {
+        const routerCache = {
             ...this.routerState.routerCache,
             [uuid]: { ...currentRoute, markedForRemoval: true },
         };
 
-        this.emitChange();
+        this.setState({ partial: { routerCache } });
     };
 
     public removeFromRouterCache = (uuid: string) => {
@@ -94,23 +113,23 @@ export default class RouterStateHandler {
             return;
         }
 
-        this.routerState.navigationStack =
-            this.routerState.navigationStack.filter(
-                (i) => i.routeUUID !== uuid,
-            );
+        const navigationStack = this.routerState.navigationStack.filter(
+            (i) => i.routeUUID !== uuid,
+        );
 
-        delete this.routerState.routerCache[uuid];
+        const routerCache = { ...this.routerState.routerCache };
+        delete routerCache[uuid];
 
-        this.emitChange();
+        this.setState({ partial: { navigationStack, routerCache } });
     };
 
     public clearRouterCache = () => {
-        this.routerState.routerCache = {};
-        this.emitChange();
+        this.setState({ partial: { routerCache: {} } });
     };
 
-    public setNavigationStack = (stack: RouterNavigationStackItem[]) => {
-        this.routerState.navigationStack = stack;
-        this.emitChange();
+    public setNavigationStack = (
+        navigationStack: RouterNavigationStackItem[],
+    ) => {
+        this.setState({ partial: { navigationStack } });
     };
 }
