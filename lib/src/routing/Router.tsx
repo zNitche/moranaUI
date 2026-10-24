@@ -66,16 +66,17 @@ export default function Router({ children }: PropsWithChildren) {
         [routes],
     );
 
-    const currentRoute: RouterCurrentRoute = useMemo(() => {
-        const responseData: RouterCurrentRoute = __getCurrentRoute(currentPath);
+    const currentRoute: RouterCurrentRoute = useMemo(
+        () => __getCurrentRoute(currentPath),
+        [__getCurrentRoute, currentPath],
+    );
 
+    useLayoutEffect(() => {
         routerStateHandler.updateNavigationStack(
-            responseData.uuid,
+            currentRoute.uuid,
             currentPath.originDirection,
         );
-
-        return responseData;
-    }, [__getCurrentRoute, currentPath, routerStateHandler]);
+    }, [currentPath.originDirection, currentRoute.uuid]);
 
     const __handleNavEvent = useCallback((event: PopStateEvent) => {
         setCurrentPath({
@@ -87,7 +88,9 @@ export default function Router({ children }: PropsWithChildren) {
         navigationReady.current = false;
 
         queueMicrotask(() =>
-            setTimeout(() => (navigationReady.current = true), 1000),
+            setTimeout(() => {
+                navigationReady.current = true;
+            }, 1000),
         );
     }, []);
 

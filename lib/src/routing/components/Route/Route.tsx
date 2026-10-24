@@ -60,7 +60,7 @@ export default function Route({
     const { transitionDetails } = useDetectTransition(routeUUID);
     const { handleTransitionAnimation } = useHandleTransitionAnimation();
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         __addRoute({ uuid: routeUUID, name: name, url, component });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -173,13 +173,20 @@ export default function Route({
         transitionDetails,
     ]);
 
+    const shouldRenderRouteComponent = Boolean(
+        currentRouteStats.inCache || currentRouteStats.isCurrentRoute,
+    );
+
+    useLayoutEffect(() => {
+        if (shouldRenderRouteComponent) {
+            __addToRouterCache(routeUUID, wrapperRef);
+        }
+    }, [__addToRouterCache, routeUUID, shouldRenderRouteComponent]);
+
     const routeComponent = useMemo(() => {
-        if (!currentRouteStats.inCache && !currentRouteStats.isCurrentRoute) {
+        if (!shouldRenderRouteComponent) {
             return;
         }
-
-        // eslint-disable-next-line react-hooks/refs
-        __addToRouterCache(routeUUID, wrapperRef);
 
         const builtInCssClasses: (string | undefined)[] = [];
 
@@ -207,10 +214,10 @@ export default function Route({
             </div>
         );
     }, [
-        currentRouteStats,
-        __addToRouterCache,
+        shouldRenderRouteComponent,
         routeUUID,
-        navAnimationBuilder?.route,
+        navAnimationBuilder?.route?.includeDefaultCssClasses,
+        navAnimationBuilder?.route?.wrapperClassName,
         component,
         wrapper,
     ]);
