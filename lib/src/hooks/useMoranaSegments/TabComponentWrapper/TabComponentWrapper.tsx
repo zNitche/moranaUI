@@ -22,7 +22,11 @@ export default function TabComponentWrapper({
                 isLeaving && classes.leaving,
                 className,
             )}
-            onAnimationEnd={(_event: AnimationEvent<HTMLDivElement>) => {
+            onAnimationEnd={(event: AnimationEvent<HTMLDivElement>) => {
+                if (event.target !== event.currentTarget) {
+                    return;
+                }
+
                 if (isLeaving) {
                     onAnimationEndCallback?.();
                 }
