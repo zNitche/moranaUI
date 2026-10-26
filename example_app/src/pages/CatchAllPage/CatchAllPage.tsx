@@ -2,14 +2,12 @@ import Content from "#root/components/Content/Content";
 import {
     MoranaContent,
     MoranaPage,
-    useMoranaApp,
     useMoranaPageLifecycle,
     useRouter,
 } from "moranaui";
 import classes from "./CatchAllPage.module.css";
 
 export default function CatchAppPage() {
-    const { setIsNavbarVisible } = useMoranaApp();
     const { navigateTo } = useRouter();
 
     useMoranaPageLifecycle({
@@ -18,13 +16,7 @@ export default function CatchAppPage() {
         },
         onUnmountCallback: () => {
             console.log("404 unmount");
-        },
-        onEnterCallback: () => {
-            setIsNavbarVisible?.(false);
-        },
-        onExitCallback: () => {
-            setIsNavbarVisible?.(true);
-        },
+        }
     });
 
     return (

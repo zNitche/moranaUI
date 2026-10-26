@@ -18,6 +18,7 @@ import useHandleTransitionAnimation from "#root/core/hooks/useHandleTransitionAn
 import useMoranaAppContext from "#root/core/hooks/context/useMoranaAppContext";
 import type { RouteLifecycleHookType } from "#root/types/RouteLifecycleHookType";
 import type RouteLifecycleCallbacks from "#root/types/RouteLifecycleCallbacks";
+import type NavigationTransitionDetails from "#root/types/NavigationTransitionDetails";
 
 interface RouteProps {
     readonly url: string;
@@ -25,22 +26,28 @@ interface RouteProps {
     readonly wrapper?: ComponentType<{ children: ReactNode }>;
     readonly cacheable?: boolean;
     readonly name?: string;
+    readonly navbarVisible?: boolean;
 }
 
 export default function Route({
     url,
     component,
+    name,
     wrapper = Fragment,
     cacheable = true,
-    name,
+    navbarVisible = true,
 }: RouteProps) {
+    const { setIsNavbarVisible } = useMoranaAppContext();
+
     const routeUUID = useMemo(() => generateUUID(), []);
     const wrapperRef = useRef<HTMLDivElement>(null);
 
     const markedForCacheRemovalRef = useRef<boolean>(false);
 
-    const onEnterLifecycleCallbackCalled = useRef<boolean>(false);
-    const onExitLifecycleCallbackCalled = useRef<boolean>(false);
+    const lifecycleCallbackCalled = useRef<{
+        onExit: boolean;
+        onEnter: boolean;
+    }>({ onEnter: false, onExit: false });
 
     const {
         __addRoute,
@@ -77,8 +84,8 @@ export default function Route({
     }, [routeUUID, routerCache, router.currentRoute]);
 
     useLayoutEffect(() => {
-        markedForCacheRemovalRef.current = currentRouteStats.markedForRemoval
-    }, [currentRouteStats.markedForRemoval])
+        markedForCacheRemovalRef.current = currentRouteStats.markedForRemoval;
+    }, [currentRouteStats.markedForRemoval]);
 
     const registerLifecycleHook = useCallback(
         (type: RouteLifecycleHookType, callback: () => void) => {
@@ -96,29 +103,39 @@ export default function Route({
 
     const __callLifecycleHooks = useCallback(() => {
         if (transitionDetails.isCurrentlyEntering) {
-            if (!onEnterLifecycleCallbackCalled.current) {
+            if (!lifecycleCallbackCalled.current.onEnter) {
                 if (!lifecycleHooks?.onEnter) {
                     return;
                 }
 
                 lifecycleHooks.onEnter();
-                onEnterLifecycleCallbackCalled.current = true;
+                lifecycleCallbackCalled.current.onEnter = true;
             }
 
-            onExitLifecycleCallbackCalled.current = false;
+            lifecycleCallbackCalled.current.onEnter = false;
         } else {
-            if (!onExitLifecycleCallbackCalled.current) {
+            if (!lifecycleCallbackCalled.current.onExit) {
                 if (!lifecycleHooks?.onExit) {
                     return;
                 }
 
                 lifecycleHooks.onExit();
-                onExitLifecycleCallbackCalled.current = true;
+                lifecycleCallbackCalled.current.onExit = true;
             }
 
-            onEnterLifecycleCallbackCalled.current = false;
+            lifecycleCallbackCalled.current.onExit = false;
         }
     }, [lifecycleHooks, transitionDetails.isCurrentlyEntering]);
+
+    const __handleNavbarState = useCallback(
+        (transitionDetails: NavigationTransitionDetails) => {
+            if (transitionDetails.isCurrentlyEntering) {
+                setIsNavbarVisible?.(navbarVisible);
+                return;
+            }
+        },
+        [navbarVisible, setIsNavbarVisible],
+    );
 
     // transitions handling
     useLayoutEffect(() => {
@@ -142,9 +159,11 @@ export default function Route({
             }
         });
 
+        __handleNavbarState(transitionDetails);
         __callLifecycleHooks();
     }, [
         __callLifecycleHooks,
+        __handleNavbarState,
         __removeFromRouterCache,
         cacheable,
         handleTransitionAnimation,

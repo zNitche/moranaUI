@@ -32,6 +32,7 @@ export default function App() {
                         cacheable={false}
                         wrapper={CatchAllWrapper}
                         component={CatchAllPage}
+                        navbarVisible={false}
                     />
                 </MoranaRoutesWrapper>
 

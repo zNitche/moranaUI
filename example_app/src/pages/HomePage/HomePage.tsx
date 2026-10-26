@@ -3,6 +3,8 @@ import {
     MoranaHeader,
     MoranaContent,
     useMoranaSegments,
+    usePullToRefresh,
+    sleep,
 } from "moranaui";
 import classes from "./HomePage.module.css";
 import Content from "#root/components/Content/Content";
@@ -11,8 +13,6 @@ import MotivationTab from "./Tabs/MotivationTab/MotivationTab";
 import FeaturesTab from "./Tabs/FeaturesTab/FeaturesTab";
 import AboutTab from "./Tabs/AboutTab/AboutTab";
 import ExtraTab from "./Tabs/ExtraTab/ExtraTab";
-import { usePullToRefresh } from "moranaui";
-import { sleep } from "moranaui";
 
 export default function HomePage() {
     const {
