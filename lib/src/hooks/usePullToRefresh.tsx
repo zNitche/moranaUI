@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import useOnOverscroll from "./useOnOverscroll";
 import { createPortal } from "react-dom";
 import { MoranaRefresher } from "#root/components";
@@ -17,8 +17,6 @@ export default function usePullToRefresh({
         useState<boolean>(false);
     const [refreshInProgress, setRefreshInProgress] = useState<boolean>(false);
 
-    const refreshInProgressRef = useRef<boolean>(false);
-
     const onOverscrollStartCallback = useCallback(() => {
         setIsIndicatorVisible(true);
     }, []);
@@ -35,16 +33,9 @@ export default function usePullToRefresh({
     });
 
     useEffect(() => {
-        if (refreshInProgressRef.current) {
-            return;
-        }
-
         if (refreshInProgress) {
-            refreshInProgressRef.current = true;
-
-            void callback?.().then(() => {
+            void callback?.().finally(() => {
                 setRefreshInProgress(false);
-                refreshInProgressRef.current = false;
             });
         }
     }, [callback, refreshInProgress]);
