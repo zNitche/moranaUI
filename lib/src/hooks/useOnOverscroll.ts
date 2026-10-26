@@ -99,7 +99,7 @@ export default function useOnOverscroll({
         return () => {
             if (targetElement) {
                 targetElement.removeEventListener("scroll", onScroll);
-                targetElement.addEventListener("scrollend", onScrollEnd);
+                targetElement.removeEventListener("scrollend", onScrollEnd);
             }
         };
     }, [onScroll, onScrollEnd, targetElement]);
