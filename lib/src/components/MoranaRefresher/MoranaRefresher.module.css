@@ -5,17 +5,18 @@
     position: absolute;
     left: 50%;
     top: var(--morana-safe-area-top, 0);
-    transform: translate(-50%, var(--drag-progress));
+    transform: translate(-50%, var(--drag-progress-percentage));
     background: #fff;
     width: 42px;
     height: 42px;
     box-sizing: border-box;
     border-radius: 100px;
     z-index: 10;
+    opacity: var(--drag-progress-percentage);
+    /* scale: clamp(calc(var(--drag-progress) / 100), 0, 1); */
     transition:
         transform 0.1s linear,
         opacity 0.1s linear;
-    opacity: var(--drag-progress);
 }
 
 .inner {

@@ -21,7 +21,8 @@ export default function MoranaRefresher({
         <div
             style={
                 {
-                    "--drag-progress": `${active ? 100 : dragProgress}%`,
+                    "--drag-progress": `${active ? 100 : dragProgress}`,
+                    "--drag-progress-percentage": `${active ? 100 : dragProgress}%`,
                     ...style,
                 } as CSSProperties
             }

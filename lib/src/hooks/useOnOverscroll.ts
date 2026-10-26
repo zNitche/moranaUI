@@ -19,21 +19,16 @@ export default function useOnOverscroll({
     onOverscrollStartCallback,
     onOverscrollEndCallback,
 }: HookUseOnOverscrollProps) {
+    const elementRef = useRef<HTMLElement>(null);
+
     const [targetElement, setTargetElement] = useState<HTMLElement | null>(
         null,
     );
     const [isScrolling, setIsScrolling] = useState<boolean>(false);
-
-    const elementRef = useRef<HTMLElement>(null);
-
     const [overscrollDetected, setOverscrollDetected] =
         useState<boolean>(false);
 
-    const {
-        setRef: setDragRef,
-        dragDetails,
-        dragInProgress,
-    } = useDrag({});
+    const { setRef: setDragRef, dragDetails, dragInProgress } = useDrag({});
 
     useEffect(() => {
         elementRef.current = targetElement;
@@ -53,7 +48,8 @@ export default function useOnOverscroll({
     }, []);
 
     const onScrollEnd = useCallback((_event: Event) => {
-        setTimeout(() => setIsScrolling(false), 1000);
+        // setTimeout(() => setIsScrolling(false), 1000);
+        setIsScrolling(false);
         setOverscrollDetected(false);
     }, []);
 
@@ -63,8 +59,8 @@ export default function useOnOverscroll({
         } else {
             onOverscrollEndCallback?.();
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [overscrollDetected])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [overscrollDetected]);
 
     useEffect(() => {
         if (isScrolling) {
