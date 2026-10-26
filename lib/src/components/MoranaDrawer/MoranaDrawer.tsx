@@ -1,7 +1,4 @@
 import {
-    useEffect,
-    useMemo,
-    useState,
     type Dispatch,
     type PropsWithChildren,
     type SetStateAction,
@@ -9,6 +6,7 @@ import {
 import classes from "./MoranaDrawer.module.css";
 import { clsx } from "#root/utils";
 import { createPortal } from "react-dom";
+import useAnimatedPresence from "#root/core/hooks/useAnimatedPresence";
 
 interface MoranaDrawerProps {
     readonly isOpen: boolean;
@@ -26,30 +24,18 @@ export default function MoranaDrawer({
     overlayClassName,
     contentWrapperClassName,
 }: PropsWithChildren<MoranaDrawerProps>) {
-    const [internalIsOpen, setInternalIsOpen] = useState(isOpen);
-
-    useEffect(() => {
-        if (isOpen) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            setInternalIsOpen(isOpen);
-        }
-    }, [isOpen]);
-
-    const isClosing = useMemo(
-        () => Boolean(!isOpen && internalIsOpen),
-        [isOpen, internalIsOpen],
-    );
+    const { internalIsOpen, setElementRef, isClosing, elementsProps } =
+        useAnimatedPresence({ isOpen: isOpen });
 
     return (
         internalIsOpen &&
         createPortal(
-            <div className={clsx(classes.moranaDrawer, className)}>
+            <div
+                className={clsx(classes.moranaDrawer, className)}
+                ref={setElementRef}
+            >
                 <div
-                    onAnimationEnd={() => {
-                        if (isClosing) {
-                            setInternalIsOpen(false);
-                        }
-                    }}
+                    {...elementsProps}
                     className={clsx(
                         classes.content,
                         isClosing && classes.close,

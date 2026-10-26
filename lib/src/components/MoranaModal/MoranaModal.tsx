@@ -1,8 +1,4 @@
 import {
-    useEffect,
-    useMemo,
-    useState,
-    type CSSProperties,
     type Dispatch,
     type PropsWithChildren,
     type SetStateAction,
@@ -10,6 +6,7 @@ import {
 import classes from "./MoranaModal.module.css";
 import { clsx } from "#root/utils";
 import { createPortal } from "react-dom";
+import useAnimatedPresence from "#root/core/hooks/useAnimatedPresence";
 
 interface MoranaModalProps {
     readonly isOpen: boolean;
@@ -27,39 +24,18 @@ export default function MoranaModal({
     overlayClassName,
     contentWrapperClassName,
 }: PropsWithChildren<MoranaModalProps>) {
-    const [modalRef, setModalRef] = useState<HTMLDivElement | null>(null);
-    const [internalIsOpen, setInternalIsOpen] = useState(isOpen);
-
-    useEffect(() => {
-        if (isOpen) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            setInternalIsOpen(isOpen);
-        }
-    }, [isOpen]);
-
-    const isClosing = useMemo(
-        () => Boolean(!isOpen && internalIsOpen),
-        [isOpen, internalIsOpen],
-    );
+    const { internalIsOpen, setElementRef, isClosing, elementsProps } =
+        useAnimatedPresence({ isOpen: isOpen });
 
     return (
         internalIsOpen &&
         createPortal(
             <div
-                ref={(ref) => setModalRef(ref)}
+                ref={setElementRef}
                 className={clsx(classes.moranaModal, className)}
-                style={
-                    {
-                        "--base-height": `${modalRef?.clientHeight}px`,
-                    } as CSSProperties
-                }
             >
                 <div
-                    onAnimationEnd={() => {
-                        if (isClosing) {
-                            setInternalIsOpen(false);
-                        }
-                    }}
+                    {...elementsProps}
                     className={clsx(
                         classes.content,
                         isClosing && classes.close,
