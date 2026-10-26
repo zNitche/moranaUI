@@ -13,14 +13,8 @@ export { MoranaFooter };
 import MoranaContent from "./components/MoranaContent/MoranaContent";
 export { MoranaContent };
 
-import useMoranaPageEnter from "./hooks/lifecycle/useMoranaPageEnter";
-export { useMoranaPageEnter };
-
-import useMoranaPageExit from "./hooks/lifecycle/useMoranaPageExit";
-export { useMoranaPageExit };
-
-import useMoranaPageRender from "./hooks/lifecycle/useMoranaPageRender";
-export { useMoranaPageRender }
+import useMoranaPageLifecycle from "./hooks/lifecycle/useMoranaPageLifecycle";
+export { useMoranaPageLifecycle }
 
 import useIsPageActive from "./hooks/lifecycle/useIsPageActive";
 export { useIsPageActive };

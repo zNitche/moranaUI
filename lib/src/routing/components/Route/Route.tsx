@@ -1,7 +1,6 @@
 import {
     Fragment,
     useCallback,
-    useEffect,
     useLayoutEffect,
     useMemo,
     useRef,
@@ -42,8 +41,6 @@ export default function Route({
 
     const onEnterLifecycleCallbackCalled = useRef<boolean>(false);
     const onExitLifecycleCallbackCalled = useRef<boolean>(false);
-    const onMountLifecycleCallbackCalled = useRef<boolean>(false);
-    const onUnmountLifecycleCallbackCalled = useRef<boolean>(false);
 
     const {
         __addRoute,
@@ -67,25 +64,6 @@ export default function Route({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    useEffect(() => {
-        if (
-            !onMountLifecycleCallbackCalled.current &&
-            lifecycleHooks?.onMount !== undefined
-        ) {
-            lifecycleHooks.onMount();
-
-            onMountLifecycleCallbackCalled.current = true;
-        }
-
-        return () => {
-            if (!onUnmountLifecycleCallbackCalled.current) {
-                lifecycleHooks?.onUnmount?.();
-
-                onUnmountLifecycleCallbackCalled.current = true;
-            }
-        };
-    }, [lifecycleHooks]);
-
     const currentRouteStats = useMemo(() => {
         const currentRouteInCache = Object.keys(routerCache).includes(routeUUID)
             ? routerCache[routeUUID]
@@ -107,8 +85,6 @@ export default function Route({
             const hooksMap: Record<RouteLifecycleHookType, string> = {
                 enter: "onEnter",
                 exit: "onExit",
-                mount: "onMount",
-                unmount: "onUnmount",
             } as const;
 
             setLifecycleHooks((current) => {
@@ -125,7 +101,7 @@ export default function Route({
                     return;
                 }
 
-                lifecycleHooks?.onEnter?.();
+                lifecycleHooks.onEnter();
                 onEnterLifecycleCallbackCalled.current = true;
             }
 
@@ -136,7 +112,7 @@ export default function Route({
                     return;
                 }
 
-                lifecycleHooks?.onExit?.();
+                lifecycleHooks.onExit();
                 onExitLifecycleCallbackCalled.current = true;
             }
 

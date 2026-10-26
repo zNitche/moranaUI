@@ -1,7 +1,5 @@
 import {
     useRouter,
-    useMoranaPageEnter,
-    useMoranaPageExit,
     MoranaPage,
     MoranaHeader,
     MoranaContent,
@@ -9,7 +7,7 @@ import {
     sleep,
     usePullToRefresh,
     useResetContentScroll,
-    useMoranaPageRender,
+    useMoranaPageLifecycle,
 } from "moranaui";
 import Header from "#root/components/Header/Header";
 import Content from "#root/components/Content/Content";
@@ -48,22 +46,17 @@ export default function CollectionPage() {
         [setPullToRefreshElementRef, setRef, setContentElementRef],
     );
 
-    useMoranaPageEnter({
-        callback: () => {
+    useMoranaPageLifecycle({
+        onMountCallback: () => console.log("collection page mount"),
+        onUnmountCallback: () => console.log("collection page unmount"),
+        onEnterCallback: () => {
             console.log("collection page enter");
+        },
+        onExitCallback: () => {
+            console.log("collection page exit");
 
             setTimeout(() => resetScroll(), 1000);
         },
-    });
-    useMoranaPageExit({
-        callback: () => {
-            console.log("collection page exit");
-        },
-    });
-
-    useMoranaPageRender({
-        onMountCallback: () => console.log("collection page mount"),
-        onUnmountCallback: () => console.log("collection page unmount"),
     });
 
     return (
