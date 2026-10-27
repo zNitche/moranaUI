@@ -1,6 +1,7 @@
-import { useRef, type CSSProperties, type PropsWithChildren } from "react";
+import { type CSSProperties, type PropsWithChildren } from "react";
 import classes from "./MoranaToolbar.module.css";
 import { clsx } from "#root/utils";
+import { useElementHeight } from "#root/hooks";
 
 interface MoranaToolbarProps {
     readonly className?: string;
@@ -14,11 +15,11 @@ export default function MoranaToolbar({
     hidden = false,
     children,
 }: PropsWithChildren<MoranaToolbarProps>) {
-    const ref = useRef<HTMLDivElement>(null);
+    const { setElementRef, elementHeight } = useElementHeight();
 
     return (
         <div
-            ref={ref}
+            ref={(element) => setElementRef(element)}
             className={clsx(
                 classes.moranaToolbar,
                 fixedPosition && classes.fixedPosition,
@@ -27,8 +28,7 @@ export default function MoranaToolbar({
             )}
             style={
                 {
-                    // eslint-disable-next-line react-hooks/refs
-                    "--height": `${ref.current?.clientHeight}px`,
+                    "--height": `${elementHeight ?? 0}px`,
                 } as CSSProperties
             }
         >

@@ -24,3 +24,6 @@ export { useResetContentScroll };
 
 import useMoranaSegments from "./useMoranaSegments/useMoranaSegments";
 export { useMoranaSegments };
+
+import useElementHeight from "./useElementHeight";
+export {useElementHeight}
