@@ -27,3 +27,9 @@ export { useMoranaSegments };
 
 import useElementHeight from "./useElementHeight";
 export {useElementHeight}
+
+import usePreviousRef from "./usePreviousRef";
+export {usePreviousRef}
+
+import useInitialRef from "./useInitialRef";
+export {useInitialRef}
