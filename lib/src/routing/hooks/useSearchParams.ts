@@ -1,25 +1,31 @@
-import { useContext, useMemo } from "react";
-import { RouterContext } from "../context";
+import { useLayoutEffect, useRef } from "react";
+import useRouteContext from "./useRouteContext";
+import useRouterContext from "./useRouterContext";
+import { useInitialRef } from "#root/hooks";
 
-// add route info here so cached pages doesn't have it rerendered
 export default function useSearchParams<T>() {
-    const context = useContext(RouterContext);
+    const paramsRef = useRef<T>(null);
 
-    const params = useMemo(() => {
-        if (!context) {
-            throw new Error(
-                "useSearchParams can't be called outside Router's context",
-            );
+    const routerContext = useRouterContext();
+    const routeContext = useRouteContext();
+
+    const initialRouteUUIDRef = useInitialRef(routeContext.routeUUID);
+
+    useLayoutEffect(() => {
+        if (!routerContext?.router || !routeContext) {
+            throw new Error("useSearchParams can't be called outside Route");
         }
 
-        if (!context.router?.search) {
+        const currentRouteUUID = routerContext.router.currentRoute?.uuid;
+
+        if (currentRouteUUID !== initialRouteUUIDRef.current) {
             return;
         }
 
-        const searchParams = new URLSearchParams(context.router.search);
+        const searchParams = new URLSearchParams(routerContext.router?.search);
+        paramsRef.current = Object.fromEntries(searchParams) as T;
+    }, [initialRouteUUIDRef, routeContext, routerContext.router]);
 
-        return Object.fromEntries(searchParams) as T;
-    }, [context]);
-
-    return params;
+    // eslint-disable-next-line react-hooks/refs
+    return paramsRef.current;
 }
