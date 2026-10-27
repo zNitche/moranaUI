@@ -27,11 +27,26 @@ export default function HomePage() {
         urlParamName: "tab",
         className: classes.segmentsBar,
         segments: [
-            { details: { name: "Motivation" }, component: MotivationTab },
-            { details: { name: "Features" }, component: FeaturesTab },
-            { details: { name: "About" }, component: AboutTab },
-            { details: { name: "Extra Tab1" }, component: ExtraTab },
-            { details: { name: "Extra Tab2" }, component: ExtraTab },
+            {
+                details: { label: "Motivation", id: "motivation" },
+                component: MotivationTab,
+            },
+            {
+                details: { label: "Features", id: "features" },
+                component: FeaturesTab,
+            },
+            {
+                details: { label: "About", id: "about" },
+                component: AboutTab,
+            },
+            {
+                details: { label: "Extra Tab1", id: "extra_tab1" },
+                component: ExtraTab,
+            },
+            {
+                details: { label: "Extra Tab2", id: "extra_tab2" },
+                component: ExtraTab,
+            },
         ],
     });
 

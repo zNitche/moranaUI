@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/refs */
-import type MoranaSegmentItem from "#root/types/MoranaSegmentItem";
 import classes from "./MoranaSegmentsBar.module.css";
 import clsx from "#root/utils/clsx";
 import {
@@ -10,6 +9,7 @@ import {
     useState,
     type CSSProperties,
 } from "react";
+import type { MoranaSegmentItem } from "#root/types/MoranaSegment";
 
 interface MoranaSegmentsBarProps {
     readonly activeSegment: MoranaSegmentItem | null;
@@ -30,7 +30,7 @@ export default function MoranaSegmentsBar({
     const selectorElementRef = useRef<HTMLDivElement | null>(null);
 
     const [segmentsElements, setSegmentsElements] = useState<
-        { name: string; ref: HTMLElement | null }[]
+        { segment: MoranaSegmentItem; ref: HTMLElement | null }[]
     >([]);
 
     const barSizeDetails = useMemo(() => {
@@ -64,7 +64,7 @@ export default function MoranaSegmentsBar({
         }
 
         const activeElement = segmentsElements.find(
-            (s) => s.name === activeSegment.name,
+            (s) => s.segment.id === activeSegment.id,
         );
 
         if (!activeElement?.ref) {
@@ -80,7 +80,7 @@ export default function MoranaSegmentsBar({
     const __scrollToSegment = useCallback(
         (segment: MoranaSegmentItem) => {
             const segmentRef = segmentsElements.find(
-                (s) => s.name === segment.name,
+                (s) => s.segment.id === segment.id,
             );
 
             if (!segmentRef?.ref) {
@@ -118,13 +118,13 @@ export default function MoranaSegmentsBar({
             _event: React.MouseEvent<HTMLDivElement>,
             segment: MoranaSegmentItem,
         ) => {
-            if (segment.disabled || activeSegment?.name === segment.name) {
+            if (segment.disabled || activeSegment?.id === segment.id) {
                 return;
             }
 
             setActiveSegment(segment);
         },
-        [activeSegment?.name, setActiveSegment],
+        [activeSegment?.id, setActiveSegment],
     );
 
     const elements = useMemo(() => {
@@ -133,32 +133,31 @@ export default function MoranaSegmentsBar({
                 <div
                     ref={(elem: HTMLElement | null) => {
                         setSegmentsElements((current) => {
-                            if (current.find((e) => e.name === segment.name)) {
+                            if (
+                                current.find((e) => e.segment.id === segment.id)
+                            ) {
                                 return current;
                             }
 
-                            return [
-                                ...current,
-                                { name: segment.name, ref: elem },
-                            ];
+                            return [...current, { segment, ref: elem }];
                         });
                     }}
                     onClick={(event: React.MouseEvent<HTMLDivElement>) => {
                         __onSegmentClick(event, segment);
                     }}
-                    key={segment.name}
+                    key={segment.id}
                     className={clsx(
                         classes.segment,
                         segment.disabled && classes.disabled,
-                        Boolean(segment.name === activeSegment?.name) &&
+                        Boolean(segment.id === activeSegment?.id) &&
                             classes.active,
                     )}
                 >
-                    {segment.name}
+                    {segment.label}
                 </div>
             );
         });
-    }, [segments, activeSegment?.name, __onSegmentClick]);
+    }, [segments, activeSegment, __onSegmentClick]);
 
     const selectorElementStyle = useMemo(() => {
         if (!activeSegmentElement || !selectorElementRef.current) {

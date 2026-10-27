@@ -2,10 +2,10 @@ import MoranaSegmentsBar from "#root/components/MoranaSegmentsBar/MoranaSegments
 import useRouterContext from "#root/routing/hooks/useRouterContext";
 import useSearchParams from "#root/routing/hooks/useSearchParams";
 import type MoranaSegment from "#root/types/MoranaSegment";
-import type MoranaSegmentItem from "#root/types/MoranaSegmentItem";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import TabComponentWrapper from "./TabComponentWrapper/TabComponentWrapper";
 import classes from "./useMoranaSegments.module.css";
+import type { MoranaSegmentItem } from "#root/types/MoranaSegment";
 
 interface HookUseMoranaSegmentsProps {
     readonly segments: MoranaSegment[];
@@ -58,7 +58,7 @@ export default function useMoranaSegments({
 
         return (
             segments.find(
-                (s) => s.details.name === searchParams[urlParamNameSafe],
+                (s) => s.details.id === searchParams[urlParamNameSafe],
             ) ?? null
         );
     }, [searchParams, segments, urlParamName, urlParamNameSafe]);
@@ -94,7 +94,7 @@ export default function useMoranaSegments({
     const onChangeHandler = useCallback(
         (s: MoranaSegmentItem) => {
             if (trackPersistence && urlParamName) {
-                replaceSearchParams({ add: { [urlParamName]: s.name } });
+                replaceSearchParams({ add: { [urlParamName]: s.id } });
             }
 
             onChange?.(s);
@@ -112,9 +112,8 @@ export default function useMoranaSegments({
     const onSegmentChange = useCallback(
         (newSegmentDetails: MoranaSegmentItem) => {
             const newSegment =
-                segments.find(
-                    (s) => s.details.name === newSegmentDetails.name,
-                ) ?? null;
+                segments.find((s) => s.details.id === newSegmentDetails.id) ??
+                null;
 
             updateSegmentStack(newSegment, activeSegment);
         },
@@ -181,12 +180,12 @@ export default function useMoranaSegments({
     }, [animatedTabChange, segmentComponentWrapperClassName, segmentsStack]);
 
     const setCurrentSegment = useCallback(
-        (name: string) => {
-            const segment = segments.find((s) => s.details.name === name);
+        (id: string) => {
+            const segment = segments.find((s) => s.details.id === id);
 
             if (segment) {
                 setActiveSegment(segment);
-                updateSegmentStack(segment, activeSegment)
+                updateSegmentStack(segment, activeSegment);
             }
         },
         [activeSegment, segments],

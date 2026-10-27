@@ -1,5 +1,10 @@
 import type React from "react";
-import type MoranaSegmentItem from "./MoranaSegmentItem";
+
+export interface MoranaSegmentItem {
+    label: string;
+    id: string;
+    disabled?: boolean;
+}
 
 export default interface MoranaSegment {
     details: MoranaSegmentItem;
