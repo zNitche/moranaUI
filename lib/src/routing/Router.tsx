@@ -16,8 +16,7 @@ import { RouterContext } from "./context";
 import RouterContent from "./components/RouterContent/RouterContent";
 import type { RouterPath } from "#root/types/RouterPath";
 import type { NavigationTransitionDirection } from "#root/types/NavigationTransitionDirection";
-import type { RouterState } from "#root/external/types";
-import RouterStateHandler from "#root/external/RouterStateHandler";
+import RouterStateHandler, { type RouterState } from "./RouterStateHandler";
 
 // well could be implemented using useReducer, but let's go with it
 const routerStateHandler = new RouterStateHandler({ maxStackItems: 3 });

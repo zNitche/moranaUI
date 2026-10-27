@@ -1,7 +1,12 @@
 import type { NavigationTransitionDirection } from "#root/types/NavigationTransitionDirection";
+import type { RouterCache } from "#root/types/RouterCache";
 import type RouterNavigationStackItem from "#root/types/RouterNavigationStackItem";
 import type { RefObject } from "react";
-import type { RouterState } from "./types";
+
+export interface RouterState {
+    routerCache: RouterCache;
+    navigationStack: RouterNavigationStackItem[];
+}
 
 interface RouterStateHandlerArgs {
     maxStackItems: number;
