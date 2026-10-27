@@ -36,6 +36,38 @@ export default function Router({ children }: PropsWithChildren) {
         search: window.location.search,
     });
 
+    const __historyStateAction = useCallback(
+        ({
+            url,
+            type,
+            updateCurrentPath = false,
+        }: {
+            url: string | URL;
+            type: "push" | "replace";
+            updateCurrentPath?: boolean;
+        }) => {
+            switch (type) {
+                case "push":
+                    window.history.pushState({}, "", url);
+                    break;
+
+                case "replace":
+                    window.history.replaceState({}, "", url);
+                    break;
+
+                default:
+                    break;
+            }
+
+            if (updateCurrentPath) {
+                setCurrentPath((current) => {
+                    return { ...current, search: window.location.search };
+                });
+            }
+        },
+        [],
+    );
+
     const __getCurrentRoute = useCallback(
         (path?: RouterPath) => {
             const responseData: RouterCurrentRoute = {};
@@ -178,10 +210,16 @@ export default function Router({ children }: PropsWithChildren) {
             }
 
             if (replace) {
-                window.history.replaceState({}, "", path);
+                __historyStateAction({
+                    url: path,
+                    type: "replace",
+                });
                 clearRouterCache();
             } else {
-                window.history.pushState({}, "", path);
+                __historyStateAction({
+                    url: path,
+                    type: "push",
+                });
             }
 
             if (popFromCache && currentRoute.uuid) {
@@ -196,7 +234,12 @@ export default function Router({ children }: PropsWithChildren) {
                 }),
             );
         },
-        [currentPath.path, currentRoute.uuid, clearRouterCache],
+        [
+            currentPath.path,
+            currentRoute.uuid,
+            __historyStateAction,
+            clearRouterCache,
+        ],
     );
 
     const navigateBack = useCallback(
@@ -244,11 +287,15 @@ export default function Router({ children }: PropsWithChildren) {
             }
 
             currentUrl.search = currentSearchParams.toString();
-            window.history.replaceState({}, "", currentUrl);
+            __historyStateAction({
+                url: currentUrl,
+                type: "replace",
+                updateCurrentPath: true,
+            });
 
             __replaceNavigationPath({ inPlace: true });
         },
-        [],
+        [__historyStateAction],
     );
 
     const getRouteUUIDByName = useCallback(
