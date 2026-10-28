@@ -20,6 +20,7 @@ import useMoranaAppContext from "#root/core/hooks/context/useMoranaAppContext";
 import type { RouteLifecycleHookType } from "#root/types/RouteLifecycleHookType";
 import type RouteLifecycleCallbacks from "#root/types/RouteLifecycleCallbacks";
 import type NavigationTransitionDetails from "#root/types/NavigationTransitionDetails";
+import ViewTransitionController from "#root/viewTransitions/ViewTransitionController";
 
 interface RouteProps {
     readonly url: string;
@@ -41,7 +42,7 @@ export default function Route({
     const { setIsNavbarVisible } = useMoranaAppContext();
 
     const routeUUID = useMemo(() => generateUUID(), []);
-    const wrapperRef = useRef<HTMLDivElement>(null);
+    const routeWrapperRef = useRef<HTMLDivElement>(null);
 
     const markedForCacheRemovalRef = useRef<boolean>(false);
 
@@ -158,21 +159,33 @@ export default function Route({
             return;
         }
 
-        void handleTransitionAnimation({
-            transitionDetails: transitionDetails,
-            onAnimationCleanup: navAnimationBuilder?.route?.onAnimationCleanup,
-            onEnterAnimation: navAnimationBuilder?.route?.onEnterAnimation,
-            onExitAnimation: navAnimationBuilder?.route?.onExitAnimation,
-            wrapperRef: wrapperRef,
-        }).finally(() => {
-            if (transitionDetails.isCurrentlyEntering) {
-                return;
-            }
+        if (!routeWrapperRef.current) {
+            return;
+        }
 
-            if (!cacheable || markedForCacheRemovalRef.current) {
-                __removeFromRouterCache(routeUUID);
-            }
+        const vc = new ViewTransitionController({
+            viewRef: routeWrapperRef.current,
         });
+
+        vc.start({
+            target: transitionDetails.isCurrentlyEntering ? "in" : "out",
+        });
+
+        // void handleTransitionAnimation({
+        //     transitionDetails: transitionDetails,
+        //     onAnimationCleanup: navAnimationBuilder?.route?.onAnimationCleanup,
+        //     onEnterAnimation: navAnimationBuilder?.route?.onEnterAnimation,
+        //     onExitAnimation: navAnimationBuilder?.route?.onExitAnimation,
+        //     wrapperRef: routeWrapperRef,
+        // }).finally(() => {
+        //     if (transitionDetails.isCurrentlyEntering) {
+        //         return;
+        //     }
+
+        //     if (!cacheable || markedForCacheRemovalRef.current) {
+        //         __removeFromRouterCache(routeUUID);
+        //     }
+        // });
     }, [
         __removeFromRouterCache,
         cacheable,
@@ -188,7 +201,7 @@ export default function Route({
 
     useLayoutEffect(() => {
         if (shouldRenderRouteComponent) {
-            __addToRouterCache(routeUUID, wrapperRef);
+            __addToRouterCache(routeUUID, routeWrapperRef);
         }
     }, [__addToRouterCache, routeUUID, shouldRenderRouteComponent]);
 
@@ -199,16 +212,16 @@ export default function Route({
 
         const builtInCssClasses: (string | undefined)[] = [];
 
-        if (navAnimationBuilder?.route?.includeDefaultCssClasses) {
-            builtInCssClasses.push(classes.hidden);
-        }
+        // if (navAnimationBuilder?.route?.includeDefaultCssClasses) {
+        //     builtInCssClasses.push(classes.hidden);
+        // }
 
         const Component = component;
         const Wrapper = wrapper;
 
         return (
             <div
-                ref={wrapperRef}
+                ref={routeWrapperRef}
                 className={clsx(
                     classes.route,
                     ...builtInCssClasses,
@@ -225,7 +238,6 @@ export default function Route({
     }, [
         shouldRenderRouteComponent,
         routeUUID,
-        navAnimationBuilder?.route?.includeDefaultCssClasses,
         navAnimationBuilder?.route?.wrapperClassName,
         component,
         wrapper,

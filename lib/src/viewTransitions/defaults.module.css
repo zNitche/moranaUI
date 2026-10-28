@@ -1,5 +1,34 @@
 /* ANIMATION slide in/out */
 
+.slide {
+}
+
+.slide[data-morana-view-transition-state="parked"] {
+    display: none;
+}
+
+.slide[data-morana-view-transition-state="active"] {
+    z-index: 2;
+    box-shadow: 5px 5px 100px rgba(0, 0, 0, 0.5);
+}
+
+.slide[data-morana-view-transition-stage="inProgress"][data-morana-view-transition-target="in"] {
+    z-index: 2;
+    animation: slideInKeyframes 0.25s ease-out forwards;
+}
+
+.slide[data-morana-view-transition-stage="inProgress"][data-morana-view-transition-target="out"] {
+    z-index: 1;
+    transform: none;
+    filter: blur(2px);
+}
+
+/*
+morana-view-transition-stage
+morana-view-transition-target
+*/
+/**/
+
 .defaultCurrentRoute {
     z-index: 2;
     box-shadow: 5px 5px 100px rgba(0, 0, 0, 0.5);
@@ -55,47 +84,5 @@
     }
     to {
         transform: translateX(100%);
-    }
-}
-
-/* ANIMATION fade in/out */
-
-.defaultCurrentRouteFade {
-    z-index: 1;
-}
-
-.defaultAwayRouteFade {
-    z-index: 2;
-}
-
-.defaultAwayRouteFade.hidden {
-    display: none;
-}
-
-.defaultFadeInAnimation {
-    animation: fadeInKeyframes 0.3s forwards;
-}
-
-.defaultFadeOutAnimation {
-    animation: fadeOutKeyframes 0.3s forwards;
-}
-
-@keyframes fadeInKeyframes {
-    0% {
-        opacity: 0;
-    }
-
-    100% {
-        opacity: 1;
-    }
-}
-
-@keyframes fadeOutKeyframes {
-    0% {
-        opacity: 1;
-    }
-
-    100% {
-        opacity: 0;
     }
 }
