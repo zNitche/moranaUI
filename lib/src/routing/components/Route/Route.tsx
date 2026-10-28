@@ -1,6 +1,7 @@
 import {
     Fragment,
     useCallback,
+    useEffect,
     useLayoutEffect,
     useMemo,
     useRef,
@@ -137,6 +138,20 @@ export default function Route({
         [navbarVisible, setIsNavbarVisible],
     );
 
+    useEffect(() => {
+        if (!transitionDetails.detected) {
+            return;
+        }
+
+        __handleNavbarState(transitionDetails);
+        __callLifecycleHooks();
+    }, [
+        __callLifecycleHooks,
+        __handleNavbarState,
+        transitionDetails,
+        transitionDetails.detected,
+    ]);
+
     // transitions handling
     useLayoutEffect(() => {
         if (!transitionDetails.detected) {
@@ -158,16 +173,10 @@ export default function Route({
                 __removeFromRouterCache(routeUUID);
             }
         });
-
-        __handleNavbarState(transitionDetails);
-        __callLifecycleHooks();
     }, [
-        __callLifecycleHooks,
-        __handleNavbarState,
         __removeFromRouterCache,
         cacheable,
         handleTransitionAnimation,
-        lifecycleHooks,
         navAnimationBuilder?.route,
         routeUUID,
         transitionDetails,
