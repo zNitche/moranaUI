@@ -290,6 +290,19 @@ export default function Router({ children }: PropsWithChildren) {
         [routes],
     );
 
+    const getRouteWrapperElementByUUID = useCallback(
+        (uuid: string) => {
+            const route = routes.find((r) => r.uuid === uuid);
+
+            if (!route) {
+                return;
+            }
+
+            return route.wrapperElementRef.current ?? undefined;
+        },
+        [routes],
+    );
+
     const router: RouterProps = useMemo(() => {
         return {
             currentRoute: currentRoute,
@@ -315,6 +328,7 @@ export default function Router({ children }: PropsWithChildren) {
             navigateBack,
             routerCache: routerState.routerCache,
             getRouteUUIDByName,
+            getRouteWrapperElementByUUID,
             replaceSearchParams,
         };
     }, [
@@ -325,6 +339,7 @@ export default function Router({ children }: PropsWithChildren) {
         navigateBack,
         routerState.routerCache,
         getRouteUUIDByName,
+        getRouteWrapperElementByUUID,
         replaceSearchParams,
     ]);
 

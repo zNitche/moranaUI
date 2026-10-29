@@ -27,6 +27,7 @@ export default interface RouterContextType {
     }) => void;
     navigateBack: ({ popFromCache }: { popFromCache?: boolean }) => void;
     getRouteUUIDByName: (name: string) => string | undefined;
+    getRouteWrapperElementByUUID: (uuid: string) => HTMLElement | undefined;
     replaceSearchParams: ({
         add,
         remove,
