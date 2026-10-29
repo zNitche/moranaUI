@@ -1,5 +1,4 @@
-type ViewTransitionStage = "inProgress" | "done";
-type TransitionViewState = "active" | "parked";
+type TransitionViewState = "inMove" | "active" | "parked";
 type ViewTransitionTarget = "in" | "out";
 
 interface ViewTransitionControllerArgs {
@@ -25,37 +24,43 @@ export default class ViewTransitionController {
     }
 
     private setElementTransitionMetadata({
-        stage,
         state,
         target,
     }: {
-        stage?: ViewTransitionStage;
+        state: TransitionViewState;
         target?: ViewTransitionTarget;
-        state?: TransitionViewState;
     }) {
-        if (!stage) {
-            delete this.viewElement.dataset.moranaViewTransitionStage;
-        } else {
-            this.viewElement.dataset.moranaViewTransitionStage = stage;
-        }
+        const stateKey = "moranaViewTransitionState";
+        const targetKey = "moranaViewTransitionTarget";
 
-        if (!state) {
-            delete this.viewElement.dataset.moranaViewTransitionState;
-        } else {
-            this.viewElement.dataset.moranaViewTransitionState = state;
-        }
+        switch (state) {
+            case "inMove":
+                if (target) {
+                    this.viewElement.dataset[targetKey] = target;
+                } else {
+                    delete this.viewElement.dataset[targetKey];
+                }
 
-        if (!target) {
-            delete this.viewElement.dataset.moranaViewTransitionTarget;
-        } else {
-            this.viewElement.dataset.moranaViewTransitionTarget = target;
+                this.viewElement.dataset[stateKey] = state;
+
+                return;
+
+            case "active":
+            case "parked":
+                this.viewElement.dataset[stateKey] = state;
+                delete this.viewElement.dataset[targetKey];
+                return;
+
+            default:
+                delete this.viewElement.dataset[targetKey];
+                this.viewElement.dataset[stateKey] = "parked";
+                return;
         }
     }
 
     private settle(target: ViewTransitionTarget) {
         this.setElementTransitionMetadata({
             state: target === "in" ? "active" : "parked",
-            stage: "done",
         });
         this.abortController = null;
     }
@@ -98,7 +103,7 @@ export default class ViewTransitionController {
         this.cancelAnimations();
 
         this.abortController = new AbortController();
-        this.setElementTransitionMetadata({ stage: "inProgress", target });
+        this.setElementTransitionMetadata({ state: "inMove", target });
 
         queueMicrotask(() => {
             this.nextTick(target);
