@@ -106,9 +106,14 @@ export default class ViewTransitionController {
         }
     }
 
-    public start({ target }: { target: ViewTransitionTarget }) {
-        this.cancelAnimations();
+    public abort(postTarget: ViewTransitionTarget) {
+        this.abortController?.abort();
+        this.abortController = null;
 
+        this.settle(postTarget);
+    }
+
+    public start({ target }: { target: ViewTransitionTarget }) {
         this.abortController = new AbortController();
         this.setElementTransitionMetadata({ state: "inMove", target });
 
