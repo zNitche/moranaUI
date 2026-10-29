@@ -2,25 +2,31 @@ type TransitionViewState = "inMove" | "active" | "parked";
 type ViewTransitionTarget = "in" | "out";
 
 interface ViewTransitionControllerArgs {
-    viewRef: HTMLDivElement;
+    viewElement: HTMLElement;
+    partnerViewElement?: HTMLElement;
 }
 
 export default class ViewTransitionController {
-    private viewElement: HTMLDivElement;
+    private viewElement: HTMLElement;
+    private partnerViewElement: HTMLElement | undefined;
     private abortController: AbortController | null = null;
 
-    constructor({ viewRef }: ViewTransitionControllerArgs) {
-        this.viewElement = viewRef;
+    constructor({
+        viewElement,
+        partnerViewElement,
+    }: ViewTransitionControllerArgs) {
+        this.viewElement = viewElement;
+        this.partnerViewElement = partnerViewElement;
     }
 
     private gatherAnimations(): Animation[] {
-        return this.viewElement.getAnimations({});
-    }
+        const targets: HTMLElement[] = [this.viewElement];
 
-    private cancelAnimations() {
-        for (const animation of this.gatherAnimations()) {
-            animation.cancel();
+        if (this.partnerViewElement) {
+            targets.push(this.partnerViewElement);
         }
+
+        return targets.flatMap((elem) => elem.getAnimations({}));
     }
 
     private setElementTransitionMetadata({
@@ -80,8 +86,9 @@ export default class ViewTransitionController {
             return;
         }
 
+        // move somewhere else, avoid inline
         const onDone = () => {
-            animationsCount--;
+            animationsCount = animationsCount - 1;
 
             if (animationsCount <= 0) {
                 this.settle(target);

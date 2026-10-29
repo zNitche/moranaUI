@@ -168,7 +168,8 @@ export default function Route({
         }
 
         const vc = new ViewTransitionController({
-            viewRef: routeWrapperRef.current,
+            viewElement: routeWrapperRef.current,
+            partnerViewElement: transitionDetails.tranitionPartnerElement
         });
 
         vc.start({
