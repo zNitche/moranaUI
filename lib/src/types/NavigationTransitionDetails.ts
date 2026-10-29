@@ -5,4 +5,5 @@ export default interface NavigationTransitionDetails {
     isCurrentlyEntering: boolean;
     isCurrentlyExiting: boolean;
     direction?: NavigationTransitionDirection;
+    tranitionPartnerElement?: HTMLElement;
 }

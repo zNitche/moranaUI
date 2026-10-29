@@ -3,7 +3,7 @@ import type NavigationTransitionDetails from "#root/types/NavigationTransitionDe
 import { useMemo } from "react";
 
 export default function useDetectTransition(routeUUID: string) {
-    const { router } = useRouterContext();
+    const { router, getRouteWrapperElementByUUID } = useRouterContext();
 
     const nextNavigationStackItem = router.navigationStack.at(-1);
 
@@ -12,7 +12,6 @@ export default function useDetectTransition(routeUUID: string) {
             detected: false,
             isCurrentlyEntering: false,
             isCurrentlyExiting: false,
-            direction: undefined,
         };
 
         if (!nextNavigationStackItem?.previousRouteUUID) {
@@ -40,10 +39,21 @@ export default function useDetectTransition(routeUUID: string) {
         ret.isCurrentlyEntering = isCurrentlyEntering;
         ret.isCurrentlyExiting = isCurrentlyExiting;
 
+        const routeTransitionPartnerUUID = ret.isCurrentlyEntering
+            ? nextNavigationStackItem.previousRouteUUID
+            : nextNavigationStackItem.routeUUID;
+
+        ret.tranitionPartnerElement = getRouteWrapperElementByUUID(
+            routeTransitionPartnerUUID,
+        );
+
         return ret;
-        // oh boy this took some time, adding router as transitionDetails causes unwanted rerenders
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [nextNavigationStackItem, routeUUID]);
+    }, [
+        getRouteWrapperElementByUUID,
+        nextNavigationStackItem,
+        routeUUID,
+        router.navigationStack.length,
+    ]);
 
     return { transitionDetails };
 }
