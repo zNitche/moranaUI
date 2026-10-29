@@ -69,7 +69,13 @@ export default function Route({
     const { handleTransitionAnimation } = useHandleTransitionAnimation();
 
     useLayoutEffect(() => {
-        __addRoute({ uuid: routeUUID, name: name, url, component });
+        __addRoute({
+            uuid: routeUUID,
+            name: name,
+            url,
+            component,
+            wrapperElementRef: routeWrapperRef,
+        });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
