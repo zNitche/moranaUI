@@ -15,7 +15,6 @@ import { clsx, generateUUID } from "#root/utils";
 import type RouteContextType from "#root/types/RouteContextType";
 import { RouteContext } from "#root/routing/context";
 import useDetectTransition from "#root/core/hooks/useDetectTransition";
-import useHandleTransitionAnimation from "#root/core/hooks/useHandleTransitionAnimation";
 import useMoranaAppContext from "#root/core/hooks/context/useMoranaAppContext";
 import type { RouteLifecycleHookType } from "#root/types/RouteLifecycleHookType";
 import type RouteLifecycleCallbacks from "#root/types/RouteLifecycleCallbacks";
@@ -66,7 +65,6 @@ export default function Route({
     >(undefined);
 
     const { transitionDetails } = useDetectTransition(routeUUID);
-    const { handleTransitionAnimation } = useHandleTransitionAnimation();
 
     useLayoutEffect(() => {
         __addRoute({
@@ -195,7 +193,6 @@ export default function Route({
     }, [
         __removeFromRouterCache,
         cacheable,
-        handleTransitionAnimation,
         navAnimationBuilder?.route,
         routeUUID,
         transitionDetails,

@@ -23,51 +23,6 @@
     filter: blur(2px);
 }
 
-/*
-morana-view-transition-stage
-morana-view-transition-target
-*/
-/**/
-
-.defaultCurrentRoute {
-    z-index: 2;
-    box-shadow: 5px 5px 100px rgba(0, 0, 0, 0.5);
-}
-
-.defaultCurrentRoute.back {
-    z-index: 1;
-    box-shadow: none;
-}
-
-.defaultAwayRoute {
-    z-index: 1;
-}
-
-.defaultAwayRoute.back {
-    z-index: 2;
-    box-shadow: 5px 5px 100px rgba(0, 0, 0, 0.5);
-}
-
-.defaultAwayRoute.parked {
-    display: none;
-}
-
-.defaultRouteEnterAnimation {
-    animation: slideInKeyframes 0.25s ease-out forwards;
-}
-
-.defaultRouteEnterAnimation.back {
-    animation: none;
-}
-
-.defaultRouteExitAnimation {
-    transform: none;
-    filter: blur(2px);
-}
-
-.defaultRouteExitAnimation.back {
-    animation: slideInKeyframesBackward 0.25s ease-out forwards;
-}
 
 @keyframes slideInKeyframes {
     from {
