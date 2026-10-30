@@ -44,6 +44,9 @@ export default function Route({
     const routeWrapperRef = useRef<HTMLDivElement>(null);
 
     const markedForCacheRemovalRef = useRef<boolean>(false);
+    const viewTransitionControllerRef = useRef<ViewTransitionController | null>(
+        null,
+    );
 
     const lifecycleCallbackCalled = useRef<{
         onExit: boolean;
@@ -167,30 +170,24 @@ export default function Route({
             return;
         }
 
-        const vc = new ViewTransitionController({
+        viewTransitionControllerRef.current ??= new ViewTransitionController({
             viewElement: routeWrapperRef.current,
-            partnerViewElement: transitionDetails.tranitionPartnerElement
         });
 
-        vc.start({
+        viewTransitionControllerRef.current.start({
             target: transitionDetails.isCurrentlyEntering ? "in" : "out",
+            partnerViewElement: transitionDetails.tranitionPartnerElement,
+            transitionDirection: transitionDetails.direction,
+            onDone: () => {
+                if (transitionDetails.isCurrentlyEntering) {
+                    return;
+                }
+
+                if (!cacheable || markedForCacheRemovalRef.current) {
+                    __removeFromRouterCache(routeUUID);
+                }
+            },
         });
-
-        // void handleTransitionAnimation({
-        //     transitionDetails: transitionDetails,
-        //     onAnimationCleanup: navAnimationBuilder?.route?.onAnimationCleanup,
-        //     onEnterAnimation: navAnimationBuilder?.route?.onEnterAnimation,
-        //     onExitAnimation: navAnimationBuilder?.route?.onExitAnimation,
-        //     wrapperRef: routeWrapperRef,
-        // }).finally(() => {
-        //     if (transitionDetails.isCurrentlyEntering) {
-        //         return;
-        //     }
-
-        //     if (!cacheable || markedForCacheRemovalRef.current) {
-        //         __removeFromRouterCache(routeUUID);
-        //     }
-        // });
     }, [
         __removeFromRouterCache,
         cacheable,
@@ -215,10 +212,6 @@ export default function Route({
         }
 
         const builtInCssClasses: (string | undefined)[] = [];
-
-        // if (navAnimationBuilder?.route?.includeDefaultCssClasses) {
-        //     builtInCssClasses.push(classes.hidden);
-        // }
 
         const Component = component;
         const Wrapper = wrapper;
