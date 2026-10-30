@@ -1,5 +1,9 @@
 import type { NavigationTransitionDirection } from "#root/types/NavigationTransitionDirection";
 
+const STATE_KEY = "moranaViewTransitionState";
+const TARGET_KEY = "moranaViewTransitionTarget";
+const TRANSITION_DIRECTION_KEY = "moranaViewTransitionDirection";
+
 type TransitionViewState = "inMove" | "active" | "parked";
 type ViewTransitionTarget = "in" | "out";
 
@@ -17,6 +21,17 @@ export default class ViewTransitionController {
         this.viewElement = viewElement;
     }
 
+    static setParkedElementMetadata(
+        element: HTMLElement,
+        targetState: TransitionViewState,
+    ) {
+        if (element.dataset[STATE_KEY]) {
+            return;
+        }
+
+        element.dataset[STATE_KEY] = targetState;
+    }
+
     private gatherAnimations(element: HTMLElement): Animation[] {
         return element.getAnimations({});
     }
@@ -30,35 +45,31 @@ export default class ViewTransitionController {
         target?: ViewTransitionTarget;
         transitionDirection?: NavigationTransitionDirection;
     }) {
-        const stateKey = "moranaViewTransitionState";
-        const targetKey = "moranaViewTransitionTarget";
-        const transitionDirectionKey = "moranaViewTransitionDirection";
-
         switch (state) {
             case "inMove":
                 if (target) {
-                    this.viewElement.dataset[targetKey] = target;
+                    this.viewElement.dataset[TARGET_KEY] = target;
                 } else {
-                    delete this.viewElement.dataset[targetKey];
+                    delete this.viewElement.dataset[TARGET_KEY];
                 }
 
-                this.viewElement.dataset[transitionDirectionKey] =
+                this.viewElement.dataset[TRANSITION_DIRECTION_KEY] =
                     transitionDirection;
-                this.viewElement.dataset[stateKey] = state;
+                this.viewElement.dataset[STATE_KEY] = state;
 
                 return;
 
             case "active":
             case "parked":
-                this.viewElement.dataset[stateKey] = state;
-                delete this.viewElement.dataset[targetKey];
-                delete this.viewElement.dataset[transitionDirectionKey];
+                this.viewElement.dataset[STATE_KEY] = state;
+                delete this.viewElement.dataset[TARGET_KEY];
+                delete this.viewElement.dataset[TRANSITION_DIRECTION_KEY];
                 return;
 
             default:
-                delete this.viewElement.dataset[transitionDirectionKey];
-                delete this.viewElement.dataset[targetKey];
-                this.viewElement.dataset[stateKey] = "parked";
+                delete this.viewElement.dataset[TRANSITION_DIRECTION_KEY];
+                delete this.viewElement.dataset[TARGET_KEY];
+                this.viewElement.dataset[STATE_KEY] = "parked";
                 return;
         }
     }

@@ -5,6 +5,7 @@ import {
     useMoranaSegments,
     usePullToRefresh,
     sleep,
+    // useRouter,
 } from "moranaui";
 import classes from "./HomePage.module.css";
 import Content from "#root/components/Content/Content";
@@ -15,6 +16,8 @@ import AboutTab from "./Tabs/AboutTab/AboutTab";
 import ExtraTab from "./Tabs/ExtraTab/ExtraTab";
 
 export default function HomePage() {
+    // const {addToRouteToRouteCache} = useRouter() 
+    
     const {
         setScrollableContainerRef: setPullToRefreshElementRef,
         RefresherComponent,
@@ -49,6 +52,10 @@ export default function HomePage() {
             },
         ],
     });
+
+    // useEffect(() => {
+    //     addToRouteToRouteCache("collection")
+    // }, [addToRouteToRouteCache])
 
     return (
         <MoranaPage>

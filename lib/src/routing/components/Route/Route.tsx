@@ -206,12 +206,26 @@ export default function Route({
         }
     }, [__addToRouterCache, routeUUID, shouldRenderRouteComponent]);
 
+    // for proper handling of router.addToRouteToRouteCache()
+    useEffect(() => {
+        if (routeWrapperRef.current) {
+            ViewTransitionController.setParkedElementMetadata(
+                routeWrapperRef.current,
+                currentRouteStats.isCurrentRoute ? "active" : "parked",
+            );
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [
+        // eslint-disable-next-line react-hooks/refs
+        routeWrapperRef.current,
+        shouldRenderRouteComponent,
+        currentRouteStats.isCurrentRoute,
+    ]);
+
     const routeComponent = useMemo(() => {
         if (!shouldRenderRouteComponent) {
             return;
         }
-
-        const builtInCssClasses: (string | undefined)[] = [];
 
         const Component = component;
         const Wrapper = wrapper;
@@ -221,7 +235,6 @@ export default function Route({
                 ref={routeWrapperRef}
                 className={clsx(
                     classes.route,
-                    ...builtInCssClasses,
                     navAnimationBuilder?.route?.wrapperClassName,
                 )}
                 id={routeUUID}
