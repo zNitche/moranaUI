@@ -48,12 +48,8 @@ export default function useDetectTransition(routeUUID: string) {
         );
 
         return ret;
-    }, [
-        getRouteWrapperElementByUUID,
-        nextNavigationStackItem,
-        routeUUID,
-        router.navigationStack.length,
-    ]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [getRouteWrapperElementByUUID, nextNavigationStackItem, routeUUID]);
 
     return { transitionDetails };
 }
