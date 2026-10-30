@@ -1,32 +1,24 @@
+import type { NavigationTransitionDirection } from "#root/types/NavigationTransitionDirection";
+
 type TransitionViewState = "inMove" | "active" | "parked";
 type ViewTransitionTarget = "in" | "out";
 
 interface ViewTransitionControllerArgs {
     viewElement: HTMLElement;
-    partnerViewElement?: HTMLElement;
 }
 
 export default class ViewTransitionController {
     private viewElement: HTMLElement;
-    private partnerViewElement: HTMLElement | undefined;
     private abortController: AbortController | null = null;
 
-    constructor({
-        viewElement,
-        partnerViewElement,
-    }: ViewTransitionControllerArgs) {
+    private onDone?: () => void = undefined;
+
+    constructor({ viewElement }: ViewTransitionControllerArgs) {
         this.viewElement = viewElement;
-        this.partnerViewElement = partnerViewElement;
     }
 
-    private gatherAnimations(): Animation[] {
-        const targets: HTMLElement[] = [this.viewElement];
-
-        if (this.partnerViewElement) {
-            targets.push(this.partnerViewElement);
-        }
-
-        return targets.flatMap((elem) => elem.getAnimations({}));
+    private gatherAnimations(element: HTMLElement): Animation[] {
+        return element.getAnimations({});
     }
 
     private setElementTransitionMetadata({
@@ -71,14 +63,25 @@ export default class ViewTransitionController {
         this.abortController = null;
     }
 
-    private nextTick(target: ViewTransitionTarget) {
+    private nextTick(
+        target: ViewTransitionTarget,
+        partnerViewElement?: HTMLElement,
+    ) {
         if (!this.abortController) {
+            this.settle(target);
             return;
         }
 
         const abortSignal = this.abortController.signal;
 
-        const currentAnimations = this.gatherAnimations();
+        const currentAnimations = this.gatherAnimations(this.viewElement);
+
+        if (partnerViewElement) {
+            currentAnimations.push(
+                ...this.gatherAnimations(partnerViewElement),
+            );
+        }
+
         let animationsCount = currentAnimations.length;
 
         if (animationsCount === 0) {
@@ -86,7 +89,6 @@ export default class ViewTransitionController {
             return;
         }
 
-        // move somewhere else, avoid inline
         const onDone = () => {
             animationsCount = animationsCount - 1;
 
@@ -107,18 +109,40 @@ export default class ViewTransitionController {
     }
 
     public abort(postTarget: ViewTransitionTarget) {
-        this.abortController?.abort();
+        if (!this.abortController) {
+            return;
+        }
+
+        this.abortController.abort();
         this.abortController = null;
 
         this.settle(postTarget);
     }
 
-    public start({ target }: { target: ViewTransitionTarget }) {
+    public start({
+        target,
+        partnerViewElement,
+        transitionDirection = "forward",
+        onDone,
+    }: {
+        target: ViewTransitionTarget;
+        partnerViewElement?: HTMLElement;
+        transitionDirection?: NavigationTransitionDirection;
+        onDone?: () => void;
+    }) {
+        this.abort(target);
+
         this.abortController = new AbortController();
-        this.setElementTransitionMetadata({ state: "inMove", target });
+        this.onDone = onDone;
+
+        this.setElementTransitionMetadata({
+            state: "inMove",
+            target,
+            transitionDirection,
+        });
 
         queueMicrotask(() => {
-            this.nextTick(target);
+            this.nextTick(target, partnerViewElement);
         });
     }
 }
