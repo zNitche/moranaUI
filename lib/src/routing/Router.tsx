@@ -236,6 +236,7 @@ export default function Router({ children }: PropsWithChildren) {
                     );
                 }
 
+                // this needs to be patched so originDirection can be handled properly
                 window.history.back();
             } else {
                 navigateTo({
@@ -303,6 +304,22 @@ export default function Router({ children }: PropsWithChildren) {
         [routes],
     );
 
+    const addToRouteToRouteCache = useCallback(
+        (routeName: string) => {
+            const route = routes.find((r) => r.name === routeName);
+
+            if (!route) {
+                return;
+            }
+
+            routerStateHandler.addToRouterCache(
+                route.uuid,
+                route.wrapperElementRef,
+            );
+        },
+        [routes],
+    );
+
     const router: RouterProps = useMemo(() => {
         return {
             currentRoute: currentRoute,
@@ -330,6 +347,7 @@ export default function Router({ children }: PropsWithChildren) {
             getRouteUUIDByName,
             getRouteWrapperElementByUUID,
             replaceSearchParams,
+            addToRouteToRouteCache,
         };
     }, [
         __addRoute,
@@ -341,6 +359,7 @@ export default function Router({ children }: PropsWithChildren) {
         getRouteUUIDByName,
         getRouteWrapperElementByUUID,
         replaceSearchParams,
+        addToRouteToRouteCache,
     ]);
 
     return (

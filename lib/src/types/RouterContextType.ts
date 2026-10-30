@@ -10,7 +10,7 @@ export default interface RouterContextType {
     routerCache: RouterCache;
     __addToRouterCache: (
         uuid: string,
-        ref: RefObject<HTMLDivElement | null> | null,
+        ref: RefObject<HTMLElement | null> | null,
     ) => void;
     __removeFromRouterCache: (uuid: string) => void;
     clearRouterCache: () => void;
@@ -35,4 +35,5 @@ export default interface RouterContextType {
         add?: Record<string, string>;
         remove?: string[];
     }) => void;
+    addToRouteToRouteCache: (routeName: string) => void;
 }

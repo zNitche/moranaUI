@@ -15,5 +15,6 @@ export default function useRouter() {
         clearRouterCache: context.clearRouterCache,
         getRouteUUIDByName: context.getRouteUUIDByName,
         replaceSearchParams: context.replaceSearchParams,
+        addToRouteToRouteCache: context.addToRouteToRouteCache,
     };
 }

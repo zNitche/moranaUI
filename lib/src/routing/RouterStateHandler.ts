@@ -78,7 +78,7 @@ export default class RouterStateHandler {
             ...this.routerState.navigationStack,
             {
                 routeUUID: routeUUID,
-                originDirection: originDirection,
+                originDirection: originDirection ?? "forward",
                 previousRouteUUID: prevRouteUUID,
             },
         ];
@@ -92,7 +92,7 @@ export default class RouterStateHandler {
 
     public addToRouterCache = (
         uuid: string,
-        ref: RefObject<HTMLDivElement | null> | null,
+        ref: RefObject<HTMLElement | null> | null,
     ) => {
         if (Object.keys(this.routerState.routerCache).includes(uuid)) {
             return;
