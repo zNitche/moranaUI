@@ -24,12 +24,15 @@ export default class ViewTransitionController {
     private setElementTransitionMetadata({
         state,
         target,
+        transitionDirection,
     }: {
         state: TransitionViewState;
         target?: ViewTransitionTarget;
+        transitionDirection?: NavigationTransitionDirection;
     }) {
         const stateKey = "moranaViewTransitionState";
         const targetKey = "moranaViewTransitionTarget";
+        const transitionDirectionKey = "moranaViewTransitionDirection";
 
         switch (state) {
             case "inMove":
@@ -39,6 +42,8 @@ export default class ViewTransitionController {
                     delete this.viewElement.dataset[targetKey];
                 }
 
+                this.viewElement.dataset[transitionDirectionKey] =
+                    transitionDirection;
                 this.viewElement.dataset[stateKey] = state;
 
                 return;
@@ -47,9 +52,11 @@ export default class ViewTransitionController {
             case "parked":
                 this.viewElement.dataset[stateKey] = state;
                 delete this.viewElement.dataset[targetKey];
+                delete this.viewElement.dataset[transitionDirectionKey];
                 return;
 
             default:
+                delete this.viewElement.dataset[transitionDirectionKey];
                 delete this.viewElement.dataset[targetKey];
                 this.viewElement.dataset[stateKey] = "parked";
                 return;
@@ -61,6 +68,14 @@ export default class ViewTransitionController {
             state: target === "in" ? "active" : "parked",
         });
         this.abortController = null;
+
+        try {
+            this.onDone?.();
+        } catch (error) {
+            console.error(error);
+        }
+
+        this.onDone = undefined;
     }
 
     private nextTick(
