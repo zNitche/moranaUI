@@ -12,6 +12,3 @@ export { sleep };
 
 import { range } from "./range";
 export { range };
-
-import waitForAnimation from "./waitForAnimation"
-export { waitForAnimation }
