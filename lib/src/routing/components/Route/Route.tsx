@@ -206,7 +206,7 @@ export default function Route({
         }
     }, [__addToRouterCache, routeUUID, shouldRenderRouteComponent]);
 
-    // for proper handling of router.addToRouteToRouteCache()
+    // for proper handling of router.renderRouteInBackground()
     useEffect(() => {
         if (routeWrapperRef.current) {
             ViewTransitionController.setParkedElementMetadata(

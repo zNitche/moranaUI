@@ -16,7 +16,7 @@ import AboutTab from "./Tabs/AboutTab/AboutTab";
 import ExtraTab from "./Tabs/ExtraTab/ExtraTab";
 
 export default function HomePage() {
-    // const {addToRouteToRouteCache} = useRouter() 
+    // const {renderRouteInBackground} = useRouter() 
     
     const {
         setScrollableContainerRef: setPullToRefreshElementRef,
@@ -54,8 +54,8 @@ export default function HomePage() {
     });
 
     // useEffect(() => {
-    //     addToRouteToRouteCache("collection")
-    // }, [addToRouteToRouteCache])
+    //     renderRouteInBackground("collection")
+    // }, [renderRouteInBackground])
 
     return (
         <MoranaPage>

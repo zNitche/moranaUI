@@ -304,7 +304,7 @@ export default function Router({ children }: PropsWithChildren) {
         [routes],
     );
 
-    const addToRouteToRouteCache = useCallback(
+    const renderRouteInBackground = useCallback(
         (routeName: string) => {
             const route = routes.find((r) => r.name === routeName);
 
@@ -347,7 +347,7 @@ export default function Router({ children }: PropsWithChildren) {
             getRouteUUIDByName,
             getRouteWrapperElementByUUID,
             replaceSearchParams,
-            addToRouteToRouteCache,
+            renderRouteInBackground,
         };
     }, [
         __addRoute,
@@ -359,7 +359,7 @@ export default function Router({ children }: PropsWithChildren) {
         getRouteUUIDByName,
         getRouteWrapperElementByUUID,
         replaceSearchParams,
-        addToRouteToRouteCache,
+        renderRouteInBackground,
     ]);
 
     return (

@@ -35,5 +35,5 @@ export default interface RouterContextType {
         add?: Record<string, string>;
         remove?: string[];
     }) => void;
-    addToRouteToRouteCache: (routeName: string) => void;
+    renderRouteInBackground: (routeName: string) => void;
 }
