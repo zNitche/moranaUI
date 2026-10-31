@@ -33,10 +33,8 @@ describe("useRouter() hook", () => {
     });
 
     it("test router context (outside RouterContext)", () => {
-        const { result } = renderHook(() =>
+        expect(() => renderHook(() =>
             useRouter(),
-        );
-
-        expect(result.current?.router.path).toEqual("");
+        )).toThrow("useRouter can't be called outside Router's context");
     });
 });

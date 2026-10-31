@@ -32,11 +32,8 @@ describe("usePathParams() hook", () => {
     });
 
     it("get path params (outside RouterContext)", () => {
-        const { result } = renderHook(() =>
-            usePathParams<{ id: string; id2: string }>(),
-        );
-
-        expect(result.current?.id).toEqual(undefined);
-        expect(result.current?.id2).toEqual(undefined);
+        expect(() =>
+            renderHook(() => usePathParams<{ id: string; id2: string }>()),
+        ).toThrow("usePathParams can't be called outside Router's context");
     });
 });

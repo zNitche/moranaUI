@@ -31,10 +31,8 @@ describe("useSearchParams() hook", () => {
     });
 
     it("get search params (outside RouterContext)", () => {
-        const { result } = renderHook(() =>
-            useSearchParams<{ qparam: string }>(),
-        );
-
-        expect(result.current?.qparam).toEqual(undefined);
+        expect(() => {
+            renderHook(() => useSearchParams<{ qparam: string }>());
+        }).toThrow("useRouterContext can't be called outside Router's context");
     });
 });
