@@ -3,15 +3,15 @@ import { Router, MoranaRoutesWrapper, Route } from "#root/routing";
 import type React from "react";
 import { Fragment } from "react/jsx-runtime";
 
-interface AppRootMockProps {
+interface AppCustomizableRootMockProps {
     readonly targetRoute?: string;
     readonly Children?: React.ComponentType;
 }
 
-export default function AppRootMock({
+export default function AppCustomizableRootMock({
     targetRoute,
     Children,
-}: AppRootMockProps) {
+}: AppCustomizableRootMockProps) {
     function insertChildren(route:string) {
         if (route === targetRoute) {{
             return Children ?? Fragment;

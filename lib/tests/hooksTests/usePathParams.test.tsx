@@ -1,5 +1,5 @@
 import { describe, it, beforeEach, vi, expect } from "vitest";
-import AppRoot from "../mocks/AppRoot.mock";
+import AppCustomizableRoot from "../mocks/AppCustomizableRoot.mock";
 import { renderHook } from "@testing-library/react";
 import { usePathParams } from "#root/routing";
 
@@ -19,7 +19,7 @@ describe("usePathParams() hook", () => {
                 wrapper: ({ children }) => {
                     const ChildrenComponent = () => <>{children}</>;
 
-                    return AppRoot({
+                    return AppCustomizableRoot({
                         Children: ChildrenComponent,
                         targetRoute: "/params",
                     });
