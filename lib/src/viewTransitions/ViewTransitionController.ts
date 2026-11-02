@@ -33,6 +33,10 @@ export default class ViewTransitionController {
     }
 
     private gatherAnimations(element: HTMLElement): Animation[] {
+        if (!(typeof element.getAnimations === "function")) {
+            return [];
+        }
+
         return element.getAnimations({});
     }
 
