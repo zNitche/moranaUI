@@ -9,6 +9,20 @@ export default function useDetectTransition(routeUUID: string) {
     const nextNavigationStackItem = router.navigationStack.at(-1);
 
     const computeTransitionDirection = (): NavigationTransitionDirection => {
+        const currentNavigationStackItem =
+            router.navigationStack.length > 1
+                ? router.navigationStack.at(router.navigationStack.length - 2)
+                : undefined;
+
+        if (currentNavigationStackItem) {
+            const currentImp =
+                currentNavigationStackItem.navigationStackImportance ?? 0;
+            const nextImp =
+                nextNavigationStackItem?.navigationStackImportance ?? 0;
+
+            return currentImp > nextImp ? "forward" : "back";
+        }
+
         return "forward";
     };
 
