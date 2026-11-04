@@ -62,6 +62,7 @@ export default class RouterStateHandler {
     public updateNavigationStack = (
         routeUUID?: string,
         originDirection?: NavigationTransitionDirection,
+        navigationStackImportance?: number,
     ) => {
         if (!routeUUID) {
             return;
@@ -77,9 +78,10 @@ export default class RouterStateHandler {
         const currentNavigationStack = [
             ...this.routerState.navigationStack,
             {
-                routeUUID: routeUUID,
-                originDirection: originDirection,
+                routeUUID,
+                originDirection,
                 previousRouteUUID: prevRouteUUID,
+                navigationStackImportance,
             },
         ];
 

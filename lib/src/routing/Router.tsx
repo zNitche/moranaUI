@@ -83,6 +83,8 @@ export default function Router({ children }: PropsWithChildren) {
                     if (pathMatchData.isMatching) {
                         responseData.uuid = route.uuid;
                         responseData.pathParams = pathMatchData.pathParams;
+                        responseData.navigationStackImportance =
+                            route.navigationStackImportance;
 
                         break;
                     }
@@ -104,8 +106,9 @@ export default function Router({ children }: PropsWithChildren) {
         routerStateHandler.updateNavigationStack(
             currentRoute.uuid,
             currentPath.originDirection,
+            currentRoute.navigationStackImportance,
         );
-    }, [currentPath.originDirection, currentRoute.uuid]);
+    }, [currentPath.originDirection, currentRoute]);
 
     const __handleNavEvent = useCallback((event: PopStateEvent) => {
         setCurrentPath({

@@ -21,6 +21,7 @@ export default function App() {
                         url={"/"}
                         component={HomePage}
                         name={"home"}
+                        navigationStackImportance={1}
                     />
                     <Route
                         url={"/collection"}

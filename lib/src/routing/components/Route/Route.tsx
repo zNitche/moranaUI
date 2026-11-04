@@ -28,6 +28,7 @@ interface RouteProps {
     readonly cacheable?: boolean;
     readonly name?: string;
     readonly navbarVisible?: boolean;
+    readonly navigationStackImportance?: number;
 }
 
 export default function Route({
@@ -37,6 +38,7 @@ export default function Route({
     wrapper = Fragment,
     cacheable = true,
     navbarVisible = true,
+    navigationStackImportance = 0,
 }: RouteProps) {
     const { setIsNavbarVisible } = useMoranaAppContext();
 
@@ -72,10 +74,11 @@ export default function Route({
     useLayoutEffect(() => {
         __addRoute({
             uuid: routeUUID,
-            name: name,
+            name,
             url,
             component,
             wrapperElementRef: routeWrapperRef,
+            navigationStackImportance
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
