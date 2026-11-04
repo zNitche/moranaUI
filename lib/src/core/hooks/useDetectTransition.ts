@@ -1,11 +1,16 @@
 import useRouterContext from "#root/routing/hooks/useRouterContext";
 import type NavigationTransitionDetails from "#root/types/NavigationTransitionDetails";
+import type { NavigationTransitionDirection } from "#root/types/NavigationTransitionDirection";
 import { useMemo } from "react";
 
 export default function useDetectTransition(routeUUID: string) {
     const { router, getRouteWrapperElementByUUID } = useRouterContext();
 
     const nextNavigationStackItem = router.navigationStack.at(-1);
+
+    const computeTransitionDirection = (): NavigationTransitionDirection => {
+        return "forward";
+    };
 
     const transitionDetails = useMemo((): NavigationTransitionDetails => {
         const ret: NavigationTransitionDetails = {
@@ -33,6 +38,8 @@ export default function useDetectTransition(routeUUID: string) {
 
         if (nextNavigationStackItem.originDirection) {
             ret.direction = nextNavigationStackItem.originDirection;
+        } else {
+            ret.direction = computeTransitionDirection();
         }
 
         ret.detected = true;

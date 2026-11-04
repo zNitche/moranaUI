@@ -56,7 +56,6 @@ describe("RouterStateHandler", () => {
             stateHandler.updateNavigationStack("route1");
             expect(stateHandler.routerState.navigationStack).toEqual([
                 {
-                    originDirection: "forward",
                     previousRouteUUID: undefined,
                     routeUUID: "route1",
                 },

@@ -78,7 +78,7 @@ export default class RouterStateHandler {
             ...this.routerState.navigationStack,
             {
                 routeUUID: routeUUID,
-                originDirection: originDirection ?? "forward",
+                originDirection: originDirection,
                 previousRouteUUID: prevRouteUUID,
             },
         ];
