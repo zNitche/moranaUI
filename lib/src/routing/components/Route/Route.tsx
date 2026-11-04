@@ -28,7 +28,7 @@ interface RouteProps {
     readonly cacheable?: boolean;
     readonly name?: string;
     readonly navbarVisible?: boolean;
-    readonly navigationStackImportance?: number;
+    readonly navigationImportance?: number;
 }
 
 export default function Route({
@@ -38,7 +38,7 @@ export default function Route({
     wrapper = Fragment,
     cacheable = true,
     navbarVisible = true,
-    navigationStackImportance = 0,
+    navigationImportance = 0,
 }: RouteProps) {
     const { setIsNavbarVisible } = useMoranaAppContext();
 
@@ -78,7 +78,7 @@ export default function Route({
             url,
             component,
             wrapperElementRef: routeWrapperRef,
-            navigationStackImportance
+            navigationImportance
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

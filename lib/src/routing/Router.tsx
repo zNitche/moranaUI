@@ -83,8 +83,8 @@ export default function Router({ children }: PropsWithChildren) {
                     if (pathMatchData.isMatching) {
                         responseData.uuid = route.uuid;
                         responseData.pathParams = pathMatchData.pathParams;
-                        responseData.navigationStackImportance =
-                            route.navigationStackImportance;
+                        responseData.navigationImportance =
+                            route.navigationImportance;
 
                         break;
                     }
@@ -106,7 +106,7 @@ export default function Router({ children }: PropsWithChildren) {
         routerStateHandler.updateNavigationStack(
             currentRoute.uuid,
             currentPath.originDirection,
-            currentRoute.navigationStackImportance,
+            currentRoute.navigationImportance,
         );
     }, [currentPath.originDirection, currentRoute]);
 

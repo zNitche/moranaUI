@@ -4,5 +4,5 @@ export default interface RouterNavigationStackItem {
     routeUUID: string;
     previousRouteUUID?: string;
     originDirection?: NavigationTransitionDirection;
-    navigationStackImportance?: number;
+    navigationImportance?: number;
 }

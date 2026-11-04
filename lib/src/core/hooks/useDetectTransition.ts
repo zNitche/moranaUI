@@ -16,9 +16,9 @@ export default function useDetectTransition(routeUUID: string) {
 
         if (currentNavigationStackItem) {
             const currentImp =
-                currentNavigationStackItem.navigationStackImportance ?? 0;
+                currentNavigationStackItem.navigationImportance ?? 0;
             const nextImp =
-                nextNavigationStackItem?.navigationStackImportance ?? 0;
+                nextNavigationStackItem?.navigationImportance ?? 0;
 
             return currentImp > nextImp ? "forward" : "back";
         }

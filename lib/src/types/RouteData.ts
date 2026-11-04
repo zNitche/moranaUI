@@ -8,5 +8,5 @@ export default interface RouteData {
     tokenizedUrl?: RouteUrlToken[];
     component: React.ComponentType;
     wrapperElementRef: RefObject<HTMLElement | null>;
-    navigationStackImportance?: number;
+    navigationImportance?: number;
 }
