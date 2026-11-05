@@ -218,7 +218,7 @@ export default function Router({ children }: PropsWithChildren) {
 
             window.dispatchEvent(
                 new PopStateEvent("popstate", {
-                    state: { originDirection: direction },
+                    state: { originDirection: direction, origin: "moranaui" },
                 }),
             );
         },
@@ -239,8 +239,17 @@ export default function Router({ children }: PropsWithChildren) {
                     );
                 }
 
-                // this needs to be patched so originDirection can be handled properly
                 window.history.back();
+                queueMicrotask(() => {
+                    window.dispatchEvent(
+                        new PopStateEvent("popstate", {
+                            state: {
+                                originDirection: "back",
+                                origin: "moranaui",
+                            },
+                        }),
+                    );
+                });
             } else {
                 navigateTo({
                     path: "/",
